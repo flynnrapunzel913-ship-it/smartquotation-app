@@ -189,42 +189,20 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+  
+  .body-footer {
+    display: none;
+  }
 }
 
-/* Multi-page Header/Footer and Border Styles */
-@page {
-  margin: 140px 30px 70px 30px;
-}
-
-.header {
-  position: fixed;
-  top: 10px;
-  left: 30px;
-  right: 30px;
-  height: 120px;
-  background: white;
-  z-index: 1000;
-}
-
-.footer {
-  position: fixed;
-  bottom: 10px;
-  left: 30px;
-  right: 30px;
+.body-footer {
+  width: 100%;
+  font-size: 8px;
+  line-height: 1.2;
+  color: #444;
   text-align: center;
-  font-size: 8pt;
-  color: #666;
-  background: white;
-  z-index: 1000;
+  padding: 20px 20px 10px 20px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.page-border {
-  position: fixed;
-  top: 5px;
-  bottom: 5px;
-  left: 5px;
-  right: 5px;
-  border: 1px solid #000;
-  pointer-events: none;
-  z-index: 999;
-}
+

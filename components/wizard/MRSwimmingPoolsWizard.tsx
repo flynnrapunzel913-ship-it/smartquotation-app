@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
 import { calculatePoolMetrics, renderTemplate, extractTemplateVariables } from "@/lib/utils";
+import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
 
 const DEFAULT_TERMS = `1. Single phase connection up to the plant room is in your scope of work.
@@ -46,38 +47,45 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     customerEmail: "",
     quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
     date: new Date().toISOString().split("T")[0],
-    gstPercent: 18,
+    gstPercent: MR_MASTER_TEMPLATE.gstPercent || 18,
     projectSpecifications: {
-      poolLength: "",
-      poolWidth: "",
-      poolDepth: "",
-      poolVolume: "",
-      plantRoomSize: "",
-      shapeOfPool: "",
-      typeOfPool: "",
-      totalPoolVolume: "",
-      filtrationVolume: "",
-      turnoverPeriod: "",
-      tilingArea: "",
-      copingArea: "",
-      waterproofingArea: "",
+      ...MR_MASTER_TEMPLATE.projectSpecifications as any,
+      poolLength: "30",
+      poolWidth: "20",
+      poolDepth: "5",
+      plantRoomSize: "8'X8'X6'",
+      plantRoomLength: "8",
+      plantRoomWidth: "8",
+      plantRoomHeight: "6",
+      turnoverPeriod: "4",
+      shapeOfPool: "RECTANGLE POOL",
+      typeOfPool: "SKIMMER TYPE",
     },
-    items: [],
-    sections: DEFAULT_SECTIONS,
-    notes: "",
-    terms: DEFAULT_TERMS,
-    paymentTerms: DEFAULT_PAYMENT,
+    items: [...(MR_MASTER_TEMPLATE.items || [])] as any,
+    sections: [...(MR_MASTER_TEMPLATE.sections || [])] as any,
+    notes: MR_MASTER_TEMPLATE.notes || "",
+    terms: MR_MASTER_TEMPLATE.terms || DEFAULT_TERMS,
+    paymentTerms: MR_MASTER_TEMPLATE.paymentTerms || DEFAULT_PAYMENT,
     title: "",
   });
 
+  const STEPS = [
+    { id: 1, name: "Client Details" },
+    { id: 2, name: "Pool Specifications" },
+    { id: 3, name: "Calculated Values" },
+    { id: 4, name: "Section A - Plant Room" },
+    { id: 5, name: "Section B - Electrical" },
+    { id: 6, name: "Section C - Control Panel" },
+    { id: 7, name: "Section D - Cleaning Kit" },
+    { id: 8, name: "Part 2 - Pool Finishes" },
+    { id: 9, name: "Review & Generate" },
+  ];
+
   // Helper to generate title
   const autoGenerateTitle = (name: string, address: string) => {
-    if (name?.trim()) return `${name.trim()} Swimming Pool Quotation`;
-    if (address?.trim()) {
-      const part = address.split(",")[0].split("\n")[0].trim();
-      return `${part} Quotation`;
-    }
-    return "Untitled Quotation";
+    const n = name?.trim() || "Client";
+    const a = address?.split(",")[0].split("\n")[0].trim() || "Site";
+    return `Quotation for ${n} - ${a}`;
   };
 
   // Recovery logic
@@ -115,7 +123,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
     const timer = setTimeout(() => {
       handleAutoSave();
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [formData, hasUnsavedChanges, isSubmitting]);
@@ -141,12 +149,29 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     if (saved) {
       setFormData(JSON.parse(saved));
       setHasUnsavedChanges(true);
+      setIsLoading(false);
     }
     setShowRecoveryDialog(false);
   };
 
   const startNew = () => {
     localStorage.removeItem("mr_quotation_draft");
+    const initial = {
+      ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
+      quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+      date: new Date().toISOString().split("T")[0],
+      customerName: "",
+      customerAddress: "",
+      customerPhone: "",
+      customerEmail: "",
+    };
+    initial.items = initial.items.map((it: any) => ({
+      ...it,
+      description: renderTemplate(it.description, it.variableValues || {}),
+      templateText: it.description
+    }));
+    setFormData(initial);
+    setIsLoading(false);
     setShowRecoveryDialog(false);
   };
 
@@ -169,45 +194,54 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             date: new Date(data.date).toISOString().split("T")[0],
             gstPercent: data.gstPercent,
             projectSpecifications: {
+              ...data.projectSpecifications,
               poolLength: String(data.projectSpecifications?.poolLength ?? ""),
               poolWidth: String(data.projectSpecifications?.poolWidth ?? ""),
               poolDepth: String(data.projectSpecifications?.poolDepth ?? ""),
-              poolVolume: String(data.projectSpecifications?.poolVolume ?? ""),
-              plantRoomSize: String(data.projectSpecifications?.plantRoomSize ?? ""),
-              shapeOfPool: String(data.projectSpecifications?.shapeOfPool ?? ""),
-              typeOfPool: String(data.projectSpecifications?.typeOfPool ?? ""),
-              totalPoolVolume: String(data.projectSpecifications?.totalPoolVolume ?? ""),
-              filtrationVolume: String(data.projectSpecifications?.filtrationVolume ?? ""),
-              turnoverPeriod: String(data.projectSpecifications?.turnoverPeriod ?? ""),
-              tilingArea: String(data.projectSpecifications?.tilingArea ?? ""),
-              copingArea: String(data.projectSpecifications?.copingArea ?? ""),
-              waterproofingArea: String(data.projectSpecifications?.waterproofingArea ?? ""),
+              plantRoomLength: String(data.projectSpecifications?.plantRoomLength ?? "8"),
+              plantRoomWidth: String(data.projectSpecifications?.plantRoomWidth ?? "8"),
+              plantRoomHeight: String(data.projectSpecifications?.plantRoomHeight ?? "6"),
+              turnoverPeriod: String(data.projectSpecifications?.turnoverPeriod ?? "4"),
             },
             items: data.items.map((it: any) => ({
-              section: it.section,
-              serialNo: it.serialNo,
-              category: it.category,
-              description: it.description,
-              warranty: it.warranty,
-              qty: it.qty,
-              unit: it.unit,
-              rate: it.rate,
-              amount: it.amount,
-              imageUrl: it.imageUrl,
+              ...it,
+              variableValues: it.variableValues || {},
             })),
             sections: (data.sections && data.sections.length > 0) ? data.sections : DEFAULT_SECTIONS,
             notes: data.notes || "",
             terms: data.terms || DEFAULT_TERMS,
             paymentTerms: data.paymentTerms || DEFAULT_PAYMENT,
+            title: data.title || "",
           };
           setFormData(mappedData);
           if (mode === "duplicate") setQuoteId(null);
           setIsLoading(false);
         });
+    } else {
+      const saved = localStorage.getItem("mr_quotation_draft");
+      if (saved) {
+        setShowRecoveryDialog(true);
+      } else {
+        const initial = {
+          ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
+          quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+          date: new Date().toISOString().split("T")[0],
+          customerName: "",
+          customerAddress: "",
+          customerPhone: "",
+          customerEmail: "",
+        };
+        initial.items = initial.items.map((it: any) => ({
+          ...it,
+          description: renderTemplate(it.description, it.variableValues || {}),
+          templateText: it.description
+        }));
+        setFormData(initial);
+        setIsLoading(false);
+      }
     }
   }, [id, mode]);
 
-  // Calculate totals - only include included sections
   const subtotal = formData.items.reduce((sum, item) => {
     const section = formData.sections?.find((s) => s.code === item.section);
     if (section && !section.included) return sum;
@@ -216,15 +250,77 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   const gstAmount = (subtotal * formData.gstPercent) / 100;
   const grandTotal = subtotal + gstAmount;
 
-  const nextStep = () => setStep((s) => Math.min(s + 1, 7));
+  const resetPhase = () => {
+    if (!confirm("Are you sure you want to reset this phase to defaults? All changes in this step will be lost.")) return;
+
+    if (step === 1) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: "",
+        customerAddress: "",
+        customerPhone: "",
+        customerEmail: "",
+      }));
+    } else if (step === 2) {
+      setFormData(prev => {
+        const nextSpecs = {
+          ...prev.projectSpecifications,
+          poolLength: "30",
+          poolWidth: "20",
+          poolDepth: "5",
+          shapeOfPool: "Rectangle Pool",
+          typeOfPool: "Skimmer Type",
+          plantRoomLength: "8",
+          plantRoomWidth: "8",
+          plantRoomHeight: "6",
+          turnoverPeriod: "4",
+          poolVolumeOverride: false,
+          totalPoolVolumeOverride: false,
+          filtrationVolumeOverride: false,
+          tilingAreaOverride: false,
+          copingAreaOverride: false,
+          waterproofingAreaOverride: false,
+        };
+        const metrics = calculatePoolMetrics(nextSpecs);
+        return {
+          ...prev,
+          projectSpecifications: { ...nextSpecs, ...metrics }
+        };
+      });
+    } else if (step === 3) {
+      ["poolVolume", "totalPoolVolume", "filtrationVolume", "tilingArea", "copingArea", "waterproofingArea"].forEach(m => resetMetric(m));
+    } else if (step >= 4 && step <= 8) {
+      const sectionCodes = ["A", "B", "C", "D", "Part 2"];
+      const code = sectionCodes[step - 4];
+      const masterItems = MR_MASTER_TEMPLATE.items?.filter(it => it.section === code) || [];
+      
+      setFormData(prev => {
+        const otherItems = prev.items.filter(it => it.section !== code);
+        const resetItems = JSON.parse(JSON.stringify(masterItems)).map((it: any) => ({
+          ...it,
+          description: renderTemplate(it.description, it.variableValues || {}),
+          templateText: it.description
+        }));
+        return { ...prev, items: [...otherItems, ...resetItems].sort((a,b) => a.serialNo - b.serialNo) };
+      });
+    }
+  };
+
+  const nextStep = async () => {
+    if (step === 8) {
+      await handleSubmit(true, true); // Save silently as draft before showing preview
+    }
+    setStep((s) => Math.min(s + 1, 9));
+  };
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInputChange = (field: keyof QuotationFormValues, value: any) => {
     setFormData((prev) => {
       const next = { ...prev, [field]: value };
       if (field === "customerName" || field === "customerAddress") {
-        next.title = autoGenerateTitle(next.customerName, next.customerAddress);
+        if (!prev.title || prev.title === autoGenerateTitle(prev.customerName, prev.customerAddress)) {
+          next.title = autoGenerateTitle(next.customerName, next.customerAddress);
+        }
       }
       return next;
     });
@@ -235,41 +331,68 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     setFormData((prev) => {
       const nextSpecs = { ...prev.projectSpecifications, [field]: value };
       
-      // Auto-calculate if L, W, or D changed
-      if (field === "poolLength" || field === "poolWidth" || field === "poolDepth") {
-        const l = parseFloat(nextSpecs.poolLength) || 0;
-        const w = parseFloat(nextSpecs.poolWidth) || 0;
-        const d = parseFloat(nextSpecs.poolDepth) || 0;
+      const l = parseFloat(nextSpecs.poolLength) || 0;
+      const w = parseFloat(nextSpecs.poolWidth) || 0;
+      const d = parseFloat(nextSpecs.poolDepth) || 0;
+      const shape = nextSpecs.shapeOfPool || "Rectangle Pool";
+      
+      if (l > 0 && w > 0 && d > 0) {
+        const metrics = calculatePoolMetrics(l, w, d, shape);
         
-        if (l > 0 && w > 0 && d > 0) {
-          const metrics = calculatePoolMetrics(l, w, d);
-          nextSpecs.poolVolume = `${l * w * d} Cft`;
-          nextSpecs.totalPoolVolume = `${metrics.volumeLiters} Ltrs`;
-          nextSpecs.filtrationVolume = `${metrics.volumeLiters} Ltrs`;
-          nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
-          nextSpecs.copingArea = `${metrics.copingArea} Rft`;
-          nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
-        }
+        // Update values only if they are not overridden
+        if (!nextSpecs.poolVolumeOverride) nextSpecs.poolVolume = `${metrics.volumeCubicFeet.toFixed(0)} Cft`;
+        if (!nextSpecs.totalPoolVolumeOverride) nextSpecs.totalPoolVolume = `${metrics.volumeLiters} Ltrs`;
+        if (!nextSpecs.filtrationVolumeOverride) nextSpecs.filtrationVolume = `${metrics.volumeLiters} Ltrs`;
+        if (!nextSpecs.tilingAreaOverride) nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
+        if (!nextSpecs.copingAreaOverride) nextSpecs.copingArea = `${metrics.copingArea} Rft`;
+        if (!nextSpecs.waterproofingAreaOverride) nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
       }
+
+      const pl = nextSpecs.plantRoomLength || "8";
+      const pw = nextSpecs.plantRoomWidth || "8";
+      const ph = nextSpecs.plantRoomHeight || "6";
+      nextSpecs.plantRoomSize = `${pl}'X${pw}'X${ph}'`;
       
       return { ...prev, projectSpecifications: nextSpecs };
     });
     setHasUnsavedChanges(true);
   };
 
-  const handleSectionChange = (index: number, field: string, value: any) => {
-    setFormData((prev) => {
-      const newSections = [...(prev.sections || [])];
-      newSections[index] = { ...newSections[index], [field]: value };
-      return { ...prev, sections: newSections };
+  const setMetricOverride = (field: string, value: string) => {
+    setFormData(prev => {
+       const nextSpecs = { 
+         ...prev.projectSpecifications, 
+         [field]: value,
+         [`${field}Override`]: true 
+       };
+       return { ...prev, projectSpecifications: nextSpecs };
     });
     setHasUnsavedChanges(true);
   };
 
-  const addCustomSection = () => {
-    const code = `S${(formData.sections?.length || 0) + 1}`;
-    const newSection = { code, title: "Custom Section", included: true, sortOrder: (formData.sections?.length || 0) + 1 };
-    setFormData((prev) => ({ ...prev, sections: [...(prev.sections || []), newSection] }));
+  const resetMetric = (field: string) => {
+    setFormData(prev => {
+      const nextSpecs = { ...prev.projectSpecifications, [`${field}Override`]: false };
+      
+      // Re-trigger calculation
+      const l = parseFloat(nextSpecs.poolLength) || 0;
+      const w = parseFloat(nextSpecs.poolWidth) || 0;
+      const d = parseFloat(nextSpecs.poolDepth) || 0;
+      const shape = nextSpecs.shapeOfPool || "Rectangle Pool";
+      
+      if (l > 0 && w > 0 && d > 0) {
+        const metrics = calculatePoolMetrics(l, w, d, shape);
+        if (field === "poolVolume") nextSpecs.poolVolume = `${metrics.volumeCubicFeet.toFixed(0)} Cft`;
+        if (field === "totalPoolVolume") nextSpecs.totalPoolVolume = `${metrics.volumeLiters} Ltrs`;
+        if (field === "filtrationVolume") nextSpecs.filtrationVolume = `${metrics.volumeLiters} Ltrs`;
+        if (field === "tilingArea") nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
+        if (field === "copingArea") nextSpecs.copingArea = `${metrics.copingArea} Rft`;
+        if (field === "waterproofingArea") nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
+      }
+      
+      return { ...prev, projectSpecifications: nextSpecs };
+    });
+    setHasUnsavedChanges(true);
   };
 
   const addItem = (section: string) => {
@@ -287,48 +410,75 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       variableValues: {},
     };
     setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updateItem = (index: number, field: keyof QuotationItemForm, value: any) => {
-    setFormData((prev) => {
-      const newItems = [...prev.items];
-      newItems[index] = { ...newItems[index], [field]: value };
-      
-      // If variable values changed, re-render description if we have a template
-      if (field === "variableValues" && newItems[index].productId) {
-        // We'll need the template text. In a real app, we might need to fetch it or have it in state.
-        // For simplicity, we'll handle the actual re-render during item selection and 
-        // provide an effect or helper to update it.
-      }
-
-      if (field === "qty" || field === "rate") {
-        newItems[index].amount = Number(newItems[index].qty) * Number(newItems[index].rate);
-      }
-      return { ...prev, items: newItems };
-    });
+    setHasUnsavedChanges(true);
   };
 
   const deleteItem = (index: number) => {
+    if (!confirm("Are you sure you want to remove this item?")) return;
     setFormData((prev) => {
       const newItems = [...prev.items];
       newItems.splice(index, 1);
       return { ...prev, items: newItems };
     });
+    setHasUnsavedChanges(true);
   };
 
-  const handleImageUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateItem(index, "imageUrl", reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+  const updateItem = (index: number, field: keyof QuotationItemForm, value: any) => {
+    setFormData((prev) => {
+      const newItems = [...prev.items];
+      newItems[index] = { ...newItems[index], [field]: value };
+      
+      if (field === "qty" || field === "rate") {
+        newItems[index].amount = Number(newItems[index].qty || 0) * Number(newItems[index].rate || 0);
+      }
+      return { ...prev, items: newItems };
+    });
+    setHasUnsavedChanges(true);
   };
 
-  const handleSubmit = async (isDraft = false) => {
+  const updateVariable = (idx: number, v: string, val: string) => {
+    setFormData((prev) => {
+      const newItems = [...prev.items];
+      const item = newItems[idx];
+      const newVars = { ...(item.variableValues || {}), [v]: val };
+      item.variableValues = newVars;
+      
+      // Live render if we have the template text
+      if (item.templateText && !item.descriptionOverride) {
+        item.description = renderTemplate(item.templateText, newVars);
+      } else if (item.productId && !item.templateText) {
+        // Fallback fetch if templateText is missing
+        fetch(`/api/products/${item.productId}`)
+          .then(res => res.json())
+          .then(prod => {
+            if (prod.templateText) {
+              updateItem(idx, "templateText", prod.templateText);
+              if (!item.descriptionOverride) {
+                updateItem(idx, "description", renderTemplate(prod.templateText, newVars));
+              }
+            }
+          });
+      }
+
+      return { ...prev, items: newItems };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const resetDescription = (idx: number) => {
+    setFormData(prev => {
+      const newItems = [...prev.items];
+      const item = newItems[idx];
+      item.descriptionOverride = false;
+      if (item.templateText) {
+        item.description = renderTemplate(item.templateText, item.variableValues || {});
+      }
+      return { ...prev, items: newItems };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const handleSubmit = async (isDraft = false, silent = false) => {
     setIsSubmitting(true);
     try {
       const payload = { ...formData, subtotal, grandTotal, isDraft };
@@ -347,12 +497,12 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         setHasUnsavedChanges(false);
         localStorage.removeItem("mr_quotation_draft");
         if (!isDraft) {
-          setStep(7); // Go to preview
-        } else {
+          setStep(9);
+        } else if (!silent) {
           alert("Draft saved!");
         }
       } else {
-        alert("Error saving quotation: " + data.error);
+        alert("Error saving: " + data.error);
       }
     } catch (e) {
       alert("Network error");
@@ -360,396 +510,413 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     setIsSubmitting(false);
   };
 
-  if (isLoading) return <div className="wizard-container">Loading quotation data...</div>;
+  const renderProductCard = (idx: number, displaySerial: number) => {
+    const item = formData.items[idx];
+    const isTemplate = !!item.productId;
+    const templateVariables = item.variableValues ? Object.keys(item.variableValues) : [];
 
-  const renderTableForSection = (section: string, title: string) => {
     return (
-      <div style={{ marginBottom: "32px" }}>
-        <h3>{title}</h3>
-        <table className="wizard-table">
-          <thead>
-            <tr>
-              <th className="col-small">SL</th>
-              <th className="col-large">Description & Image</th>
-              <th className="col-medium">Warranty</th>
-              <th className="col-small">Qty</th>
-              <th className="col-small">Unit</th>
-              <th className="col-medium">Rate (₹)</th>
-              <th className="col-medium">Amount (₹)</th>
-              <th className="col-action"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {formData.items.map((item, idx) => {
-              if (item.section !== section) return null;
-              
-              const isTemplate = !!item.productId;
-              const templateVariables = item.variableValues ? Object.keys(item.variableValues) : [];
+      <div key={idx} className="product-card">
+        <div className="product-card-image">
+          {item.imageUrl ? <img src={item.imageUrl} alt="product" /> : <div style={{ color: "#94a3b8", fontSize: "12px" }}>No Image</div>}
+        </div>
+        
+        <div className="product-card-content">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+               <h4 className="product-card-title">{displaySerial}. {item.category}</h4>
+               {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
+               {!item.descriptionOverride && isTemplate && <span className="badge auto">Template Driven</span>}
+            </div>
+            <div style={{ display: "flex", gap: "8px" }}>
+               <button className="btn-icon" onClick={() => {
+                  updateItem(idx, "isExpanded", !item.isExpanded);
+                  if (!item.isExpanded) updateItem(idx, "descriptionOverride", true);
+               }}>
+                  {item.isExpanded ? "Done Editing" : "Edit Paragraph"}
+               </button>
+               {item.descriptionOverride && (
+                 <button className="btn-icon" onClick={() => resetDescription(idx)}>Reset</button>
+               )}
+               <button className="btn-icon delete" onClick={() => deleteItem(idx)} title="Delete Item">✕</button>
+            </div>
+          </div>
 
-              return (
-                <tr key={idx}>
-                  <td>
-                    <input type="number" className="form-control" value={item.serialNo} onChange={(e) => updateItem(idx, "serialNo", parseInt(e.target.value))} />
-                  </td>
-                  <td>
-                    <ProductSelect
-                      className="form-control"
-                      value={item.description}
-                      onChange={(product, manualValue) => {
-                        if (product) {
-                          const initialVars: Record<string, string> = {};
-                          product.templateVariables.forEach(v => initialVars[v] = "");
-                          
-                          setFormData((prev) => {
-                            const newItems = [...prev.items];
-                            newItems[idx] = {
-                              ...newItems[idx],
-                              productId: product.id,
-                              variableValues: initialVars,
-                              description: renderTemplate(product.templateText, initialVars),
-                              warranty: product.warranty || newItems[idx].warranty,
-                              unit: product.unit || newItems[idx].unit,
-                              rate: Number(product.defaultRate) || newItems[idx].rate,
-                              category: product.category || newItems[idx].category,
-                              section: product.sectionCode || newItems[idx].section,
-                              imageUrl: product.imagePath || newItems[idx].imageUrl,
-                            };
-                            newItems[idx].amount = Number(newItems[idx].qty) * Number(newItems[idx].rate);
-                            return { ...prev, items: newItems };
-                          });
-                        } else if (manualValue !== undefined) {
-                          updateItem(idx, "productId", null);
-                          updateItem(idx, "variableValues", {});
-                          updateItem(idx, "description", manualValue);
-                        }
-                      }}
-                      placeholder="Search template products..."
-                    />
-                    
-                    {isTemplate && templateVariables.length > 0 && (
-                      <div className="variable-inputs">
-                        {templateVariables.map(v => (
-                          <div key={v} className="variable-field">
-                            <label>{v.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</label>
-                            <input 
-                              type="text" 
-                              value={item.variableValues?.[v] || ""} 
-                              onChange={(e) => {
-                                const newVars = { ...item.variableValues, [v]: e.target.value };
-                                // We need the original template text here. 
-                                // For now we'll assume it's stored or we'll have to fetch it.
-                                // Let's store the raw template in the item too for easy rendering.
-                                updateItem(idx, "variableValues", newVars);
-                                // Trigger description update
-                                fetch(`/api/products/${item.productId}`)
-                                  .then(res => res.json())
-                                  .then(prod => {
-                                    updateItem(idx, "description", renderTemplate(prod.templateText, newVars));
-                                  });
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
+          <div className="product-card-description-preview">
+            {item.description.split("\n").map((line, i) => (
+              <div key={i} style={{ 
+                color: line.toUpperCase().includes("MAKE :") ? "#1e40af" : "inherit",
+                fontWeight: line.toUpperCase().includes("MAKE :") ? 700 : 400
+              }}>{line}</div>
+            ))}
+          </div>
 
-                    <div className="image-upload-wrapper">
-                      <input type="file" accept="image/*" onChange={(e) => handleImageUpload(idx, e)} style={{ fontSize: "11px" }} />
-                      {item.imageUrl && <img src={item.imageUrl} className="image-preview" alt="preview" />}
-                    </div>
-                  </td>
-                  <td>
-                    <input type="text" className="form-control" value={item.warranty} onChange={(e) => updateItem(idx, "warranty", e.target.value)} />
-                  </td>
-                  <td>
-                    <input type="number" className="form-control" value={item.qty} onChange={(e) => updateItem(idx, "qty", parseFloat(e.target.value))} />
-                  </td>
-                  <td>
-                    <input type="text" className="form-control" value={item.unit} onChange={(e) => updateItem(idx, "unit", e.target.value)} />
-                  </td>
-                  <td>
-                    <input type="number" className="form-control" value={item.rate} onChange={(e) => updateItem(idx, "rate", parseFloat(e.target.value))} />
-                  </td>
-                  <td>
-                    <input type="number" className="form-control" value={item.amount} readOnly style={{ background: "#f8fafc" }} />
-                  </td>
-                  <td className="col-action">
-                    <button className="btn-icon" onClick={() => deleteItem(idx)} title="Delete">✕</button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <button className="btn-add-row" onClick={() => addItem(section)}>+ Add Row to {section}</button>
+          {isTemplate && templateVariables.length > 0 && (
+            <div className="product-card-variables">
+              {templateVariables.map(v => (
+                <div key={v} className="variable-field">
+                  <label>{v.replace(/([A-Z])/g, ' $1').toLowerCase()}</label>
+                  <input type="text" value={item.variableValues?.[v] || ""} onChange={(e) => updateVariable(idx, v, e.target.value)} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {item.isExpanded && (
+            <div style={{ marginTop: "12px", borderTop: "1px solid #f1f5f9", paddingTop: "12px" }}>
+              <label style={{ fontSize: "12px", fontWeight: 700, marginBottom: "4px", display: "block" }}>Description Override</label>
+              <textarea className="form-control" style={{ fontSize: "13px", minHeight: "120px" }} value={item.description} onChange={(e) => {
+                 updateItem(idx, "description", e.target.value);
+                 updateItem(idx, "descriptionOverride", true);
+              }} />
+            </div>
+          )}
+        </div>
+
+        <div className="product-card-commercials">
+          <div className="form-group">
+            <label>Warranty</label>
+            <input type="text" className="form-control" value={item.warranty} onChange={(e) => updateItem(idx, "warranty", e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label>Qty</label>
+            <input type="number" className="form-control" value={item.qty} onChange={(e) => updateItem(idx, "qty", parseFloat(e.target.value))} />
+          </div>
+          <div className="form-group">
+            <label>Unit</label>
+            <input type="text" className="form-control" value={item.unit} onChange={(e) => updateItem(idx, "unit", e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label>Rate (₹)</label>
+            <input type="number" className="form-control" value={item.rate} onChange={(e) => updateItem(idx, "rate", parseFloat(e.target.value))} />
+          </div>
+          <div className="form-group" style={{ gridColumn: "span 2" }}>
+            <label>Amount</label>
+            <div style={{ fontWeight: 700, fontSize: "16px", color: "#0369a1" }}>₹ {Number(item.amount || 0).toLocaleString("en-IN")}</div>
+          </div>
+        </div>
       </div>
     );
   };
 
+  if (isLoading) return <div className="wizard-container">Loading...</div>;
+
   return (
     <div className="wizard-container">
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${(step / 9) * 100}%` }}></div>
+      </div>
+
       <div className="wizard-header">
-        <h1>MR SWIMMING POOLS & SPA CONSTRUCTION COMPANY</h1>
-        <p>Quotation Generator Wizard</p>
-        {lastSaved && (
-          <div style={{ fontSize: "12px", color: "#64748b", marginTop: "4px" }}>
-            Last auto-saved at {lastSaved.toLocaleTimeString()}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <h1>{STEPS[step - 1].name}</h1>
+            <p style={{ color: "#64748b" }}>Step {step} of 9</p>
           </div>
-        )}
+          {lastSaved && <span style={{ fontSize: "11px", color: "#94a3b8" }}>Autosaved {lastSaved.toLocaleTimeString()}</span>}
+        </div>
       </div>
 
       {showRecoveryDialog && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000
-        }}>
-          <div style={{ background: "white", padding: "32px", borderRadius: "12px", maxWidth: "400px", textAlign: "center", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)" }}>
-            <h3 style={{ marginBottom: "12px" }}>Draft Found</h3>
-            <p style={{ color: "#64748b", marginBottom: "24px" }}>A saved draft was found from your previous session. Would you like to resume it?</p>
+        <div className="recovery-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="metrics-card" style={{ maxWidth: "400px", textAlign: "center" }}>
+            <h3>Resume Draft?</h3>
+            <p style={{ margin: "16px 0" }}>We found an unsaved quotation from your last visit.</p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-              <button className="btn" style={{ background: "#0369a1", color: "white" }} onClick={resumeDraft}>Resume Draft</button>
-              <button className="btn btn-outline" onClick={startNew}>Start New</button>
+              <button className="btn-primary" onClick={resumeDraft}>Resume</button>
+              <button className="btn-secondary" onClick={startNew}>Start New</button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="stepper">
-        {[
-          { s: 1, name: "Client" },
-          { s: 2, name: "Specs" },
-          { s: 3, name: "MEP" },
-          { s: 4, name: "Finishes" },
-          { s: 5, name: "Totals" },
-          { s: 6, name: "Terms" },
-          { s: 7, name: "Preview" },
-        ].map(({ s, name }) => (
-          <div
-            key={s}
-            className={`step-indicator ${step === s ? "active" : step > s ? "completed" : ""}`}
-            onClick={() => setStep(s)}
-            style={{ cursor: "pointer" }}
-            title={`Jump to ${name}`}
-          >
-            <span className="step-num">{s}</span>
-            <span className="step-text">{name}</span>
-          </div>
-        ))}
-      </div>
-
       <div className="wizard-step-content">
         {step === 1 && (
-          <div>
-            <h2>Step 1: Client Information</h2>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Date</label>
-                <input type="date" className="form-control" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Quote Number</label>
-                <input type="text" className="form-control" value={formData.quoteNumber} onChange={(e) => handleInputChange("quoteNumber", e.target.value)} />
-              </div>
-              <div className="form-group" style={{ gridColumn: "span 2" }}>
-                <label>Quotation Title (Auto-generated)</label>
-                <input type="text" className="form-control" value={formData.title} onChange={(e) => handleInputChange("title", e.target.value)} placeholder="e.g., Tadas Swimming Pool Quotation" />
-              </div>
-              <div className="form-group">
-                <label>Client Name</label>
-                <input type="text" className="form-control" value={formData.customerName} onChange={(e) => handleInputChange("customerName", e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Site Address</label>
-                <textarea className="form-control" value={formData.customerAddress} onChange={(e) => handleInputChange("customerAddress", e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Phone</label>
-                <input type="text" className="form-control" value={formData.customerPhone} onChange={(e) => handleInputChange("customerPhone", e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input type="email" className="form-control" value={formData.customerEmail} onChange={(e) => handleInputChange("customerEmail", e.target.value)} />
-              </div>
-            </div>
+          <div className="metrics-grid">
+             <div className="form-grid">
+                <div className="form-group"><label>Client Name</label><input type="text" className="form-control" value={formData.customerName} onChange={(e) => handleInputChange("customerName", e.target.value)} /></div>
+                <div className="form-group"><label>Date</label><input type="date" className="form-control" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} /></div>
+                <div className="form-group" style={{ gridColumn: "span 2" }}><label>Site Address</label><textarea className="form-control" value={formData.customerAddress} onChange={(e) => handleInputChange("customerAddress", e.target.value)} /></div>
+                <div className="form-group"><label>Phone Number (Optional)</label><input type="text" className="form-control" value={formData.customerPhone} onChange={(e) => handleInputChange("customerPhone", e.target.value)} /></div>
+                <div className="form-group" style={{ gridColumn: "span 2" }}><label>Quotation Title</label><input type="text" className="form-control" value={formData.title} onChange={(e) => handleInputChange("title", e.target.value)} /></div>
+             </div>
           </div>
         )}
 
         {step === 2 && (
-          <div>
-            <h2>Step 2: Pool Specifications</h2>
-            <div className="form-grid">
-              <div className="form-group"><label>Pool Length</label><input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} /></div>
-              <div className="form-group"><label>Pool Width</label><input type="text" className="form-control" value={formData.projectSpecifications.poolWidth} onChange={(e) => handleSpecChange("poolWidth", e.target.value)} /></div>
-              <div className="form-group"><label>Pool Depth</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
-              <div className="form-group"><label>Water Volume</label><input type="text" className="form-control" value={formData.projectSpecifications.poolVolume} onChange={(e) => handleSpecChange("poolVolume", e.target.value)} /></div>
-              <div className="form-group"><label>Plant Room Size</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomSize} onChange={(e) => handleSpecChange("plantRoomSize", e.target.value)} /></div>
-              <div className="form-group"><label>Shape of Pool</label><input type="text" className="form-control" value={formData.projectSpecifications.shapeOfPool} onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)} /></div>
-              <div className="form-group"><label>Type of Pool</label><input type="text" className="form-control" value={formData.projectSpecifications.typeOfPool} onChange={(e) => handleSpecChange("typeOfPool", e.target.value)} /></div>
-              <div className="form-group"><label>Total Pool Volume in Liters</label><input type="text" className="form-control" value={formData.projectSpecifications.totalPoolVolume || ""} onChange={(e) => handleSpecChange("totalPoolVolume", e.target.value)} /></div>
-              <div className="form-group"><label>Total Filtration Volume in Ltrs</label><input type="text" className="form-control" value={formData.projectSpecifications.filtrationVolume || ""} onChange={(e) => handleSpecChange("filtrationVolume", e.target.value)} /></div>
-              <div className="form-group"><label>Turnover Period</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod || ""} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
-              <div className="form-group"><label>Total Tiling Area in Sft</label><input type="text" className="form-control" value={formData.projectSpecifications.tilingArea || ""} onChange={(e) => handleSpecChange("tilingArea", e.target.value)} /></div>
-              <div className="form-group"><label>Total Coping Area in Rft</label><input type="text" className="form-control" value={formData.projectSpecifications.copingArea || ""} onChange={(e) => handleSpecChange("copingArea", e.target.value)} /></div>
-              <div className="form-group"><label>Total Waterproofing Area in Sft</label><input type="text" className="form-control" value={formData.projectSpecifications.waterproofingArea || ""} onChange={(e) => handleSpecChange("waterproofingArea", e.target.value)} /></div>
+          <div className="metrics-container">
+            <div className="metrics-card">
+              <h3 style={{ marginBottom: "20px" }}>Pool Dimensions</h3>
+              <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
+                <div className="form-group">
+                  <label>Pool Shape</label>
+                  <select 
+                    className="form-control" 
+                    value={formData.projectSpecifications.shapeOfPool} 
+                    onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)}
+                  >
+                    <option value="Rectangle Pool">Rectangle Pool</option>
+                    <option value="Square Pool">Square Pool</option>
+                    <option value="Circular Pool">Circular Pool</option>
+                    <option value="Oval Pool">Oval Pool</option>
+                    <option value="L Shape Pool">L Shape Pool</option>
+                    <option value="Infinity Pool">Infinity Pool</option>
+                    <option value="Custom">Custom</option>
+                  </select>
+                  {formData.projectSpecifications.shapeOfPool === "Custom" && (
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      style={{ marginTop: "8px" }} 
+                      placeholder="Enter custom shape..." 
+                      onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)} 
+                    />
+                  )}
+                </div>
+                <div className="form-group">
+                  <label>Pool Type</label>
+                  <select 
+                    className="form-control" 
+                    value={formData.projectSpecifications.typeOfPool} 
+                    onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
+                  >
+                    <option value="Skimmer Type">Skimmer Type</option>
+                    <option value="Overflow Type">Overflow Type</option>
+                    <option value="Infinity Type">Infinity Type</option>
+                    <option value="Jacuzzi">Jacuzzi</option>
+                    <option value="Kids Pool">Kids Pool</option>
+                    <option value="Lap Pool">Lap Pool</option>
+                    <option value="Custom">Custom</option>
+                  </select>
+                  {formData.projectSpecifications.typeOfPool === "Custom" && (
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      style={{ marginTop: "8px" }} 
+                      placeholder="Enter custom type..." 
+                      onChange={(e) => handleSpecChange("typeOfPool", e.target.value)} 
+                    />
+                  )}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                  <div className="form-group">
+                    <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
+                    <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={formData.projectSpecifications.poolWidth} 
+                      disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
+                      onChange={(e) => handleSpecChange("poolWidth", e.target.value)} 
+                    />
+                  </div>
+                  <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
+                </div>
+              </div>
+
+              <h3 style={{ margin: "24px 0 20px" }}>Plant Room</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomLength} onChange={(e) => handleSpecChange("plantRoomLength", e.target.value)} /></div>
+                <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomWidth} onChange={(e) => handleSpecChange("plantRoomWidth", e.target.value)} /></div>
+                <div className="form-group"><label>Height (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
+              </div>
+
+              <div className="form-group" style={{ marginTop: "12px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
+            </div>
+            
+            <div className="metrics-card read-only">
+               <h3 style={{ marginBottom: "20px" }}>Live Metrics Preview</h3>
+               <p style={{ fontSize: "12px", color: "#64748b", marginBottom: "24px" }}>These values update as you type.</p>
+               <div className="metrics-grid">
+                  <div className="metric-row"><span className="metric-label">Water Volume (Cft)</span><span className="metric-value">{formData.projectSpecifications.poolVolume}</span></div>
+                  <div className="metric-row"><span className="metric-label">Volume in Liters</span><span className="metric-value">{formData.projectSpecifications.totalPoolVolume}</span></div>
+                  <div className="metric-row"><span className="metric-label">Tiling Area</span><span className="metric-value">{formData.projectSpecifications.tilingArea}</span></div>
+                  <div className="metric-row"><span className="metric-label">Coping Area</span><span className="metric-value">{formData.projectSpecifications.copingArea}</span></div>
+                  <div className="metric-row"><span className="metric-label">Waterproofing Area</span><span className="metric-value">{formData.projectSpecifications.waterproofingArea}</span></div>
+                  <div className="metric-row"><span className="metric-label">Plant Room Size</span><span className="metric-value">{formData.projectSpecifications.plantRoomSize}</span></div>
+               </div>
             </div>
           </div>
         )}
 
         {step === 3 && (
-          <div>
-            <h2>Step 3: Manage Sections & MEP</h2>
+          <div className="metrics-card" style={{ maxWidth: "800px", margin: "0 auto" }}>
+            <h2 style={{ textAlign: "center", marginBottom: "8px" }}>Calculated Values</h2>
+            <p style={{ textAlign: "center", color: "#64748b", marginBottom: "32px" }}>Review and adjust the final technical metrics for this quotation.</p>
             
-            <div className="section-manager" style={{ marginBottom: "24px", padding: "16px", background: "#f1f5f9", borderRadius: "8px" }}>
-              <h4 style={{ marginBottom: "12px" }}>Manage Quotation Sections</h4>
-              <div style={{ display: "grid", gap: "8px" }}>
-                {formData.sections?.map((s, idx) => (
-                  <div key={idx} style={{ display: "flex", alignItems: "center", gap: "12px", background: "white", padding: "8px", borderRadius: "4px", border: "1px solid #e2e8f0" }}>
-                    <input type="checkbox" checked={s.included} onChange={(e) => handleSectionChange(idx, "included", e.target.checked)} />
-                    <input type="text" className="form-control" style={{ flex: 1, height: "32px", fontSize: "13px" }} value={s.title} onChange={(e) => handleSectionChange(idx, "title", e.target.value)} />
-                    <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "600" }}>{s.code}</span>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+              {[
+                { label: "Main Pool Volume", key: "poolVolume" },
+                { label: "Total Volume (Ltrs)", key: "totalPoolVolume" },
+                { label: "Filtration Volume", key: "filtrationVolume" },
+                { label: "Tiling Area", key: "tilingArea" },
+                { label: "Coping Area", key: "copingArea" },
+                { label: "Waterproofing Area", key: "waterproofingArea" },
+              ].map((m) => {
+                const isOverridden = (formData.projectSpecifications as any)[`${m.key}Override`];
+                return (
+                  <div key={m.key} className={`metric-card ${isOverridden ? 'manual-override' : ''}`}>
+                    <div className="metric-header">
+                      <span className="metric-label">{m.label}</span>
+                      {isOverridden ? (
+                        <span className="badge manual">Manual Override</span>
+                      ) : (
+                        <span className="badge auto">Auto Calculated</span>
+                      )}
+                    </div>
+                    <div className="metric-body">
+                      <input 
+                        type="text" 
+                        className="metric-input"
+                        value={(formData.projectSpecifications as any)[m.key]} 
+                        onChange={(e) => setMetricOverride(m.key, e.target.value)}
+                      />
+                      {isOverridden && (
+                        <button className="reset-btn" onClick={() => resetMetric(m.key)}>Reset</button>
+                      )}
+                    </div>
                   </div>
-                ))}
-              </div>
-              <button className="btn btn-small" style={{ marginTop: "12px", background: "#334155", color: "white" }} onClick={addCustomSection}>+ Add Custom Section</button>
+                );
+              })}
             </div>
-
-            <p style={{ color: "#64748b", marginBottom: "16px" }}>Add items for Filtration, Equipment, and Cleaning Kit.</p>
-            {formData.sections?.filter(s => ["A", "B", "C", "D"].includes(s.code)).map((s, idx) => (
-               s.included && renderTableForSection(s.code, s.title)
-            ))}
-          </div>
-        )}
-
-        {step === 4 && (
-          <div>
-            <h2>Step 4: Pool Finishes</h2>
-            <p style={{ color: "#64748b", marginBottom: "16px" }}>Add items for Civil, Waterproofing, Tiles, Coping, Labour.</p>
-            {formData.sections?.filter(s => !["A", "B", "C", "D"].includes(s.code)).map((s, idx) => (
-               s.included && renderTableForSection(s.code, s.title)
-            ))}
-          </div>
-        )}
-
-        {step === 5 && (
-          <div>
-            <h2>Step 5: GST and Totals</h2>
-            <div style={{ maxWidth: "400px", background: "#f8fafc", padding: "24px", borderRadius: "8px", border: "1px solid #cbd5e1" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                <strong>Subtotal:</strong>
-                <span>₹ {subtotal.toFixed(2)}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", alignItems: "center" }}>
-                <strong>GST Percentage:</strong>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <input type="number" className="form-control" style={{ width: "80px" }} value={formData.gstPercent} onChange={(e) => handleInputChange("gstPercent", parseFloat(e.target.value))} />
-                  <span>%</span>
-                </div>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                <strong>GST Amount:</strong>
-                <span>₹ {gstAmount.toFixed(2)}</span>
-              </div>
-              <hr style={{ margin: "16px 0", borderColor: "#cbd5e1" }} />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "18px", color: "#0369a1" }}>
-                <strong>Grand Total:</strong>
-                <strong>₹ {grandTotal.toFixed(2)}</strong>
-              </div>
-            </div>
-            
-            <div style={{ marginTop: "24px" }}>
-              <p style={{ fontSize: "13px", color: "#64748b" }}>Note: Only "Included" sections contribute to the totals.</p>
+            <div style={{ marginTop: "40px", textAlign: "center" }}>
+                 <button className="btn-primary" onClick={nextStep}>Looks Correct, Continue →</button>
             </div>
           </div>
         )}
 
-        {step === 6 && (
+        {[4, 5, 6, 7].map(sIdx => (
+          step === sIdx && (
+            <div key={sIdx}>
+               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                  <h3>Items for {formData.sections?.[sIdx - 4].title}</h3>
+                  <button className="btn-secondary" onClick={() => {/* Add product logic */}}>+ Add Product</button>
+               </div>
+               {formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).map((it, i) => {
+                  const actualIdx = formData.items.findIndex(orig => orig === it);
+                  return renderProductCard(actualIdx, i + 1);
+               })}
+               <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
+                  <ProductSelect
+                    placeholder="Search and add a product to this section..."
+                    onChange={(product) => {
+                      if (product) {
+                        const initialVars: Record<string, string> = {};
+                        product.templateVariables.forEach(v => initialVars[v] = "");
+                        const newItem: QuotationItemForm = {
+                          section: formData.sections?.[sIdx - 4].code || "A",
+                          serialNo: formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).length + 1,
+                          category: product.category || "General",
+                          templateText: product.templateText,
+                          description: renderTemplate(product.templateText, initialVars),
+                          warranty: product.warranty || "",
+                          qty: 1,
+                          unit: product.unit || "Nos",
+                          rate: Number(product.defaultRate) || 0,
+                          amount: Number(product.defaultRate) || 0,
+                          productId: product.id,
+                          variableValues: initialVars,
+                          imageUrl: product.imagePath,
+                          imageText: product.imageText,
+                        };
+                        setFormData(prev => ({ ...prev, items: [...prev.items, newItem] }));
+                      }
+                    }}
+                  />
+               </div>
+            </div>
+          )
+        ))}
+
+        {step === 8 && (
           <div>
-            <h2>Step 6: Terms & Payment Terms</h2>
-            <div className="form-group">
-              <label>Terms & Conditions</label>
-              <textarea className="form-control" style={{ minHeight: "150px" }} value={formData.terms} onChange={(e) => handleInputChange("terms", e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label>Payment Terms</label>
-              <textarea className="form-control" style={{ minHeight: "150px" }} value={formData.paymentTerms} onChange={(e) => handleInputChange("paymentTerms", e.target.value)} />
-            </div>
+             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <h3>Part 2 - Pool Finishes</h3>
+                <button className="btn-secondary" onClick={() => resetPhase()}>Reset Phase</button>
+             </div>
+             {formData.items.filter(it => it.section === "Part 2").map((it, i) => {
+                const actualIdx = formData.items.findIndex(orig => orig === it);
+                return renderProductCard(actualIdx, i + 1);
+             })}
+             <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
+                <ProductSelect
+                  placeholder="Search and add a product to Part 2..."
+                  onChange={(product) => {
+                    if (product) {
+                      const initialVars: Record<string, string> = {};
+                      product.templateVariables.forEach(v => initialVars[v] = "");
+                      const newItem: QuotationItemForm = {
+                        section: "Part 2",
+                        serialNo: formData.items.filter(it => it.section === "Part 2").length + 1,
+                        category: product.category || "General",
+                        templateText: product.templateText,
+                        description: renderTemplate(product.templateText, initialVars),
+                        warranty: product.warranty || "",
+                        qty: 1,
+                        unit: product.unit || "Nos",
+                        rate: Number(product.defaultRate) || 0,
+                        amount: Number(product.defaultRate) || 0,
+                        productId: product.id,
+                        variableValues: initialVars,
+                        imageUrl: product.imagePath,
+                        imageText: product.imageText,
+                      };
+                      setFormData(prev => ({ ...prev, items: [...prev.items, newItem] }));
+                    }
+                  }}
+                />
+                <button className="btn-secondary" style={{ marginTop: "12px" }} onClick={() => addItem("Part 2")}>+ Add Manual Item</button>
+             </div>
           </div>
         )}
 
-        {step === 7 && (
-          <div>
-            <h2>Step 7: Preview & Generate</h2>
-            {quoteId ? (
-              <div style={{ textAlign: "center", padding: "40px" }}>
-                <div style={{ fontSize: "48px", color: "#10b981", marginBottom: "16px" }}>✓</div>
-                <h3 style={{ fontSize: "24px", marginBottom: "24px" }}>Quotation is Ready!</h3>
-                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginBottom: "32px" }}>
-                  <button className="btn" style={{ background: "#6366f1", color: "white" }} onClick={() => window.open(`/api/quotations/${quoteId}/pdf?disposition=inline`, "_blank")}>
-                    Preview PDF
-                  </button>
-                  <button className="btn" style={{ background: "#ef4444", color: "white" }} onClick={() => window.open(`/api/quotations/${quoteId}/pdf?disposition=attachment`, "_blank")}>
-                    Download PDF
-                  </button>
-                  <button className="btn" style={{ background: "#2563eb", color: "white" }} onClick={() => window.open(`/api/quotations/${quoteId}/docx`, "_blank")}>
-                    Download Word
-                  </button>
-                </div>
-                
-                <div style={{ display: "flex", justifyContent: "center", gap: "12px", borderTop: "1px solid #e2e8f0", paddingTop: "32px" }}>
-                  <button className="btn" style={{ background: "#0f172a", color: "white" }} onClick={() => setStep(1)}>
-                    Edit Quotation
-                  </button>
-                  <button className="btn" style={{ background: "#10b981", color: "white" }} onClick={() => handleSubmit(false)}>
-                    Save Changes
-                  </button>
-                  <button className="btn btn-outline" onClick={() => router.push("/history")}>
-                    Back to History
-                  </button>
-                </div>
-              </div>
+        {step === 9 && (
+          <div style={{ textAlign: "center", padding: "40px" }}>
+            {isSubmitting ? (
+              <>
+                <div className="spinner" style={{ margin: "0 auto 24px" }}></div>
+                <h2>Saving Quotation...</h2>
+                <p style={{ color: "#64748b" }}>Please wait while we finalize your documents.</p>
+              </>
+            ) : !quoteId ? (
+              <>
+                <div style={{ fontSize: "64px", color: "#ef4444", marginBottom: "20px" }}>⚠</div>
+                <h2>Save Failed</h2>
+                <p style={{ color: "#64748b", marginBottom: "40px" }}>We couldn't save your quotation. Please check your connection and try again.</p>
+                <button className="btn-primary" onClick={() => handleSubmit(true)}>Try Saving Again</button>
+              </>
             ) : (
-              <div style={{ textAlign: "center", padding: "40px" }}>
-                <h3>Preview and Finalize</h3>
-                <p>Click the button below to save and generate your documents.</p>
-                <button className="btn" style={{ background: "#10b981", color: "white", marginTop: "20px" }} onClick={() => handleSubmit(false)}>
-                  Save & Generate Documents
-                </button>
-              </div>
+              <>
+                <div style={{ fontSize: "64px", color: "#10b981", marginBottom: "20px" }}>✓</div>
+                <h2 style={{ marginBottom: "12px" }}>Quotation Ready</h2>
+                <p style={{ color: "#64748b", marginBottom: "40px" }}>Your quotation has been structured and calculated. Preview the results below.</p>
+                
+                <div style={{ display: "flex", gap: "16px", justifyContent: "center", marginBottom: "48px" }}>
+                   <button className="btn-primary" style={{ background: "#6366f1" }} onClick={() => window.open(`/api/quotations/${quoteId}/pdf?disposition=inline`, "_blank")}>Preview PDF</button>
+                   <button className="btn-primary" style={{ background: "#2563eb" }} onClick={() => window.open(`/api/quotations/${quoteId}/docx`, "_blank")}>Download Word</button>
+                </div>
+
+                <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: "40px" }}>
+                   <button className="btn-secondary" onClick={() => setStep(1)}>Edit Details</button>
+                   <button className="btn-secondary" style={{ marginLeft: "12px" }} onClick={() => router.push("/history")}>Back to History</button>
+                </div>
+              </>
             )}
           </div>
         )}
       </div>
 
-      <div className="wizard-footer">
-        {step > 1 && step < 7 && (
-          <button className="btn btn-outline" onClick={prevStep}>← Previous</button>
-        )}
-        {step === 1 && <div></div>}
-        
+      <div className="sticky-footer">
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          {step > 1 && <button className="btn-secondary" onClick={prevStep}>← Back</button>}
+          {step < 9 && <button className="btn-icon" style={{ border: "1px solid #fecaca", color: "#ef4444" }} onClick={resetPhase} title="Reset this phase to defaults">Reset Phase</button>}
+        </div>
         <div style={{ display: "flex", gap: "12px" }}>
-          {step < 7 && (
-            <button className="btn btn-outline" onClick={() => handleSubmit(true)} disabled={isSubmitting}>
-              {isSubmitting ? "..." : "Save Draft"}
-            </button>
-          )}
-          
-          {step < 6 && (
-            <button className="btn" style={{ background: "#0f172a", color: "white" }} onClick={nextStep}>Next Step →</button>
-          )}
-          
-          {step === 6 && (
-            <button className="btn" style={{ background: "#10b981", color: "white" }} onClick={() => handleSubmit(false)} disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save & Preview"}
-            </button>
-          )}
+           {step < 9 && <button className="btn-secondary" onClick={() => handleSubmit(true)}>Save Draft</button>}
+           {step < 9 && <button className="btn-primary" onClick={nextStep}>Next Step →</button>}
         </div>
       </div>
     </div>

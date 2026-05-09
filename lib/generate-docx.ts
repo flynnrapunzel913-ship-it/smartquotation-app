@@ -10,6 +10,9 @@ import {
   AlignmentType,
   BorderStyle,
   ImageRun,
+  VerticalAlign,
+  Header,
+  Footer,
 } from "docx";
 import { format } from "date-fns";
 import { formatCurrencyINR } from "@/lib/utils";
@@ -36,6 +39,7 @@ const HEADER_CONTACTS = {
 
 function cell(
   text: string,
+  widthPct: number,
   opts?: {
     bold?: boolean;
     align?: (typeof AlignmentType)[keyof typeof AlignmentType];
@@ -43,11 +47,29 @@ function cell(
 ): TableCell {
   return new TableCell({
     borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder },
-    width: { size: 14, type: WidthType.PERCENTAGE },
+    width: { size: widthPct, type: WidthType.PERCENTAGE },
     children: [
       new Paragraph({
         alignment: opts?.align,
         children: [new TextRun({ text, bold: opts?.bold, size: 18 })],
+      }),
+    ],
+  });
+}
+
+function columnHeader(
+  text: string,
+  widthPct: number,
+  align: (typeof AlignmentType)[keyof typeof AlignmentType] = AlignmentType.CENTER,
+): TableCell {
+  return new TableCell({
+    borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder },
+    width: { size: widthPct, type: WidthType.PERCENTAGE },
+    shading: { fill: "f1f5f9" },
+    children: [
+      new Paragraph({
+        alignment: align,
+        children: [new TextRun({ text, bold: true, size: 18 })],
       }),
     ],
   });
@@ -140,39 +162,8 @@ async function generateKleanTechDocx(
 ): Promise<Buffer> {
   const children: (Paragraph | Table)[] = [];
 
-  // Header
-  children.push(
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: "KLEAN TECH SYSTEMS", bold: true, size: 28, color: "000000" })],
-    }),
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: "No: 191, “Shri Mallikarjuna”, Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023.", size: 16 })],
-    }),
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: "Email: kleantechsystems@yahoo.co.in", size: 16 })],
-    }),
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { before: 200 },
-      children: [new TextRun({ text: "QUOTATION", bold: true, size: 24 })],
-    }),
-  );
-
-  // Ref & Date
-  children.push(
-    new Paragraph({
-      alignment: AlignmentType.RIGHT,
-      children: [new TextRun({ text: `Ref No: ${quote.quoteNumber}`, bold: true, size: 18 })],
-    }),
-    new Paragraph({
-      alignment: AlignmentType.RIGHT,
-      children: [new TextRun({ text: `Date: ${format(new Date(quote.date), "dd.MM.yyyy")}`, bold: true, size: 18 })],
-    }),
-  );
-
+  // Header and Footer will be added to the section configuration below
+  
   // Invoice To
   children.push(
     new Paragraph({
@@ -292,7 +283,52 @@ async function generateKleanTechDocx(
   );
 
   const doc = new Document({
-    sections: [{ children }],
+    sections: [
+      {
+        headers: {
+          default: new Header({
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: "KLEAN TECH SYSTEMS", bold: true, size: 24, color: "000000" })],
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: "No: 191, “Shri Mallikarjuna”, Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023.", size: 14 })],
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: "Email: kleantechsystems@yahoo.co.in", size: 14 })],
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 100 },
+                children: [new TextRun({ text: "QUOTATION", bold: true, size: 18 })],
+              }),
+              new Paragraph({
+                alignment: AlignmentType.RIGHT,
+                children: [new TextRun({ text: `Ref No: ${quote.quoteNumber}`, bold: true, size: 14 })],
+              }),
+              new Paragraph({
+                alignment: AlignmentType.RIGHT,
+                children: [new TextRun({ text: `Date: ${format(new Date(quote.date), "dd.MM.yyyy")}`, bold: true, size: 14 })],
+              }),
+            ],
+          }),
+        },
+        footers: {
+          default: new Footer({
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [new TextRun({ text: "NO.191, “Shri Mallikarjuna” Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023. GST No: 29AQEPS9928D1ZB. Email: kleantechsystems@yahoo.co.in.", size: 16 })],
+              }),
+            ],
+          }),
+        },
+        children,
+      },
+    ],
   });
 
   const buf = await Packer.toBuffer(doc);
@@ -553,41 +589,65 @@ export async function quotationToDocxBuffer(
     const headerRow = new TableRow({
       tableHeader: true,
       children: [
-        cell("SL", { bold: true }),
-        cell("Description", { bold: true }),
-        cell("Wty", { bold: true }),
-        cell("Qty", { bold: true, align: AlignmentType.RIGHT }),
-        cell("Unit", { bold: true }),
-        cell("Rate", { bold: true, align: AlignmentType.RIGHT }),
-        cell("Amount", { bold: true, align: AlignmentType.RIGHT }),
+        columnHeader("SL No.", 5),
+        columnHeader("Description", 40),
+        columnHeader("Image*", 12),
+        columnHeader("Warranty**", 10),
+        columnHeader("Qty", 5, AlignmentType.RIGHT),
+        columnHeader("Unit", 6),
+        columnHeader("Rate", 10, AlignmentType.RIGHT),
+        columnHeader("Amount", 12, AlignmentType.RIGHT),
       ],
     });
 
     const dataRows = rows.map(
-      (it: (typeof quote.items)[number]) => {
-        const descriptionCellChildren: Paragraph[] = it.description.split("\n").map(line => {
-          const isMakeLine = line.toUpperCase().includes("MAKE :");
-          return new Paragraph({
-            children: [
-              new TextRun({ 
-                text: line, 
-                color: isMakeLine ? "1e40af" : "000000",
-                bold: isMakeLine,
-                size: 18 
-              })
-            ]
-          });
-        });
+      (it: (typeof quote.items)[number], index: number) => {
+        const descriptionLines = it.description.split("\n");
+        const titleText = descriptionLines[0];
+        const restLines = descriptionLines.slice(1);
+        
+        const descriptionCellChildren: Paragraph[] = [
+          new Paragraph({
+            children: [new TextRun({ text: titleText, bold: true, size: 20, allCaps: true })],
+          }),
+          ...restLines.map(line => {
+            const isMakeLine = line.toUpperCase().includes("MAKE :");
+            return new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: line, 
+                  color: isMakeLine ? "1e40af" : "000000",
+                  bold: isMakeLine,
+                  size: 18 
+                })
+              ]
+            });
+          })
+        ];
+
+        let imageCellChildren: Paragraph[] = [];
         if (it.imageUrl) {
           const imageTypeMatch = it.imageUrl.match(/^data:image\/(png|jpg|jpeg|gif|bmp);base64,/);
           const imageType = imageTypeMatch?.[1] === "jpeg" ? "jpg" : imageTypeMatch?.[1] ?? "png";
           const base64Data = it.imageUrl.replace(/^data:image\/\w+;base64,/, "");
-          descriptionCellChildren.push(new Paragraph({
+          imageCellChildren.push(new Paragraph({
+            alignment: AlignmentType.CENTER,
             children: [
               new ImageRun({
                 type: imageType as "jpg" | "png" | "gif" | "bmp",
                 data: Buffer.from(base64Data, "base64"),
-                transformation: { width: 100, height: 75 },
+                transformation: { width: 70, height: 50 }, // Compact for Word
+              }),
+            ],
+          }));
+        } else if ((it as any).imageText) {
+          imageCellChildren.push(new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: (it as any).imageText,
+                bold: true,
+                size: 20,
               }),
             ],
           }));
@@ -595,17 +655,23 @@ export async function quotationToDocxBuffer(
 
         return new TableRow({
           children: [
-            cell(String(it.serialNo)),
+            cell(String(index + 1), 5, { align: AlignmentType.CENTER }),
             new TableCell({
               borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder },
-              width: { size: 14, type: WidthType.PERCENTAGE },
+              width: { size: 40, type: WidthType.PERCENTAGE },
               children: descriptionCellChildren,
             }),
-            cell(it.warranty),
-            cell(String(Number(it.qty)), { align: AlignmentType.RIGHT }),
-            cell(it.unit),
-            cell(formatAmountWithoutCurrency(Number(it.rate)), { align: AlignmentType.RIGHT }),
-            cell(formatAmountWithoutCurrency(Number(it.amount)), { align: AlignmentType.RIGHT }),
+            new TableCell({
+              borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder },
+              width: { size: 12, type: WidthType.PERCENTAGE },
+              verticalAlign: (it as any).imageText ? VerticalAlign.CENTER : VerticalAlign.TOP,
+              children: imageCellChildren,
+            }),
+            cell(it.warranty, 10, { align: AlignmentType.CENTER }),
+            cell(String(Number(it.qty)), 5, { align: AlignmentType.CENTER }),
+            cell(it.unit, 6, { align: AlignmentType.CENTER }),
+            cell(formatAmountWithoutCurrency(Number(it.rate)), 10, { align: AlignmentType.RIGHT }),
+            cell(formatAmountWithoutCurrency(Number(it.amount)), 12, { align: AlignmentType.RIGHT, bold: true }),
           ],
         });
       }

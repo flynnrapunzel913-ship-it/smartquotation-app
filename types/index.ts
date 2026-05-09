@@ -14,6 +14,17 @@ export type ProjectSpecifications = {
   tilingArea?: string;
   copingArea?: string;
   waterproofingArea?: string;
+  // Overrides
+  poolVolumeOverride?: boolean;
+  totalPoolVolumeOverride?: boolean;
+  filtrationVolumeOverride?: boolean;
+  tilingAreaOverride?: boolean;
+  copingAreaOverride?: boolean;
+  waterproofingAreaOverride?: boolean;
+  // Sizes
+  plantRoomLength?: string;
+  plantRoomWidth?: string;
+  plantRoomHeight?: string;
 };
 
 export const SECTIONS = ["A", "B", "C", "D"] as const;
@@ -31,8 +42,12 @@ export type QuotationItemForm = {
   rate: number;
   amount: number;
   imageUrl?: string | null;
+  imageText?: string | null;
   productId?: string | null;
   variableValues?: Record<string, string>;
+  isExpanded?: boolean;
+  descriptionOverride?: boolean;
+  templateText?: string;
 };
 
 export type QuotationSection = {

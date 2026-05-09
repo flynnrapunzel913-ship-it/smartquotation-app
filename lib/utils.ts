@@ -29,23 +29,55 @@ export function convertToWordsINR(num: number): string {
   return inWords(Math.floor(num)).trim() + " Rupees Only";
 }
 
-export function calculatePoolMetrics(l: number, w: number, d: number) {
-  // Assuming inputs are in feet
-  const volumeCubicFeet = l * w * d;
-  const volumeLiters = Math.round(volumeCubicFeet * 28.317);
-  
-  const floorArea = l * w;
-  const wallArea = 2 * (l + w) * d;
-  const tilingArea = Math.round(floorArea + wallArea);
-  
-  const copingArea = Math.round(2 * (l + w));
-  const waterproofingArea = tilingArea;
+export interface PoolMetrics {
+  volumeCubicFeet: number;
+  volumeLiters: number;
+  tilingArea: number;
+  copingArea: number;
+  waterproofingArea: number;
+  floorArea: number;
+  wallArea: number;
+}
+
+export function calculatePoolMetrics(l: number, w: number, d: number, shape: string = "Rectangle Pool"): PoolMetrics {
+  let floorArea = 0;
+  let wallArea = 0;
+  let volumeCubicFeet = 0;
+  let perimeter = 0;
+
+  const s = shape.toLowerCase();
+
+  if (s.includes("circular")) {
+    const r = l / 2; // Assuming length is diameter
+    floorArea = Math.PI * r * r;
+    wallArea = 2 * Math.PI * r * d;
+    perimeter = 2 * Math.PI * r;
+  } else if (s.includes("oval")) {
+    const a = l / 2;
+    const b = w / 2;
+    floorArea = Math.PI * a * b;
+    // Ramanujan approximation for perimeter
+    const h = Math.pow(a - b, 2) / Math.pow(a + b, 2);
+    perimeter = Math.PI * (a + b) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)));
+    wallArea = perimeter * d;
+  } else {
+    // Default to Rectangle/Square
+    floorArea = l * w;
+    wallArea = 2 * (l * d) + 2 * (w * d);
+    perimeter = 2 * (l + w);
+  }
+
+  volumeCubicFeet = floorArea * d;
+  const volumeLiters = Math.round(volumeCubicFeet * 28.3168);
 
   return {
+    volumeCubicFeet,
     volumeLiters,
-    tilingArea,
-    copingArea,
-    waterproofingArea
+    floorArea: Math.round(floorArea),
+    wallArea: Math.round(wallArea),
+    tilingArea: Math.round(floorArea + wallArea),
+    copingArea: Math.round(perimeter),
+    waterproofingArea: Math.round(floorArea + wallArea),
   };
 }
 

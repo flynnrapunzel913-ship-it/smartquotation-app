@@ -229,7 +229,7 @@ function buildKleanTechQuotationHtml(
       * This is a computer generated document and authenticated by KLEAN TECH SYSTEMS. 
       Hence, it can be considered valid even if not signed manually.
     </div>
-    <div class="footer">
+    <div class="body-footer">
       NO.191, “Shri Mallikarjuna” Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023. GST No: 29AQEPS9928D1ZB. Email: kleantechsystems@yahoo.co.in.
     </div>
   </body>
@@ -296,9 +296,15 @@ export function buildQuotationHtml(
       .reduce((total, item) => total + Number(item.amount), 0);
 
   const part1Total = sumSections(["A", "B", "C", "D"]);
-  const part2Total = sumSections(sections.map((s: any) => s.code).filter((c: string) => !["A", "B", "C", "D"].includes(c)));
+  const part2Total = sumSections(["Part 2"]);
 
-  let tablesHtml = "";
+  let tablesHtml = `
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+      <h2 style="text-decoration: underline; margin: 5px 0;">BILL OF QUANTITY</h2>
+      <h3 style="margin: 5px 0;">PART-1 - MEP</h3>
+      <h4 style="margin: 5px 0;">POOL FILTRATION & BASIN EQUIPMENTS / ACCESSORIES - MEP</h4>
+    </div>
+  `;
   for (const sec of sections) {
     const rows = itemsBySection.get(sec.code);
     if (!rows?.length) continue;
@@ -307,44 +313,66 @@ export function buildQuotationHtml(
       <table class="boq-table">
         <thead>
           <tr>
-            <th>SL</th>
-            <th>Description</th>
-            <th>Warranty</th>
-            <th class="num">Qty</th>
-            <th>Unit</th>
-            <th class="num">Rate (Rs.)</th>
-            <th class="num">Amount (Rs.)</th>
+            <th style="width: 5%;">SL No.</th>
+            <th style="width: 40%;">Description</th>
+            <th style="width: 12%;">Image*</th>
+            <th style="width: 10%;">Warranty**</th>
+            <th style="width: 5%;">Qty</th>
+            <th style="width: 6%;">Unit</th>
+            <th style="width: 10%;">Rate</th>
+            <th style="width: 12%;">Amount</th>
           </tr>
         </thead>
         <tbody>
           ${rows
-            .map((it: (typeof quote.items)[number]) => {
-              const description = escapeHtml(it.description);
+            .map((it: (typeof quote.items)[number], index: number) => {
+              const descriptionLines = it.description.split("\n");
+              const title = descriptionLines[0];
+              const rest = descriptionLines.slice(1).join("\n");
+              
               // Highlight MAKE : lines
-              const formattedDescription = description.split("\n").map(line => {
+              const formattedBody = rest.split("\n").map(line => {
                 if (line.toUpperCase().includes("MAKE :")) {
-                  return `<span style="color: #1e40af; font-weight: 700;">${line}</span>`;
+                  return `<div class="item-make">${escapeHtml(line)}</div>`;
                 }
-                return line;
-              }).join("<br/>");
+                return `<div class="item-body">${escapeHtml(line)}</div>`;
+              }).join("");
 
               return `
               <tr>
-                <td class="cen" style="vertical-align: top;">${it.serialNo}</td>
-                <td style="white-space: pre-line; padding: 10px;">
-                  <div style="font-weight: 600; margin-bottom: 8px; font-size: 11px;">${escapeHtml(it.category.toUpperCase())}</div>
-                  <div style="line-height: 1.5;">${formattedDescription}</div>
-                  ${it.imageUrl ? `<div style="margin-top: 10px;"><img src="${imageToBase64(it.imageUrl)}" class="item-image" style="max-width: 150px; max-height: 100px; border: 1px solid #ddd;" /></div>` : ""}
+                <td class="cen" style="vertical-align: top;">${index + 1}</td>
+                <td>
+                  <div class="item-title">${escapeHtml(title)}</div>
+                  ${formattedBody}
                 </td>
-                <td class="cen" style="vertical-align: top;">${escapeHtml(it.warranty)}</td>
-                <td class="num" style="vertical-align: top;">${Number(it.qty)}</td>
-                <td class="cen" style="vertical-align: top;">${escapeHtml(it.unit)}</td>
-                <td class="num" style="vertical-align: top;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
-                <td class="num" style="vertical-align: top; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
+                <td class="cen">
+                  <div class="item-image-container">
+                    ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" />` : 
+                      ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px;">${escapeHtml((it as any).imageText)}</div>` : "")}
+                  </div>
+                </td>
+                <td class="numeric-cell">${escapeHtml(it.warranty)}</td>
+                <td class="numeric-cell">${Number(it.qty)}</td>
+                <td class="numeric-cell">${escapeHtml(it.unit)}</td>
+                <td class="num" style="vertical-align: middle;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
+                <td class="num" style="vertical-align: middle; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
               </tr>`;
             }).join("")}
         </tbody>
       </table>`;
+    
+    if (sec.code === "D") {
+      tablesHtml += `
+        <table class="boq-table" style="margin-top: -21px; border-top: 0;">
+          <tbody>
+            <tr>
+              <td colspan="7" style="text-align: right; padding: 10px; font-weight: 700;">TOTAL (A+B+C+D)</td>
+              <td class="num" style="width: 100px; padding: 10px; font-weight: 700; background: #f8fafc;">${formatAmountWithoutCurrency(part1Total)}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
   }
 
   const specificationSectionHtml = buildMRPoolSpecificationSectionHtml({

@@ -1,11 +1,9 @@
 import { getSession } from "@/lib/session";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { QuotationFormValues } from "@/types";
 import { listQuotations } from "@/lib/data/quotations";
 import { convertToWordsINR } from "@/lib/utils";
-
-const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   try {
@@ -52,9 +50,10 @@ export async function POST(req: Request) {
     // Convert total to words (basic implementation, you can refine this later)
     const amountInWords = convertToWordsINR(grandTotal);
 
-    // Create quotation
-    const quotation = await prisma.quotation.create({
-      data: {
+    // Upsert quotation based on quoteNumber
+    const quotation = await prisma.quotation.upsert({
+      where: { quoteNumber: data.quoteNumber },
+      create: {
         quoteNumber: data.quoteNumber,
         title: data.title || "",
         customerId: customer.id,
@@ -90,6 +89,38 @@ export async function POST(req: Request) {
           })),
         },
       },
+      update: {
+        title: data.title || "",
+        date: new Date(data.date),
+        gstPercent: gstPercent,
+        subtotal: subtotal,
+        gstAmount: gstAmount,
+        grandTotal: grandTotal,
+        amountInWords: amountInWords,
+        notes: data.notes || "",
+        terms: data.terms || "",
+        paymentTerms: data.paymentTerms || "",
+        isDraft: data.isDraft || false,
+        projectSpecifications: data.projectSpecifications as any,
+        sections: (data.sections as any) || [],
+        items: {
+          deleteMany: {},
+          create: data.items.map((item) => ({
+            section: item.section,
+            serialNo: item.serialNo,
+            category: item.category || "General",
+            description: item.description,
+            warranty: item.warranty || "",
+            qty: item.qty,
+            unit: item.unit,
+            rate: item.rate,
+            amount: item.amount,
+            imageUrl: item.imageUrl || null,
+            productId: item.productId || null,
+            variableValues: item.variableValues || {},
+          })),
+        },
+      }
     });
 
     return NextResponse.json({ success: true, id: quotation.id });

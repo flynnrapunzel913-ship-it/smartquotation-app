@@ -255,3 +255,257 @@ textarea.form-control {
   position: sticky;
   top: 0;
 }
+/* Product Card Layout */
+.product-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 120px 1fr 250px;
+  gap: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.product-card-image {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #f1f5f9;
+}
+
+.product-card-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.product-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.product-card-description-preview {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #475569;
+  background: #fcfcfc;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #e2e8f0;
+}
+
+.product-card-variables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.product-card-commercials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-left: 20px;
+  border-left: 1px solid #f1f5f9;
+}
+
+.metrics-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.metrics-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.metrics-card.read-only {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.metrics-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.metric-card {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.metric-card.manual-override {
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.badge.auto {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.manual {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.metric-body {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.metric-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  font-size: 18px;
+  color: #0f172a;
+  padding: 4px 0;
+  outline: none;
+}
+
+.reset-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ef4444;
+  background: none;
+  border: 1px solid #fecaca;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #fee2e2;
+}
+
+.product-card-variables {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px;
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+
+.variable-field label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.variable-field input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 20px 0;
+  margin-top: 40px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #0369a1;
+  transition: width 0.4s ease;
+}
+
+.btn-primary {
+  background: #0f172a;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-secondary {
+  background: white;
+  color: #0f172a;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0369a1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
