@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: smartquotation
+    # Host 5433 avoids clashing with a local PostgreSQL service on Windows (often uses 5432).
+    ports:
+      - "5433:5432"
+    volumes:
+      - smartquotation_pg:/var/lib/postgresql/data
+
+volumes:
+  smartquotation_pg:

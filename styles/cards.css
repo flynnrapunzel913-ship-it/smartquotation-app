@@ -1,0 +1,89 @@
+.cards-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 2rem;
+}
+
+.cards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 3rem;
+}
+
+.cards-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cards-header p {
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.module-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.module-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.module-card-mr {
+  border-color: #cffafe;
+}
+
+.module-card-klean {
+  border-color: #d1fae5;
+}
+
+.module-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.module-card-mr .module-card-title {
+  color: #155e75;
+}
+
+.module-card-klean .module-card-title {
+  color: #065f46;
+}
+
+.module-card-desc {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.module-card-action {
+  margin-top: auto;
+  width: 100%;
+}
+
+.module-card-action .btn {
+  width: 100%;
+}

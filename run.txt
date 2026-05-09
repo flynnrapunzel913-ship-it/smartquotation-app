@@ -1,0 +1,3 @@
+netstat -ano | findstr :3005
+taskkill /F /PID 40024
+npm run dev -- -p 3005

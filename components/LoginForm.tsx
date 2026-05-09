@@ -1,0 +1,81 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export function LoginForm() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPending(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        router.push("/quotation-types");
+      } else {
+        setError(data.error || "Login failed");
+        setPending(false);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred.");
+      setPending(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {error && (
+        <div className="alert alert-error">
+          {error}
+        </div>
+      )}
+      
+      <div className="form-group">
+        <label className="form-label" htmlFor="username">Username</label>
+        <input 
+          className="form-input" 
+          id="username" 
+          type="text" 
+          required 
+          placeholder="admin"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      
+      <div className="form-group">
+        <label className="form-label" htmlFor="password">Password</label>
+        <input 
+          className="form-input" 
+          id="password" 
+          type="password" 
+          required 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      
+      <button 
+        type="submit" 
+        className="btn btn-primary" 
+        style={{ width: '100%', marginTop: '0.5rem' }} 
+        disabled={pending}
+      >
+        {pending ? "Signing in…" : "Sign in"}
+      </button>
+    </form>
+  );
+}
