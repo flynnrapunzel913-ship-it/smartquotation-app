@@ -143,7 +143,7 @@ export function buildQuotationHtml(
                   <div style="line-height: 1.5;">${formattedDescription}</div>
                 </td>
                 <td class="cen" style="vertical-align: top; padding: 10px;">
-                  ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" style="max-width: 140px; max-height: 100px; border: 1px solid #ddd;" />` : 
+                  ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" style="width: 80px; height: auto; object-fit: contain; image-rendering: -webkit-optimize-contrast;" />` : 
                     ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px; margin-top: 20px;">${escapeHtml((it as any).imageText)}</div>` : "")}
                 </td>
                 <td class="cen" style="vertical-align: top; padding: 10px;">${escapeHtml(it.warranty)}</td>
