@@ -82,6 +82,7 @@ export async function POST(req: Request) {
             rate: item.rate,
             amount: item.amount,
             imageUrl: item.imageUrl || null,
+            imageText: item.imageText || null,
             productId: item.productId || null,
             variableValues: item.variableValues || {},
           })),

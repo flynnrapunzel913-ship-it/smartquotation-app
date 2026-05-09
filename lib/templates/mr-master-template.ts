@@ -135,6 +135,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 6500,
       amount: 13000,
       productId: "seed-temp-prod-8",
+      imageUrl: "/template-images/mr-swimming-pools/std-skimmer.jpg",
       variableValues: {},
     },
     {
@@ -148,6 +149,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 25000,
       amount: 25000,
       productId: "seed-temp-prod-9",
+      imageUrl: "/template-images/mr-swimming-pools/labour-plant-room.jpg",
       variableValues: {},
     },
     {
@@ -161,6 +163,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 115000,
       amount: 115000,
       productId: "seed-temp-prod-10",
+      imageUrl: "/template-images/mr-swimming-pools/plumbing-materials.jpg",
       variableValues: { "plumbingPipeSize": "1 1/2\"" },
     },
     {
@@ -174,6 +177,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 3800,
       amount: 68400,
       productId: "seed-temp-prod-11",
+      imageUrl: "/template-images/mr-swimming-pools/control-regulating-equipment.jpg",
       variableValues: {},
     },
     {
@@ -187,6 +191,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 25000,
       amount: 25000,
       productId: "seed-temp-prod-12",
+      imageUrl: "/template-images/mr-swimming-pools/labour-plumbing.jpg",
       variableValues: {},
     },
     {
@@ -216,6 +221,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 15000,
       amount: 15000,
       productId: "seed-temp-prod-14",
+      imageUrl: "/template-images/mr-swimming-pools/electrical-materials.jpg",
     },
     {
       section: "B",
@@ -228,6 +234,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 20000,
       amount: 20000,
       productId: "seed-temp-prod-15",
+      imageUrl: "/template-images/mr-swimming-pools/labour-pool-electrical.jpg",
     },
 
     // SECTION C – ELECTRICAL CONTROL PANEL WITH TIMER
@@ -242,6 +249,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 3800,
       amount: 7600,
       productId: "seed-temp-prod-16",
+      imageUrl: "/template-images/mr-swimming-pools/pool-starter-panel.jpg",
     },
     {
       section: "C",
@@ -254,6 +262,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 7500,
       amount: 7500,
       productId: "seed-temp-prod-17",
+      imageUrl: "/template-images/mr-swimming-pools/transformer.jpg",
     },
     {
       section: "C",
@@ -266,6 +275,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 10000,
       amount: 10000,
       productId: "seed-temp-prod-18",
+      imageUrl: "/template-images/mr-swimming-pools/testing-commissioning.jpg",
     },
 
     // SECTION D – SUPPLY OF SWIMMING POOL MAINTENANCE CLEANING KIT
@@ -336,7 +346,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
     },
     {
       section: "D",
-      serialNo: 6,
+      serialNo: 24,
       category: "CLEANING KIT",
       description: "POOL BRUSH:\n\nSupply of Pool cleaning Brush with aluminium back.\n\nMAKE : PENTAIR / AQUATIX.",
       warranty: "0",
@@ -349,7 +359,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
     },
     {
       section: "D",
-      serialNo: 7,
+      serialNo: 25,
       category: "CLEANING KIT",
       description: "POOL CHEMICALS:\n\nSupply of Pool Chemicals like TCCA 90, Algaecide, pH Balancing Chemicals etc for initial Pool cleaning etc.",
       warranty: "0",
@@ -373,6 +383,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 65,
       amount: 92300,
       productId: "seed-temp-prod-26",
+      imageUrl: "/template-images/mr-swimming-pools/waterproofing.jpg",
     },
     {
       section: "Part 2",
@@ -385,6 +396,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 80,
       amount: 8320,
       productId: "seed-temp-prod-27",
+      imageUrl: "/template-images/mr-swimming-pools/coping-stone.jpg",
     },
     {
       section: "Part 2",
@@ -397,6 +409,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 90,
       amount: 99000,
       productId: "seed-temp-prod-28",
+      imageUrl: "/template-images/mr-swimming-pools/swimming-pool-tiles.jpg",
     },
     {
       section: "Part 2",
@@ -409,6 +422,8 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 110,
       amount: 121000,
       productId: "seed-temp-prod-29",
+      imageUrl: null,
+      imageText: "RPSP",
     }
   ],
   terms: `1. Single phase connection up to the plant room is in your scope of work.

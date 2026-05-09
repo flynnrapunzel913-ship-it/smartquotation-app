@@ -95,6 +95,7 @@ export async function PUT(
           rate: Number(item.rate),
           amount: Number(item.amount),
           imageUrl: item.imageUrl || null,
+          imageText: item.imageText || null,
           productId: item.productId || null,
           variableValues: item.variableValues || {},
         })),

@@ -46,6 +46,7 @@ model Product {
   templateText  String   @default("") @db.Text
   templateVariables Json   @default("[]")
   imagePath     String?  @db.Text
+  imageText     String?  @db.Text
   sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -115,6 +116,7 @@ model QuotationItem {
   rate        Decimal   @db.Decimal(14, 2)
   amount      Decimal   @db.Decimal(14, 2)
   imageUrl    String?   @db.Text
+  imageText   String?   @db.Text
   productId   String?
   product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
   variableValues Json    @default("{}")

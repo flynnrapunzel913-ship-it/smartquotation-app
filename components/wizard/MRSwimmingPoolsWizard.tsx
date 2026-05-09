@@ -402,6 +402,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                               category: product.category || newItems[idx].category,
                               section: product.sectionCode || newItems[idx].section,
                               imageUrl: product.imagePath || newItems[idx].imageUrl,
+                              imageText: product.imageText || newItems[idx].imageText,
                             };
                             newItems[idx].amount = Number(newItems[idx].qty) * Number(newItems[idx].rate);
                             return { ...prev, items: newItems };
@@ -445,6 +446,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                     <div className="image-upload-wrapper">
                       <input type="file" accept="image/*" onChange={(e) => handleImageUpload(idx, e)} style={{ fontSize: "11px" }} />
                       {item.imageUrl && <img src={item.imageUrl} className="image-preview" alt="preview" />}
+                      {!item.imageUrl && item.imageText && <div className="text-preview" style={{ fontWeight: 700, fontSize: "14px", marginTop: "8px" }}>{item.imageText}</div>}
                     </div>
                   </td>
                   <td>

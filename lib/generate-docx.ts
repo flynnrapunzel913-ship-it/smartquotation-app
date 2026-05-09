@@ -415,11 +415,24 @@ export async function quotationToDocxBuffer(
           const imageType = imageTypeMatch?.[1] === "jpeg" ? "jpg" : imageTypeMatch?.[1] ?? "png";
           const base64Data = it.imageUrl.replace(/^data:image\/\w+;base64,/, "");
           descriptionCellChildren.push(new Paragraph({
+            alignment: AlignmentType.CENTER,
             children: [
               new ImageRun({
                 type: imageType as "jpg" | "png" | "gif" | "bmp",
                 data: Buffer.from(base64Data, "base64"),
                 transformation: { width: 100, height: 75 },
+              }),
+            ],
+          }));
+        } else if ((it as any).imageText) {
+          descriptionCellChildren.push(new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 100 },
+            children: [
+              new TextRun({
+                text: (it as any).imageText,
+                bold: true,
+                size: 20,
               }),
             ],
           }));

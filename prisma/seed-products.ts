@@ -97,7 +97,8 @@ const products = [
     unit: "Nos",
     warranty: "01 Years",
     defaultRate: 6500,
-    sortOrder: 8
+    sortOrder: 8,
+    imagePath: "/template-images/mr-swimming-pools/std-skimmer.jpg"
   },
   {
     name: "LABOUR CHARGES - PLANT ROOM & BASIN EQUIPMENTS",
@@ -108,7 +109,8 @@ const products = [
     unit: "Lsm",
     warranty: "01 Years",
     defaultRate: 25000,
-    sortOrder: 9
+    sortOrder: 9,
+    imagePath: "/template-images/mr-swimming-pools/labour-plant-room.jpg"
   },
   {
     name: "PLUMBING MATERIALS",
@@ -119,7 +121,8 @@ const products = [
     unit: "Lsm",
     warranty: "0",
     defaultRate: 115000,
-    sortOrder: 10
+    sortOrder: 10,
+    imagePath: "/template-images/mr-swimming-pools/plumbing-materials.jpg"
   },
   {
     name: "CONTROL & REGULATING EQUIPMENTS",
@@ -130,7 +133,8 @@ const products = [
     unit: "Nos",
     warranty: "01 Years",
     defaultRate: 3800,
-    sortOrder: 11
+    sortOrder: 11,
+    imagePath: "/template-images/mr-swimming-pools/control-regulating-equipment.jpg"
   },
   {
     name: "LABOUR CHARGES - PLUMBING WORKS",
@@ -141,7 +145,8 @@ const products = [
     unit: "Lsm",
     warranty: "01 Years",
     defaultRate: 25000,
-    sortOrder: 12
+    sortOrder: 12,
+    imagePath: "/template-images/mr-swimming-pools/labour-plumbing.jpg"
   },
   {
     name: "UNDERWATER LIGHT",
@@ -166,7 +171,8 @@ const products = [
     unit: "Lsm",
     warranty: "0",
     defaultRate: 15000,
-    sortOrder: 14
+    sortOrder: 14,
+    imagePath: "/template-images/mr-swimming-pools/electrical-materials.jpg"
   },
   {
     name: "LABOUR CHARGES - POOL ELECTRICAL WORKS",
@@ -177,7 +183,8 @@ const products = [
     unit: "Lsm",
     warranty: "01 Years",
     defaultRate: 20000,
-    sortOrder: 15
+    sortOrder: 15,
+    imagePath: "/template-images/mr-swimming-pools/labour-pool-electrical.jpg"
   },
 
   // SECTION C – ELECTRICAL CONTROL PANEL WITH TIMER
@@ -190,7 +197,8 @@ const products = [
     unit: "Lsm",
     warranty: "01 Years",
     defaultRate: 3800,
-    sortOrder: 16
+    sortOrder: 16,
+    imagePath: "/template-images/mr-swimming-pools/pool-starter-panel.jpg"
   },
   {
     name: "TRANSFORMER FOR POOL LIGHTS",
@@ -201,7 +209,8 @@ const products = [
     unit: "Nos",
     warranty: "01 YEARS",
     defaultRate: 7500,
-    sortOrder: 17
+    sortOrder: 17,
+    imagePath: "/template-images/mr-swimming-pools/transformer.jpg"
   },
   {
     name: "TESTING & COMMISSIONING OF THE POOL",
@@ -212,10 +221,11 @@ const products = [
     unit: "Lsm",
     warranty: "0",
     defaultRate: 10000,
-    sortOrder: 18
+    sortOrder: 18,
+    imagePath: "/template-images/mr-swimming-pools/testing-commissioning.jpg"
   },
 
-  // SECTION D – SUPPLY OF SWIMMING POOL MAINTENANCE CLEANING KIT
+  // SECTION D – MAINTENANCE CLEANING KIT
   {
     name: "VACUUM HEAD",
     templateText: "VACUUM HEAD:\n\nSupply of Vacuum Head ABS body with 4 wheels and brush etc.\n\nMAKE : PENTAIR / AQUATIX.",
@@ -223,7 +233,7 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Nos",
-    warranty: "0",
+    warranty: "N/A",
     defaultRate: 2800,
     sortOrder: 19,
     imagePath: "/template-images/mr-swimming-pools/vacuum-head.jpg"
@@ -235,7 +245,7 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Nos",
-    warranty: "0",
+    warranty: "N/A",
     defaultRate: 3500,
     sortOrder: 20,
     imagePath: "/template-images/mr-swimming-pools/vacuum-hose.jpg"
@@ -247,7 +257,7 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Nos",
-    warranty: "0",
+    warranty: "N/A",
     defaultRate: 4200,
     sortOrder: 21,
     imagePath: "/template-images/mr-swimming-pools/telescopic-rod.jpg"
@@ -259,7 +269,7 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Nos",
-    warranty: "0",
+    warranty: "N/A",
     defaultRate: 1400,
     sortOrder: 22,
     imagePath: "/template-images/mr-swimming-pools/leaf-rake.jpg"
@@ -271,7 +281,7 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Nos",
-    warranty: "0",
+    warranty: "N/A",
     defaultRate: 700,
     sortOrder: 23,
     imagePath: "/template-images/mr-swimming-pools/test-kit.jpg"
@@ -283,7 +293,7 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Nos",
-    warranty: "0",
+    warranty: "N/A",
     defaultRate: 1400,
     sortOrder: 24,
     imagePath: "/template-images/mr-swimming-pools/pool-brush.jpg"
@@ -295,8 +305,8 @@ const products = [
     category: "CLEANING KIT",
     sectionCode: "D",
     unit: "Lsm",
-    warranty: "0",
-    defaultRate: 5000,
+    warranty: "N/A",
+    defaultRate: 8500,
     sortOrder: 25,
     imagePath: "/template-images/mr-swimming-pools/pool-chemicals.jpg"
   },
@@ -311,7 +321,8 @@ const products = [
     unit: "Lsm",
     warranty: "05 Years",
     defaultRate: 65,
-    sortOrder: 26
+    sortOrder: 26,
+    imagePath: "/template-images/mr-swimming-pools/waterproofing.jpg"
   },
   {
     name: "COPING STONE: LABOR CHARGES ONLY (**Excluding Granite/cement)",
@@ -322,7 +333,8 @@ const products = [
     unit: "Sft",
     warranty: "0",
     defaultRate: 80,
-    sortOrder: 27
+    sortOrder: 27,
+    imagePath: "/template-images/mr-swimming-pools/coping-stone.jpg"
   },
   {
     name: "SWIMMING POOL TILES",
@@ -333,7 +345,8 @@ const products = [
     unit: "Sft",
     warranty: "0",
     defaultRate: 90,
-    sortOrder: 28
+    sortOrder: 28,
+    imagePath: "/template-images/mr-swimming-pools/swimming-pool-tiles.jpg"
   },
   {
     name: "Labour charges for Tiles fixing & Epoxy Grouting",
@@ -344,7 +357,9 @@ const products = [
     unit: "Sft",
     warranty: "01 Year for Tiles Fixing",
     defaultRate: 110,
-    sortOrder: 29
+    sortOrder: 29,
+    imagePath: null,
+    imageText: "RPSP"
   }
 ];
 
@@ -363,6 +378,7 @@ export async function seedProducts() {
         defaultRate: p.defaultRate,
         sortOrder: p.sortOrder,
         imagePath: p.imagePath || null,
+        imageText: (p as any).imageText || null,
       },
       create: {
         id: `seed-temp-prod-${p.sortOrder}`,
@@ -376,6 +392,7 @@ export async function seedProducts() {
         defaultRate: p.defaultRate,
         sortOrder: p.sortOrder,
         imagePath: p.imagePath || null,
+        imageText: (p as any).imageText || null,
       },
     });
   }

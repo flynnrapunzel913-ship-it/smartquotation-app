@@ -31,6 +31,7 @@ export type QuotationItemForm = {
   rate: number;
   amount: number;
   imageUrl?: string | null;
+  imageText?: string | null;
   productId?: string | null;
   variableValues?: Record<string, string>;
 };
