@@ -140,7 +140,6 @@ export function buildQuotationHtml(
               <tr>
                 <td class="cen" style="vertical-align: top;">${it.serialNo}</td>
                 <td style="white-space: pre-line; padding: 10px;">
-                  <div style="font-weight: 600; margin-bottom: 8px; font-size: 11px;">${escapeHtml(it.category.toUpperCase())}</div>
                   <div style="line-height: 1.5;">${formattedDescription}</div>
                 </td>
                 <td class="cen" style="vertical-align: top; padding: 10px;">

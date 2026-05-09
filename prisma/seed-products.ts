@@ -350,7 +350,7 @@ const products = [
   },
   {
     name: "Labour charges for Tiles fixing & Epoxy Grouting",
-    templateText: "Labour charges for Tiles fixing & Epoxy Grouting with required Tools and materials for cleaning after Grouting etc.",
+    templateText: "Labour charges for Tiles fixing & Epoxy Grouting:\n\nSupply of required Tools and materials for cleaning after Grouting etc.",
     templateVariables: [],
     category: "POOL FINISHES",
     sectionCode: "Part 2",

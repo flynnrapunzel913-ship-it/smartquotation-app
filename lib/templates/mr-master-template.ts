@@ -415,7 +415,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       section: "Part 2",
       serialNo: 4,
       category: "POOL FINISHES",
-      description: "Labour charges for Tiles fixing & Epoxy Grouting:\n\nLabour charges for Tiles fixing & Epoxy Grouting with required Tools and materials for cleaning after Grouting etc.",
+      description: "Labour charges for Tiles fixing & Epoxy Grouting:\n\nSupply of required Tools and materials for cleaning after Grouting etc.",
       warranty: "01 Year for Tiles Fixing",
       qty: 1100,
       unit: "Sft",
