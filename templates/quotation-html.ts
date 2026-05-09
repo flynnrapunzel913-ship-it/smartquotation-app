@@ -97,9 +97,15 @@ export function buildQuotationHtml(
       .reduce((total, item) => total + Number(item.amount), 0);
 
   const part1Total = sumSections(["A", "B", "C", "D"]);
-  const part2Total = sumSections(sections.map((s: any) => s.code).filter((c: string) => !["A", "B", "C", "D"].includes(c)));
+  const part2Total = sumSections(["Part 2"]);
 
-  let tablesHtml = "";
+  let tablesHtml = `
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+      <h2 style="text-decoration: underline; margin: 5px 0;">BILL OF QUANTITY</h2>
+      <h3 style="margin: 5px 0;">PART-1 - MEP</h3>
+      <h4 style="margin: 5px 0;">POOL FILTRATION & BASIN EQUIPMENTS / ACCESSORIES - MEP</h4>
+    </div>
+  `;
   for (const sec of sections) {
     const rows = itemsBySection.get(sec.code);
     if (!rows?.length) continue;
@@ -108,13 +114,14 @@ export function buildQuotationHtml(
       <table class="boq-table">
         <thead>
           <tr>
-            <th>SL</th>
+            <th style="width: 40px;">SL No.</th>
             <th>Description</th>
-            <th>Warranty</th>
-            <th class="num">Qty</th>
-            <th>Unit</th>
-            <th class="num">Rate (Rs.)</th>
-            <th class="num">Amount (Rs.)</th>
+            <th style="width: 160px;">Image*</th>
+            <th style="width: 100px;">Warranty**</th>
+            <th class="num" style="width: 50px;">Qty</th>
+            <th style="width: 50px;">Unit</th>
+            <th class="num" style="width: 80px;">Rate</th>
+            <th class="num" style="width: 100px;">Amount</th>
           </tr>
         </thead>
         <tbody>
@@ -135,13 +142,15 @@ export function buildQuotationHtml(
                 <td style="white-space: pre-line; padding: 10px;">
                   <div style="font-weight: 600; margin-bottom: 8px; font-size: 11px;">${escapeHtml(it.category.toUpperCase())}</div>
                   <div style="line-height: 1.5;">${formattedDescription}</div>
-                  ${it.imageUrl ? `<div style="margin-top: 10px;"><img src="${imageToBase64(it.imageUrl)}" class="item-image" style="max-width: 150px; max-height: 100px; border: 1px solid #ddd;" /></div>` : ""}
                 </td>
-                <td class="cen" style="vertical-align: top;">${escapeHtml(it.warranty)}</td>
-                <td class="num" style="vertical-align: top;">${Number(it.qty)}</td>
-                <td class="cen" style="vertical-align: top;">${escapeHtml(it.unit)}</td>
-                <td class="num" style="vertical-align: top;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
-                <td class="num" style="vertical-align: top; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
+                <td class="cen" style="vertical-align: top; padding: 10px;">
+                  ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" style="max-width: 140px; max-height: 100px; border: 1px solid #ddd;" />` : ""}
+                </td>
+                <td class="cen" style="vertical-align: top; padding: 10px;">${escapeHtml(it.warranty)}</td>
+                <td class="num" style="vertical-align: top; padding: 10px;">${Number(it.qty)}</td>
+                <td class="cen" style="vertical-align: top; padding: 10px;">${escapeHtml(it.unit)}</td>
+                <td class="num" style="vertical-align: top; padding: 10px;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
+                <td class="num" style="vertical-align: top; padding: 10px; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
               </tr>`;
             }).join("")}
         </tbody>
