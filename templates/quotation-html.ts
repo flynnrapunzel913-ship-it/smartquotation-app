@@ -114,43 +114,49 @@ export function buildQuotationHtml(
       <table class="boq-table">
         <thead>
           <tr>
-            <th style="width: 40px;">SL No.</th>
-            <th>Description</th>
-            <th style="width: 160px;">Image*</th>
-            <th style="width: 100px;">Warranty**</th>
-            <th class="num" style="width: 50px;">Qty</th>
-            <th style="width: 50px;">Unit</th>
-            <th class="num" style="width: 80px;">Rate</th>
-            <th class="num" style="width: 100px;">Amount</th>
+            <th style="width: 5%;">SL No.</th>
+            <th style="width: 40%;">Description</th>
+            <th style="width: 12%;">Image*</th>
+            <th style="width: 10%;">Warranty**</th>
+            <th style="width: 5%;">Qty</th>
+            <th style="width: 6%;">Unit</th>
+            <th style="width: 10%;">Rate</th>
+            <th style="width: 12%;">Amount</th>
           </tr>
         </thead>
         <tbody>
           ${rows
             .map((it: (typeof quote.items)[number]) => {
-              const description = escapeHtml(it.description);
+              const descriptionLines = it.description.split("\n");
+              const title = descriptionLines[0];
+              const rest = descriptionLines.slice(1).join("\n");
+              
               // Highlight MAKE : lines
-              const formattedDescription = description.split("\n").map(line => {
+              const formattedBody = rest.split("\n").map(line => {
                 if (line.toUpperCase().includes("MAKE :")) {
-                  return `<span style="color: #1e40af; font-weight: 700;">${line}</span>`;
+                  return `<div class="item-make">${escapeHtml(line)}</div>`;
                 }
-                return line;
-              }).join("<br/>");
+                return `<div class="item-body">${escapeHtml(line)}</div>`;
+              }).join("");
 
               return `
               <tr>
                 <td class="cen" style="vertical-align: top;">${it.serialNo}</td>
-                <td style="white-space: pre-line; padding: 10px;">
-                  <div style="line-height: 1.5;">${formattedDescription}</div>
+                <td>
+                  <div class="item-title">${escapeHtml(title)}</div>
+                  ${formattedBody}
                 </td>
-                <td class="cen" style="vertical-align: top; padding: 10px;">
-                  ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" style="width: 80px; height: auto; object-fit: contain; image-rendering: -webkit-optimize-contrast;" />` : 
-                    ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px; margin-top: 20px;">${escapeHtml((it as any).imageText)}</div>` : "")}
+                <td class="cen">
+                  <div class="item-image-container">
+                    ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" />` : 
+                      ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px;">${escapeHtml((it as any).imageText)}</div>` : "")}
+                  </div>
                 </td>
-                <td class="cen" style="vertical-align: top; padding: 10px;">${escapeHtml(it.warranty)}</td>
-                <td class="num" style="vertical-align: top; padding: 10px;">${Number(it.qty)}</td>
-                <td class="cen" style="vertical-align: top; padding: 10px;">${escapeHtml(it.unit)}</td>
-                <td class="num" style="vertical-align: top; padding: 10px;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
-                <td class="num" style="vertical-align: top; padding: 10px; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
+                <td class="numeric-cell">${escapeHtml(it.warranty)}</td>
+                <td class="numeric-cell">${Number(it.qty)}</td>
+                <td class="numeric-cell">${escapeHtml(it.unit)}</td>
+                <td class="num" style="vertical-align: middle;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
+                <td class="num" style="vertical-align: middle; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
               </tr>`;
             }).join("")}
         </tbody>
