@@ -87,7 +87,7 @@ export async function seedProducts() {
       warranty: "02 Years",
       templateText: "WALL INLETS:\n\nSupply of Wall / Floor inlets to the pool with {{wallInletPipeSize}} pipe connection & capable of discharging 5000 - 7000 liter / Hr.\n\nMAKE : PENTAIR / MIDAS / AQUATIX / AQVASTAR",
       templateVariables: ["wallInletPipeSize"],
-      imagePath: "/template-images/mr-swimming-pools/wall-inlets.png",
+      imagePath: "/template-images/mr-swimming-pools/wall-inlets-composite.png",
       sortOrder: 6,
     },
     {
@@ -157,7 +157,7 @@ export async function seedProducts() {
       warranty: "01 Years",
       templateText: "CONTROL & REGULATING EQUIPMENTS:\n\nProviding Supply of Imported Ball valves & NRV to the Pump & filter and Standard ball valves to the Connection Pipe Lines etc.\n\nMAKE : CEPEX - Spain or Equivalent.",
       templateVariables: [],
-      imagePath: "/template-images/mr-swimming-pools/control-and-regulating-equipments.png",
+      imagePath: "/template-images/mr-swimming-pools/control-regulating-equipments-composite.png",
       sortOrder: 11,
     },
     {
@@ -171,7 +171,7 @@ export async function seedProducts() {
       warranty: "01 Years",
       templateText: "LABOUR CHARGES - PLUMBING WORKS:\n\nInstallation charges for Plant room filtration equipments & pool inside and outside basin fittings etc.\n\nMAKE :",
       templateVariables: [],
-      imagePath: "/template-images/mr-swimming-pools/labour-charges--plumbing-works.png",
+      imagePath: "/template-images/mr-swimming-pools/labour-plumbing.png",
       sortOrder: 12,
     },
     {
@@ -199,7 +199,7 @@ export async function seedProducts() {
       warranty: "0",
       templateText: "ELECTRICAL MATERIALS:\n\nSupply of 1.5 Sqmm x 2 core Electrical cabling with required conduits for Pool pumps to the electrical panels with required clamping etc.\n\nMAKE : V Guard, Finolex, Havells, Polycab Etc.",
       templateVariables: [],
-      imagePath: "/template-images/mr-swimming-pools/electrical-materials.png",
+      imagePath: "/template-images/mr-swimming-pools/electrical-materials-composite.png",
       sortOrder: 14,
     },
     {
@@ -241,7 +241,8 @@ export async function seedProducts() {
       warranty: "01 YEARS",
       templateText: "TRANSFORMER FOR POOL LIGHTS:\n\nAC TO DC CONVERTING 12V TRANSFORMER",
       templateVariables: [],
-      imagePath: "/template-images/mr-swimming-pools/transformer-for-pool-lights.png",
+      imagePath: null,
+      imageText: null,
       sortOrder: 17,
     },
     {
@@ -367,7 +368,7 @@ export async function seedProducts() {
       warranty: "05 Years",
       templateText: "WATER PROOFING:\n\nSupply and applying of ELESTO-MERICO Two coat weather proof high flexibility cementitious mortar with crack bridging capacity up to 2 mm, Edge band for all the corners & Brush bond of 2 coats for swimming pools, Balancing Tank, Filtration room & overflow Gutter.\n\nMAKE : NIPPON / MAPEI / KERAKOLL / NIPPON",
       templateVariables: [],
-      imagePath: "/template-images/mr-swimming-pools/water-proofing.png",
+      imagePath: "/template-images/mr-swimming-pools/waterproofing.png",
       sortOrder: 26,
     },
     {

@@ -108,7 +108,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       amount: 5520,
       productId: "seed-temp-prod-6",
       variableValues: { "wallInletPipeSize": "2\"" },
-      imageUrl: "/template-images/mr-swimming-pools/wall-inlets.png"
+      imageUrl: "/template-images/mr-swimming-pools/wall-inlets-composite.png"
     },
     {
       section: "A",
@@ -177,7 +177,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 3800,
       amount: 68400,
       productId: "seed-temp-prod-11",
-      imageUrl: "/template-images/mr-swimming-pools/control-and-regulating-equipments.png",
+      imageUrl: "/template-images/mr-swimming-pools/control-regulating-equipments-composite.png",
       variableValues: {},
     },
     {
@@ -191,7 +191,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 25000,
       amount: 25000,
       productId: "seed-temp-prod-12",
-      imageUrl: "/template-images/mr-swimming-pools/labour-charges--plumbing-works.png",
+      imageUrl: "/template-images/mr-swimming-pools/labour-plumbing.png",
       variableValues: {},
     },
     {
@@ -221,7 +221,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 15000,
       amount: 15000,
       productId: "seed-temp-prod-14",
-      imageUrl: "/template-images/mr-swimming-pools/electrical-materials.png",
+      imageUrl: "/template-images/mr-swimming-pools/electrical-materials-composite.png",
     },
     {
       section: "B",
@@ -262,7 +262,8 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 7500,
       amount: 7500,
       productId: "seed-temp-prod-17",
-      imageUrl: "/template-images/mr-swimming-pools/transformer-for-pool-lights.png",
+      imageUrl: null,
+      imageText: null,
     },
     {
       section: "C",
@@ -383,7 +384,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 65,
       amount: 92300,
       productId: "seed-temp-prod-26",
-      imageUrl: "/template-images/mr-swimming-pools/water-proofing.png",
+      imageUrl: "/template-images/mr-swimming-pools/waterproofing.png",
     },
     {
       section: "Part 2",
