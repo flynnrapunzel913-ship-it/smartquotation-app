@@ -87,11 +87,23 @@ Restart `npm run dev`, run migrate + seed again, then try logging in.
 
 ## Deploying on Vercel
 
-- Add the same env vars: `DATABASE_URL`, `SESSION_SECRET` (32+ chars).  
-- Connect a hosted Postgres (Vercel Postgres, Neon, Supabase, etc.).  
-- Run migrations against production: `npx prisma migrate deploy` (CI or local with prod `DATABASE_URL`).  
-- PDF routes use `nodejs` runtime and `maxDuration` 60s; adjust in `app/api/quotations/[id]/pdf/route.ts` if your plan allows.  
-- Large logo/signature **data URLs** in `CompanySettings` count toward DB size; for very large assets consider moving to object storage later.
+### Environment Variables
+Ensure the following environment variables are set in your Vercel project settings:
+- `DATABASE_URL`: Your production PostgreSQL connection string.
+- `SESSION_SECRET`: A secure string of at least 32 characters for `iron-session`.
+- `NODE_ENV`: Set to `production`.
+
+### Build Command
+For a successful deployment that handles database migrations and Prisma client generation, use the following build command in Vercel:
+
+```bash
+npx prisma generate && npx prisma migrate deploy && npm run build
+```
+
+### PDF & DOCX Generation
+- PDF routes use the `nodejs` runtime.
+- Ensure `maxDuration` is set to 60s in your API routes if your Vercel plan allows, as PDF generation can be time-consuming.
+- The application automatically switches to `@sparticuz/chromium` when it detects it's running on Vercel (`process.env.VERCEL === '1'`).
 
 ## Project layout (high level)
 
