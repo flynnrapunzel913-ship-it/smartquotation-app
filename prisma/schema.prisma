@@ -43,10 +43,14 @@ model Product {
   defaultRate   Decimal  @db.Decimal(14, 2)
   unit          String   @default("Nos")
   warranty      String   @default("")
-  specification String   @default("") @db.Text
-  displayOrder  Int      @default(0)
+  templateText  String   @default("") @db.Text
+  templateVariables Json   @default("[]")
+  imagePath     String?  @db.Text
+  sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  items         QuotationItem[]
 
   @@index([name])
   @@index([category])
@@ -111,6 +115,10 @@ model QuotationItem {
   rate        Decimal   @db.Decimal(14, 2)
   amount      Decimal   @db.Decimal(14, 2)
   imageUrl    String?   @db.Text
+  productId   String?
+  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variableValues Json    @default("{}")
 
   @@index([quotationId])
+  @@index([productId])
 }

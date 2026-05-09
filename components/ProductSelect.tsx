@@ -5,13 +5,14 @@ import React, { useState, useEffect, useRef } from "react";
 interface Product {
   id: string;
   name: string;
-  description: string;
+  templateText: string;
+  templateVariables: string[];
   category: string;
   sectionCode: string;
   unit: string;
   warranty: string;
   defaultRate: number;
-  specification: string;
+  imagePath?: string | null;
 }
 
 interface ProductSelectProps {

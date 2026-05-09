@@ -21,6 +21,23 @@ function formatAmountWithoutCurrency(amount: number | string): string {
   return formatCurrencyINR(amount).replace("₹", "").trim();
 }
 
+function imageToBase64(src: string): string {
+  if (!src) return "";
+  if (src.startsWith("data:")) return src;
+  
+  try {
+    const publicPath = path.join(process.cwd(), "public", src.startsWith("/") ? src.slice(1) : src);
+    if (fs.existsSync(publicPath)) {
+      const buffer = fs.readFileSync(publicPath);
+      const ext = path.extname(publicPath).slice(1) || "png";
+      return `data:image/${ext};base64,${buffer.toString("base64")}`;
+    }
+  } catch (e) {
+    console.error("Error reading image for base64", e);
+  }
+  return src;
+}
+
 const HEADER_CONTACTS = {
   phone1: "+91 9538840277",
   phone2: "+91 9845326115",
@@ -44,11 +61,9 @@ export function buildQuotationHtml(
   let logoHtml = `<div class="logo-placeholder">${escapeHtml(c?.companyName ?? "MR SWIMMING POOLS & SPA CONSTRUCTION COMPANY")}</div>`;
   
   if (fs.existsSync(localLogoPath)) {
-    // Read local logo as base64 to embed it directly in HTML to avoid Puppeteer resolution issues
-    const logoBase64 = fs.readFileSync(localLogoPath, { encoding: "base64" });
-    logoHtml = `<img class="logo" src="data:image/png;base64,${logoBase64}" alt="logo" />`;
+    logoHtml = `<img class="logo" src="${imageToBase64("/templates/mr-swimming-pools/logo.png")}" alt="logo" />`;
   } else if (c?.logoUrl) {
-    logoHtml = `<img class="logo" src="${escapeHtml(c.logoUrl)}" alt="logo" />`;
+    logoHtml = `<img class="logo" src="${imageToBase64(c.logoUrl)}" alt="logo" />`;
   }
 
   // Same for CSS
@@ -109,23 +124,24 @@ export function buildQuotationHtml(
               // Highlight MAKE : lines
               const formattedDescription = description.split("\n").map(line => {
                 if (line.toUpperCase().includes("MAKE :")) {
-                  return `<span style="color: #1e40af; font-weight: 600;">${line}</span>`;
+                  return `<span style="color: #1e40af; font-weight: 700;">${line}</span>`;
                 }
                 return line;
               }).join("<br/>");
 
               return `
               <tr>
-                <td class="cen">${it.serialNo}</td>
-                <td style="white-space: pre-line;">
-                  ${formattedDescription}
-                  ${it.imageUrl ? `<img src="${it.imageUrl}" class="item-image" />` : ""}
+                <td class="cen" style="vertical-align: top;">${it.serialNo}</td>
+                <td style="white-space: pre-line; padding: 10px;">
+                  <div style="font-weight: 600; margin-bottom: 8px; font-size: 11px;">${escapeHtml(it.category.toUpperCase())}</div>
+                  <div style="line-height: 1.5;">${formattedDescription}</div>
+                  ${it.imageUrl ? `<div style="margin-top: 10px;"><img src="${imageToBase64(it.imageUrl)}" class="item-image" style="max-width: 150px; max-height: 100px; border: 1px solid #ddd;" /></div>` : ""}
                 </td>
-                <td>${escapeHtml(it.warranty)}</td>
-                <td class="num">${Number(it.qty)}</td>
-                <td class="cen">${escapeHtml(it.unit)}</td>
-                <td class="num">${formatAmountWithoutCurrency(Number(it.rate))}</td>
-                <td class="num">${formatAmountWithoutCurrency(Number(it.amount))}</td>
+                <td class="cen" style="vertical-align: top;">${escapeHtml(it.warranty)}</td>
+                <td class="num" style="vertical-align: top;">${Number(it.qty)}</td>
+                <td class="cen" style="vertical-align: top;">${escapeHtml(it.unit)}</td>
+                <td class="num" style="vertical-align: top;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
+                <td class="num" style="vertical-align: top; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
               </tr>`;
             }).join("")}
         </tbody>

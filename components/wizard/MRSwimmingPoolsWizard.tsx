@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
+import { calculatePoolMetrics, renderTemplate, extractTemplateVariables } from "@/lib/utils";
 import "@/styles/wizard.css";
 
 const DEFAULT_TERMS = `1. Single phase connection up to the plant room is in your scope of work.
@@ -231,10 +232,28 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   };
 
   const handleSpecChange = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      projectSpecifications: { ...prev.projectSpecifications, [field]: value },
-    }));
+    setFormData((prev) => {
+      const nextSpecs = { ...prev.projectSpecifications, [field]: value };
+      
+      // Auto-calculate if L, W, or D changed
+      if (field === "poolLength" || field === "poolWidth" || field === "poolDepth") {
+        const l = parseFloat(nextSpecs.poolLength) || 0;
+        const w = parseFloat(nextSpecs.poolWidth) || 0;
+        const d = parseFloat(nextSpecs.poolDepth) || 0;
+        
+        if (l > 0 && w > 0 && d > 0) {
+          const metrics = calculatePoolMetrics(l, w, d);
+          nextSpecs.poolVolume = `${l * w * d} Cft`;
+          nextSpecs.totalPoolVolume = `${metrics.volumeLiters} Ltrs`;
+          nextSpecs.filtrationVolume = `${metrics.volumeLiters} Ltrs`;
+          nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
+          nextSpecs.copingArea = `${metrics.copingArea} Rft`;
+          nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
+        }
+      }
+      
+      return { ...prev, projectSpecifications: nextSpecs };
+    });
     setHasUnsavedChanges(true);
   };
 
@@ -264,6 +283,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       unit: "Nos",
       rate: 0,
       amount: 0,
+      productId: null,
+      variableValues: {},
     };
     setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
   };
@@ -273,6 +294,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     setFormData((prev) => {
       const newItems = [...prev.items];
       newItems[index] = { ...newItems[index], [field]: value };
+      
+      // If variable values changed, re-render description if we have a template
+      if (field === "variableValues" && newItems[index].productId) {
+        // We'll need the template text. In a real app, we might need to fetch it or have it in state.
+        // For simplicity, we'll handle the actual re-render during item selection and 
+        // provide an effect or helper to update it.
+      }
+
       if (field === "qty" || field === "rate") {
         newItems[index].amount = Number(newItems[index].qty) * Number(newItems[index].rate);
       }
@@ -353,6 +382,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           <tbody>
             {formData.items.map((item, idx) => {
               if (item.section !== section) return null;
+              
+              const isTemplate = !!item.productId;
+              const templateVariables = item.variableValues ? Object.keys(item.variableValues) : [];
+
               return (
                 <tr key={idx}>
                   <td>
@@ -364,27 +397,62 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                       value={item.description}
                       onChange={(product, manualValue) => {
                         if (product) {
-                          // Auto-fill multiple fields
+                          const initialVars: Record<string, string> = {};
+                          product.templateVariables.forEach(v => initialVars[v] = "");
+                          
                           setFormData((prev) => {
                             const newItems = [...prev.items];
                             newItems[idx] = {
                               ...newItems[idx],
-                              description: product.specification || product.name,
+                              productId: product.id,
+                              variableValues: initialVars,
+                              description: renderTemplate(product.templateText, initialVars),
                               warranty: product.warranty || newItems[idx].warranty,
                               unit: product.unit || newItems[idx].unit,
                               rate: Number(product.defaultRate) || newItems[idx].rate,
                               category: product.category || newItems[idx].category,
                               section: product.sectionCode || newItems[idx].section,
+                              imageUrl: product.imagePath || newItems[idx].imageUrl,
                             };
                             newItems[idx].amount = Number(newItems[idx].qty) * Number(newItems[idx].rate);
                             return { ...prev, items: newItems };
                           });
                         } else if (manualValue !== undefined) {
+                          updateItem(idx, "productId", null);
+                          updateItem(idx, "variableValues", {});
                           updateItem(idx, "description", manualValue);
                         }
                       }}
-                      placeholder="Search products or type..."
+                      placeholder="Search template products..."
                     />
+                    
+                    {isTemplate && templateVariables.length > 0 && (
+                      <div className="variable-inputs">
+                        {templateVariables.map(v => (
+                          <div key={v} className="variable-field">
+                            <label>{v.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</label>
+                            <input 
+                              type="text" 
+                              value={item.variableValues?.[v] || ""} 
+                              onChange={(e) => {
+                                const newVars = { ...item.variableValues, [v]: e.target.value };
+                                // We need the original template text here. 
+                                // For now we'll assume it's stored or we'll have to fetch it.
+                                // Let's store the raw template in the item too for easy rendering.
+                                updateItem(idx, "variableValues", newVars);
+                                // Trigger description update
+                                fetch(`/api/products/${item.productId}`)
+                                  .then(res => res.json())
+                                  .then(prod => {
+                                    updateItem(idx, "description", renderTemplate(prod.templateText, newVars));
+                                  });
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="image-upload-wrapper">
                       <input type="file" accept="image/*" onChange={(e) => handleImageUpload(idx, e)} style={{ fontSize: "11px" }} />
                       {item.imageUrl && <img src={item.imageUrl} className="image-preview" alt="preview" />}

@@ -28,3 +28,35 @@ export function convertToWordsINR(num: number): string {
 
   return inWords(Math.floor(num)).trim() + " Rupees Only";
 }
+
+export function calculatePoolMetrics(l: number, w: number, d: number) {
+  // Assuming inputs are in feet
+  const volumeCubicFeet = l * w * d;
+  const volumeLiters = Math.round(volumeCubicFeet * 28.317);
+  
+  const floorArea = l * w;
+  const wallArea = 2 * (l + w) * d;
+  const tilingArea = Math.round(floorArea + wallArea);
+  
+  const copingArea = Math.round(2 * (l + w));
+  const waterproofingArea = tilingArea;
+
+  return {
+    volumeLiters,
+    tilingArea,
+    copingArea,
+    waterproofingArea
+  };
+}
+
+export function renderTemplate(template: string, variables: Record<string, string>): string {
+  if (!template) return "";
+  return template.replace(/{{(\w+)}}/g, (_, key) => {
+    return variables[key] !== undefined ? variables[key] : `{{${key}}}`;
+  });
+}
+
+export function extractTemplateVariables(template: string): string[] {
+  const matches = template.matchAll(/{{(\w+)}}/g);
+  return Array.from(new Set(Array.from(matches).map(m => m[1])));
+}
