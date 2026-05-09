@@ -417,7 +417,7 @@ export async function quotationToDocxBuffer(
     });
 
     const dataRows = rows.map(
-      (it: (typeof quote.items)[number]) => {
+      (it: (typeof quote.items)[number], index: number) => {
         const descriptionLines = it.description.split("\n");
         const titleText = descriptionLines[0];
         const restLines = descriptionLines.slice(1);
@@ -471,7 +471,7 @@ export async function quotationToDocxBuffer(
 
         return new TableRow({
           children: [
-            cell(String(it.serialNo), 5, { align: AlignmentType.CENTER }),
+            cell(String(index + 1), 5, { align: AlignmentType.CENTER }),
             new TableCell({
               borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder },
               width: { size: 40, type: WidthType.PERCENTAGE },

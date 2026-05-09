@@ -156,7 +156,15 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
   const startNew = () => {
     localStorage.removeItem("mr_quotation_draft");
-    const initial = JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE));
+    const initial = {
+      ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
+      quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+      date: new Date().toISOString().split("T")[0],
+      customerName: "",
+      customerAddress: "",
+      customerPhone: "",
+      customerEmail: "",
+    };
     initial.items = initial.items.map((it: any) => ({
       ...it,
       description: renderTemplate(it.description, it.variableValues || {}),
@@ -214,7 +222,15 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       if (saved) {
         setShowRecoveryDialog(true);
       } else {
-        const initial = JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE));
+        const initial = {
+          ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
+          quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+          date: new Date().toISOString().split("T")[0],
+          customerName: "",
+          customerAddress: "",
+          customerPhone: "",
+          customerEmail: "",
+        };
         initial.items = initial.items.map((it: any) => ({
           ...it,
           description: renderTemplate(it.description, it.variableValues || {}),
@@ -233,6 +249,62 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   }, 0);
   const gstAmount = (subtotal * formData.gstPercent) / 100;
   const grandTotal = subtotal + gstAmount;
+
+  const resetPhase = () => {
+    if (!confirm("Are you sure you want to reset this phase to defaults? All changes in this step will be lost.")) return;
+
+    if (step === 1) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: "",
+        customerAddress: "",
+        customerPhone: "",
+        customerEmail: "",
+      }));
+    } else if (step === 2) {
+      setFormData(prev => {
+        const nextSpecs = {
+          ...prev.projectSpecifications,
+          poolLength: "30",
+          poolWidth: "20",
+          poolDepth: "5",
+          shapeOfPool: "Rectangle Pool",
+          typeOfPool: "Skimmer Type",
+          plantRoomLength: "8",
+          plantRoomWidth: "8",
+          plantRoomHeight: "6",
+          turnoverPeriod: "4",
+          poolVolumeOverride: false,
+          totalPoolVolumeOverride: false,
+          filtrationVolumeOverride: false,
+          tilingAreaOverride: false,
+          copingAreaOverride: false,
+          waterproofingAreaOverride: false,
+        };
+        const metrics = calculatePoolMetrics(nextSpecs);
+        return {
+          ...prev,
+          projectSpecifications: { ...nextSpecs, ...metrics }
+        };
+      });
+    } else if (step === 3) {
+      ["poolVolume", "totalPoolVolume", "filtrationVolume", "tilingArea", "copingArea", "waterproofingArea"].forEach(m => resetMetric(m));
+    } else if (step >= 4 && step <= 8) {
+      const sectionCodes = ["A", "B", "C", "D", "Part 2"];
+      const code = sectionCodes[step - 4];
+      const masterItems = MR_MASTER_TEMPLATE.items?.filter(it => it.section === code) || [];
+      
+      setFormData(prev => {
+        const otherItems = prev.items.filter(it => it.section !== code);
+        const resetItems = JSON.parse(JSON.stringify(masterItems)).map((it: any) => ({
+          ...it,
+          description: renderTemplate(it.description, it.variableValues || {}),
+          templateText: it.description
+        }));
+        return { ...prev, items: [...otherItems, ...resetItems].sort((a,b) => a.serialNo - b.serialNo) };
+      });
+    }
+  };
 
   const nextStep = async () => {
     if (step === 8) {
@@ -438,7 +510,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     setIsSubmitting(false);
   };
 
-  const renderProductCard = (idx: number) => {
+  const renderProductCard = (idx: number, displaySerial: number) => {
     const item = formData.items[idx];
     const isTemplate = !!item.productId;
     const templateVariables = item.variableValues ? Object.keys(item.variableValues) : [];
@@ -452,7 +524,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         <div className="product-card-content">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-               <h4 className="product-card-title">{item.serialNo}. {item.category}</h4>
+               <h4 className="product-card-title">{displaySerial}. {item.category}</h4>
                {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
                {!item.descriptionOverride && isTemplate && <span className="badge auto">Template Driven</span>}
             </div>
@@ -723,9 +795,9 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                   <h3>Items for {formData.sections?.[sIdx - 4].title}</h3>
                   <button className="btn-secondary" onClick={() => {/* Add product logic */}}>+ Add Product</button>
                </div>
-               {formData.items.filter(it => it.section === formData.sections?.[sIdx - 4].code).map((_, i) => {
-                 const actualIdx = formData.items.findIndex(it => it === formData.items.filter(it => it.section === formData.sections?.[sIdx - 4].code)[i]);
-                 return renderProductCard(actualIdx);
+               {formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).map((it, i) => {
+                  const actualIdx = formData.items.findIndex(orig => orig === it);
+                  return renderProductCard(actualIdx, i + 1);
                })}
                <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
                   <ProductSelect
@@ -763,11 +835,11 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           <div>
              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                 <h3>Part 2 - Pool Finishes</h3>
-                <button className="btn-secondary">+ Add Item</button>
+                <button className="btn-secondary" onClick={() => resetPhase()}>Reset Phase</button>
              </div>
-             {formData.items.filter(it => it.section === "Part 2").map((_, i) => {
-                const actualIdx = formData.items.findIndex(it => it === formData.items.filter(it => it.section === "Part 2")[i]);
-                return renderProductCard(actualIdx);
+             {formData.items.filter(it => it.section === "Part 2").map((it, i) => {
+                const actualIdx = formData.items.findIndex(orig => orig === it);
+                return renderProductCard(actualIdx, i + 1);
              })}
              <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
                 <ProductSelect
@@ -838,8 +910,9 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       </div>
 
       <div className="sticky-footer">
-        <div>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           {step > 1 && <button className="btn-secondary" onClick={prevStep}>← Back</button>}
+          {step < 9 && <button className="btn-icon" style={{ border: "1px solid #fecaca", color: "#ef4444" }} onClick={resetPhase} title="Reset this phase to defaults">Reset Phase</button>}
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
            {step < 9 && <button className="btn-secondary" onClick={() => handleSubmit(true)}>Save Draft</button>}

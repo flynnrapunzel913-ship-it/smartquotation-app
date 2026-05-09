@@ -126,7 +126,7 @@ export function buildQuotationHtml(
         </thead>
         <tbody>
           ${rows
-            .map((it: (typeof quote.items)[number]) => {
+            .map((it: (typeof quote.items)[number], index: number) => {
               const descriptionLines = it.description.split("\n");
               const title = descriptionLines[0];
               const rest = descriptionLines.slice(1).join("\n");
@@ -141,7 +141,7 @@ export function buildQuotationHtml(
 
               return `
               <tr>
-                <td class="cen" style="vertical-align: top;">${it.serialNo}</td>
+                <td class="cen" style="vertical-align: top;">${index + 1}</td>
                 <td>
                   <div class="item-title">${escapeHtml(title)}</div>
                   ${formattedBody}
