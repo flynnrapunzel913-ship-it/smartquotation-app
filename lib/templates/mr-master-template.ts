@@ -66,7 +66,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       amount: 12400,
       productId: "seed-temp-prod-3",
       variableValues: { "valveSize": "1.5\"" },
-      imageUrl: "/template-images/mr-swimming-pools/multiport-valve.jpg"
+      imageUrl: "/template-images/mr-swimming-pools/06-way-multiport-valve.jpg"
     },
     {
       section: "A",
@@ -122,7 +122,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       amount: 45000,
       productId: "seed-temp-prod-7",
       variableValues: { "ladderSteps": "03 & 04" },
-      imageUrl: "/template-images/mr-swimming-pools/pool-ladder.jpg"
+      imageUrl: "/template-images/mr-swimming-pools/swimming-pool-ladder.jpg"
     },
     {
       section: "A",
@@ -149,7 +149,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 25000,
       amount: 25000,
       productId: "seed-temp-prod-9",
-      imageUrl: "/template-images/mr-swimming-pools/labour-plant-room.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/labour-charges--plant-room-and-basin-equipments.jpg",
       variableValues: {},
     },
     {
@@ -177,7 +177,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 3800,
       amount: 68400,
       productId: "seed-temp-prod-11",
-      imageUrl: "/template-images/mr-swimming-pools/control-regulating-equipment.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/control-and-regulating-equipments.jpg",
       variableValues: {},
     },
     {
@@ -191,7 +191,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 25000,
       amount: 25000,
       productId: "seed-temp-prod-12",
-      imageUrl: "/template-images/mr-swimming-pools/labour-plumbing.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/labour-charges--plumbing-works.jpg",
       variableValues: {},
     },
     {
@@ -234,7 +234,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 20000,
       amount: 20000,
       productId: "seed-temp-prod-15",
-      imageUrl: "/template-images/mr-swimming-pools/labour-pool-electrical.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/labour-charges--pool-electrical-works.jpg",
     },
 
     // SECTION C – ELECTRICAL CONTROL PANEL WITH TIMER
@@ -249,7 +249,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 3800,
       amount: 7600,
       productId: "seed-temp-prod-16",
-      imageUrl: "/template-images/mr-swimming-pools/pool-starter-panel.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/pool-starter-for-pumps-and-lights.jpg",
     },
     {
       section: "C",
@@ -262,7 +262,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 7500,
       amount: 7500,
       productId: "seed-temp-prod-17",
-      imageUrl: "/template-images/mr-swimming-pools/transformer.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/transformer-for-pool-lights.jpg",
     },
     {
       section: "C",
@@ -275,7 +275,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 10000,
       amount: 10000,
       productId: "seed-temp-prod-18",
-      imageUrl: "/template-images/mr-swimming-pools/testing-commissioning.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/testing-and-commissioning-of-the-pool.jpg",
     },
 
     // SECTION D – SUPPLY OF SWIMMING POOL MAINTENANCE CLEANING KIT
@@ -329,7 +329,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 1400,
       amount: 1400,
       productId: "seed-temp-prod-22",
-      imageUrl: "/template-images/mr-swimming-pools/leaf-rake.jpg"
+      imageUrl: "/template-images/mr-swimming-pools/deep-leaf-rake.jpg"
     },
     {
       section: "D",
@@ -342,7 +342,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 700,
       amount: 700,
       productId: "seed-temp-prod-23",
-      imageUrl: "/template-images/mr-swimming-pools/test-kit.jpg"
+      imageUrl: "/template-images/mr-swimming-pools/water-test-kit.jpg"
     },
     {
       section: "D",
@@ -383,7 +383,7 @@ export const MR_MASTER_TEMPLATE: Partial<QuotationFormValues> = {
       rate: 65,
       amount: 92300,
       productId: "seed-temp-prod-26",
-      imageUrl: "/template-images/mr-swimming-pools/waterproofing.jpg",
+      imageUrl: "/template-images/mr-swimming-pools/water-proofing.jpg",
     },
     {
       section: "Part 2",

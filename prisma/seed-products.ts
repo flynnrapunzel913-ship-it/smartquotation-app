@@ -38,7 +38,7 @@ const products = [
     warranty: "01 Years",
     defaultRate: 12400,
     sortOrder: 3,
-    imagePath: "/template-images/mr-swimming-pools/multiport-valve.jpg"
+    imagePath: "/template-images/mr-swimming-pools/06-way-multiport-valve.jpg"
   },
   {
     name: "RECIRCULATING PUMP",
@@ -86,7 +86,7 @@ const products = [
     warranty: "02 Years",
     defaultRate: 22500,
     sortOrder: 7,
-    imagePath: "/template-images/mr-swimming-pools/pool-ladder.jpg"
+    imagePath: "/template-images/mr-swimming-pools/swimming-pool-ladder.jpg"
   },
   {
     name: "STD SKIMMER",
@@ -110,7 +110,7 @@ const products = [
     warranty: "01 Years",
     defaultRate: 25000,
     sortOrder: 9,
-    imagePath: "/template-images/mr-swimming-pools/labour-plant-room.jpg"
+    imagePath: "/template-images/mr-swimming-pools/labour-charges--plant-room-and-basin-equipments.jpg"
   },
   {
     name: "PLUMBING MATERIALS",
@@ -134,7 +134,7 @@ const products = [
     warranty: "01 Years",
     defaultRate: 3800,
     sortOrder: 11,
-    imagePath: "/template-images/mr-swimming-pools/control-regulating-equipment.jpg"
+    imagePath: "/template-images/mr-swimming-pools/control-and-regulating-equipments.jpg"
   },
   {
     name: "LABOUR CHARGES - PLUMBING WORKS",
@@ -146,7 +146,7 @@ const products = [
     warranty: "01 Years",
     defaultRate: 25000,
     sortOrder: 12,
-    imagePath: "/template-images/mr-swimming-pools/labour-plumbing.jpg"
+    imagePath: "/template-images/mr-swimming-pools/labour-charges--plumbing-works.jpg"
   },
   {
     name: "UNDERWATER LIGHT",
@@ -184,7 +184,7 @@ const products = [
     warranty: "01 Years",
     defaultRate: 20000,
     sortOrder: 15,
-    imagePath: "/template-images/mr-swimming-pools/labour-pool-electrical.jpg"
+    imagePath: "/template-images/mr-swimming-pools/labour-charges--pool-electrical-works.jpg"
   },
 
   // SECTION C – ELECTRICAL CONTROL PANEL WITH TIMER
@@ -198,7 +198,7 @@ const products = [
     warranty: "01 Years",
     defaultRate: 3800,
     sortOrder: 16,
-    imagePath: "/template-images/mr-swimming-pools/pool-starter-panel.jpg"
+    imagePath: "/template-images/mr-swimming-pools/pool-starter-for-pumps-and-lights.jpg"
   },
   {
     name: "TRANSFORMER FOR POOL LIGHTS",
@@ -210,7 +210,7 @@ const products = [
     warranty: "01 YEARS",
     defaultRate: 7500,
     sortOrder: 17,
-    imagePath: "/template-images/mr-swimming-pools/transformer.jpg"
+    imagePath: "/template-images/mr-swimming-pools/transformer-for-pool-lights.jpg"
   },
   {
     name: "TESTING & COMMISSIONING OF THE POOL",
@@ -222,7 +222,7 @@ const products = [
     warranty: "0",
     defaultRate: 10000,
     sortOrder: 18,
-    imagePath: "/template-images/mr-swimming-pools/testing-commissioning.jpg"
+    imagePath: "/template-images/mr-swimming-pools/testing-and-commissioning-of-the-pool.jpg"
   },
 
   // SECTION D – MAINTENANCE CLEANING KIT
@@ -272,7 +272,7 @@ const products = [
     warranty: "N/A",
     defaultRate: 1400,
     sortOrder: 22,
-    imagePath: "/template-images/mr-swimming-pools/leaf-rake.jpg"
+    imagePath: "/template-images/mr-swimming-pools/deep-leaf-rake.jpg"
   },
   {
     name: "WATER TEST KIT",
@@ -284,7 +284,7 @@ const products = [
     warranty: "N/A",
     defaultRate: 700,
     sortOrder: 23,
-    imagePath: "/template-images/mr-swimming-pools/test-kit.jpg"
+    imagePath: "/template-images/mr-swimming-pools/water-test-kit.jpg"
   },
   {
     name: "POOL BRUSH",
@@ -322,7 +322,7 @@ const products = [
     warranty: "05 Years",
     defaultRate: 65,
     sortOrder: 26,
-    imagePath: "/template-images/mr-swimming-pools/waterproofing.jpg"
+    imagePath: "/template-images/mr-swimming-pools/water-proofing.jpg"
   },
   {
     name: "COPING STONE: LABOR CHARGES ONLY (**Excluding Granite/cement)",
