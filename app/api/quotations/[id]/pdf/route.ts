@@ -17,17 +17,22 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   if (!quote) {
     return new Response("Not found", { status: 404 });
   }
-  const company = await getOrCreateCompanySettings();
-  const html = buildQuotationHtml(quote, company);
-  const buffer = await htmlToPdfBuffer(html);
+  try {
+    const company = await getOrCreateCompanySettings();
+    const html = buildQuotationHtml(quote, company);
+    const buffer = await htmlToPdfBuffer(html);
 
-  const { searchParams } = new URL(_req.url);
-  const disposition = searchParams.get("disposition") === "inline" ? "inline" : "attachment";
+    const { searchParams } = new URL(_req.url);
+    const disposition = searchParams.get("disposition") === "inline" ? "inline" : "attachment";
 
-  return new Response(new Uint8Array(buffer), {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `${disposition}; filename="${quote.quoteNumber}.pdf"`,
-    },
-  });
+    return new Response(new Uint8Array(buffer), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `${disposition}; filename="${quote.quoteNumber}.pdf"`,
+      },
+    });
+  } catch (error: any) {
+    console.error("PDF Generation Error:", error);
+    return new Response(`Error generating PDF: ${error.message}`, { status: 500 });
+  }
 }

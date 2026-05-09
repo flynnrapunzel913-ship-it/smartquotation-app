@@ -1,11 +1,9 @@
 import { getSession } from "@/lib/session";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { QuotationFormValues } from "@/types";
 import { listQuotations } from "@/lib/data/quotations";
 import { convertToWordsINR } from "@/lib/utils";
-
-const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   try {
