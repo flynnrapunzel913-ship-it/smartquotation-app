@@ -47,13 +47,212 @@ const HEADER_CONTACTS = {
   branches: "Branches: Bengaluru &bull; Mysuru &bull; Kalburgi",
 };
 
+function buildKleanTechQuotationHtml(
+  quote: QuotationWithRelations,
+  company: CompanySettings | null,
+): string {
+  const subtotal = quote.items.reduce((sum, item) => sum + Number(item.amount), 0);
+  const specs = quote.projectSpecifications as any;
+  const serviceCharges = specs?.serviceCharges ? Number(specs.serviceCharges) : 0;
+  const cfPercent = specs?.carryingForwardPercent ? Number(specs.carryingForwardPercent) : 3;
+  const carryingForwardCharge = (subtotal * cfPercent) / 100;
+  const taxableAmount = subtotal + serviceCharges + carryingForwardCharge;
+  const gstPercent = Number(quote.gstPercent) || 18;
+  const gstAmount = (taxableAmount * gstPercent) / 100;
+  const grandTotal = taxableAmount + gstAmount;
+
+  const cssPath = path.join(process.cwd(), "styles", "klean-tech-template.css");
+  let cssContent = "";
+  if (fs.existsSync(cssPath)) {
+    cssContent = fs.readFileSync(cssPath, "utf-8");
+  }
+
+  const logoPath = path.join(process.cwd(), "templates", "klean-tech", "roots-logo.png");
+  let logoHtml = "";
+  if (fs.existsSync(logoPath)) {
+    const buffer = fs.readFileSync(logoPath);
+    logoHtml = `<img src="data:image/png;base64,${buffer.toString("base64")}" class="logo" />`;
+  }
+
+  const itemsHtml = quote.items.map((item, idx) => {
+    const lines = item.description.split("\n");
+    const title = lines[0];
+    const itemSpecs = lines.slice(1).join("\n");
+    
+    return `
+      <tr>
+        <td class="numeric-cell">${idx + 1}</td>
+        <td>
+          <span class="product-description-title">${escapeHtml(title)}</span>
+          ${itemSpecs ? `<span class="product-description-specs">${escapeHtml(itemSpecs)}</span>` : ""}
+        </td>
+        <td>
+          ${item.imageUrl ? `<img src="${imageToBase64(item.imageUrl.replace(".jpg", ".png"))}" class="product-image" />` : "No Image"}
+        </td>
+        <td class="numeric-cell">${escapeHtml((item as any).hsnCode || "")}</td>
+        <td style="text-align: right;">${formatAmountWithoutCurrency(item.rate)}</td>
+        <td class="numeric-cell">${Number(item.qty)}</td>
+        <td style="text-align: right;">${formatAmountWithoutCurrency(item.amount)}</td>
+      </tr>
+    `;
+  }).join("");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Quotation ${quote.quoteNumber}</title>
+  <style>
+    ${cssContent}
+  </style>
+</head>
+<body>
+  <div class="page-border"></div>
+  <div class="quotation-template">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-section">
+        ${logoHtml}
+      </div>
+      
+      <div class="company-details">
+        <div class="company-name">KLEAN TECH SYSTEMS</div>
+        <div>NO.191, “Shri Mallikarjuna”,</div>
+        <div>Opp. Keshwapur Police Station, Naveen Park,</div>
+        <div>Keshwapur, Hubli-580023</div>
+        <div>GSTIN: 29AQEPS9928D1ZB</div>
+        <div>Mob No: +91 9538840277</div>
+        <div>Email: kleantechsystems@yahoo.co.in</div>
+      </div>
+      
+      <div class="quote-meta">
+        <div class="quote-title">QUOTATION</div>
+        <div>${escapeHtml(quote.quoteNumber)}</div>
+        <div>DATE: ${format(new Date(quote.date), "dd.MM.yyyy")}</div>
+      </div>
+    </div>
+
+    <!-- Invoice To -->
+    <div class="invoice-to">
+      <div class="invoice-to-title">Invoice To:</div>
+      <div><strong>${escapeHtml(quote.customer.name)}</strong></div>
+      <div style="white-space: pre-wrap;">${escapeHtml(quote.customer.address)}</div>
+    </div>
+
+    <!-- Product Table -->
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th style="width: 5%">Sl.No</th>
+          <th style="width: 45%">Description</th>
+          <th style="width: 15%">Image</th>
+          <th style="width: 10%">HSN Code</th>
+          <th style="width: 10%">Unit Price (INR)</th>
+          <th style="width: 5%">Qty</th>
+          <th style="width: 10%">Total Price exclusive. Of Tax Rs.</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHtml}
+      </tbody>
+    </table>
+
+    <!-- Payment Term -->
+    <div class="payment-term">
+      <span class="payment-term-label">Payment Term : </span>
+      <span>${escapeHtml(quote.paymentTerms || "100% Advance Payment along with Purchase Order")}</span>
+    </div>
+
+    <!-- Footer Line -->
+    <div class="footer-line">
+      <div>No: 191, “Shri Mallikarjuna” Opp. Police Station, Naveen Park,</div>
+      <div>Kusugal Road, Keshwapur, Hubballi-580023.</div>
+      <div>GST No: 29AQEPS9928D1ZB. email: kleantechsystems@yahoo.co.in.</div>
+    </div>
+
+    <div style="page-break-before: always;"></div>
+
+    <!-- Terms and Conditions -->
+    <div class="terms-section">
+      <div class="terms-title">TERMS AND CONDITIONS:</div>
+      <ul class="terms-list">
+        <li>• Prices: Price quoted Ex Godown.</li>
+        <li>• Tax Applicable: GST ${gstPercent}% Extra</li>
+        <li>• Carrying & Forwarding: ${cfPercent}% Extra</li>
+        <li>• Freight: ${escapeHtml(specs?.freightType || "To be paid by buyer")}</li>
+        <li>• Delivery: Within 2 weeks from the date of receipt of your Purchase Order.</li>
+        <li>• Warranty: 12 Months from the date of delivery...</li>
+        <li>• Validity: The rates and terms are valid for 30 days...</li>
+        <li>• Commissioning & Training: Will be done by our Engineer at your site.</li>
+      </ul>
+    </div>
+
+    <!-- Bank Details -->
+    <div class="bank-details">
+      <div class="bank-details-title">* The Bank Details.</div>
+      <div class="bank-details-grid">
+        <span class="bank-details-label">Account Name:</span>
+        <span>KLEAN TECH SYSTEMS</span>
+        
+        <span class="bank-details-label">Bank Account Number:</span>
+        <span>37116560016</span>
+        
+        <span class="bank-details-label">Bank Name:</span>
+        <span>State Bank of India</span>
+        
+        <span class="bank-details-label">Bank Branch Name:</span>
+        <span>Kusugal Road Branch Hubli.</span>
+        
+        <span class="bank-details-label">IFSC Code of Bank Branch:</span>
+        <span>SBIN0040641</span>
+        
+        <span class="bank-details-label">Our E-mail ID (For sending payment advice):</span>
+        <span>kleantechsystems@yahoo.co.in</span>
+        
+        <span class="bank-details-label">GST No:</span>
+        <span>29AQEPS9928D1ZB</span>
+        
+        <span class="bank-details-label">PAN No:</span>
+        <span>AQEPS9928D</span>
+      </div>
+    </div>
+
+    <!-- Signature Block -->
+    <div class="signature-block">
+      <div>For KLEAN TECH SYSTEMS</div>
+      <div style="height: 60px;"></div>
+      <div>Rajesh V Shetti.</div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      * This is a computer generated document and authenticated by KLEAN TECH SYSTEMS. 
+      Hence, it can be considered valid even if not signed manually.
+    </div>
+    <div class="footer">
+      NO.191, “Shri Mallikarjuna” Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023. GST No: 29AQEPS9928D1ZB. Email: kleantechsystems@yahoo.co.in.
+    </div>
+  </body>
+</html>`;
+}
 export function buildQuotationHtml(
   quote: QuotationWithRelations,
   company: CompanySettings | null,
   options?: { title?: string },
 ): string {
+  let specs = quote.projectSpecifications as any;
+  if (typeof specs === "string") {
+    try {
+      specs = JSON.parse(specs);
+    } catch (e) {
+      specs = {};
+    }
+  }
+
+  if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+    return buildKleanTechQuotationHtml(quote, company);
+  }
   const title = options?.title ?? `Quotation ${quote.quoteNumber}`;
-  const specs = quote.projectSpecifications as ProjectSpecifications;
   const c = company;
 
   // Use the extracted logo if it exists, otherwise fallback to DB

@@ -134,11 +134,179 @@ function multilineParagraphs(text: string, size = 20): Paragraph[] {
       }),
   );
 }
+async function generateKleanTechDocx(
+  quote: QuotationWithRelations,
+  company: CompanySettings | null,
+): Promise<Buffer> {
+  const children: (Paragraph | Table)[] = [];
+
+  // Header
+  children.push(
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: "KLEAN TECH SYSTEMS", bold: true, size: 28, color: "000000" })],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: "No: 191, “Shri Mallikarjuna”, Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023.", size: 16 })],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: "Email: kleantechsystems@yahoo.co.in", size: 16 })],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 200 },
+      children: [new TextRun({ text: "QUOTATION", bold: true, size: 24 })],
+    }),
+  );
+
+  // Ref & Date
+  children.push(
+    new Paragraph({
+      alignment: AlignmentType.RIGHT,
+      children: [new TextRun({ text: `Ref No: ${quote.quoteNumber}`, bold: true, size: 18 })],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.RIGHT,
+      children: [new TextRun({ text: `Date: ${format(new Date(quote.date), "dd.MM.yyyy")}`, bold: true, size: 18 })],
+    }),
+  );
+
+  // Invoice To
+  children.push(
+    new Paragraph({
+      spacing: { before: 200 },
+      children: [new TextRun({ text: "Invoice To:", bold: true, size: 18 })],
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: quote.customer.name, bold: true, size: 18 })],
+    }),
+    ...multilineParagraphs(quote.customer.address, 18),
+  );
+
+  // Item Table
+  const headerRow = new TableRow({
+    tableHeader: true,
+    children: [
+      cell("Sl.No", { bold: true }),
+      cell("Description", { bold: true }),
+      cell("Image", { bold: true }),
+      cell("HSN Code", { bold: true }),
+      cell("Unit Price", { bold: true, align: AlignmentType.RIGHT }),
+      cell("Qty", { bold: true, align: AlignmentType.CENTER }),
+      cell("Total", { bold: true, align: AlignmentType.RIGHT }),
+    ],
+  });
+
+  const dataRows = quote.items.map((item, idx) => {
+    let imageCell = cell("");
+    if (item.imageUrl) {
+      const localImagePath = path.join(process.cwd(), "public", item.imageUrl);
+      if (fs.existsSync(localImagePath)) {
+        try {
+          const imageBuffer = fs.readFileSync(localImagePath);
+          imageCell = new TableCell({
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                  new ImageRun({
+                    data: imageBuffer,
+                    transformation: { width: 60, height: 60 },
+                  }),
+                ],
+              }),
+            ],
+          });
+        } catch (e) {
+          console.error("Failed to load image for DOCX:", e);
+        }
+      }
+    }
+
+    return new TableRow({
+      children: [
+        cell(String(idx + 1), { align: AlignmentType.CENTER }),
+        cell(item.description),
+        imageCell,
+        cell((item as any).hsnCode || ""),
+        cell(formatCurrencyINR(Number(item.rate)), { align: AlignmentType.RIGHT }),
+        cell(String(Number(item.qty)), { align: AlignmentType.CENTER }),
+        cell(formatCurrencyINR(Number(item.amount)), { align: AlignmentType.RIGHT }),
+      ],
+    });
+  });
+
+  children.push(
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      rows: [headerRow, ...dataRows],
+    }),
+  );
+
+  // Totals
+  const subtotal = quote.items.reduce((sum, item) => sum + Number(item.amount), 0);
+  const specs = quote.projectSpecifications as any;
+  const serviceCharges = specs?.serviceCharges ? Number(specs.serviceCharges) : 0;
+  const cfPercent = specs?.carryingForwardPercent ? Number(specs.carryingForwardPercent) : 3;
+  const carryingForwardCharge = (subtotal * cfPercent) / 100;
+  const taxableAmount = subtotal + serviceCharges + carryingForwardCharge;
+  const gstPercent = Number(quote.gstPercent) || 18;
+  const gstAmount = (taxableAmount * gstPercent) / 100;
+  const grandTotal = taxableAmount + gstAmount;
+
+  children.push(
+    new Paragraph({ spacing: { before: 200 } }),
+    new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      rows: [
+        new TableRow({ children: [cell("Sub Total", { bold: true }), cell(formatCurrencyINR(subtotal), { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Service Charges", { bold: true }), cell(formatCurrencyINR(serviceCharges), { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell(`C&F Charges (${cfPercent}%)`, { bold: true }), cell(formatCurrencyINR(carryingForwardCharge), { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Taxable Amount", { bold: true }), cell(formatCurrencyINR(taxableAmount), { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell(`GST (${gstPercent}%)`, { bold: true }), cell(formatCurrencyINR(gstAmount), { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Grand Total", { bold: true }), cell(formatCurrencyINR(grandTotal), { align: AlignmentType.RIGHT })] }),
+      ],
+    }),
+  );
+
+  if (quote.terms) {
+    children.push(
+      new Paragraph({ spacing: { before: 200 }, children: [new TextRun({ text: "TERMS & CONDITIONS", bold: true, size: 22 })] }),
+      ...multilineParagraphs(quote.terms, 18),
+    );
+  }
+
+  if (quote.paymentTerms) {
+    children.push(
+      new Paragraph({ spacing: { before: 200 }, children: [new TextRun({ text: "PAYMENT TERMS", bold: true, size: 22 })] }),
+      ...multilineParagraphs(quote.paymentTerms, 18),
+    );
+  }
+
+  children.push(
+    new Paragraph({ spacing: { before: 400 }, children: [new TextRun({ text: "For KLEAN TECH SYSTEMS", size: 20, bold: true })] }),
+    new Paragraph({ spacing: { before: 400 }, children: [new TextRun({ text: "Rajesh V Shetti", size: 20, bold: true })] }),
+    new Paragraph({ children: [new TextRun({ text: "+91 9538840277", size: 20, bold: true })] }),
+  );
+
+  const doc = new Document({
+    sections: [{ children }],
+  });
+
+  const buf = await Packer.toBuffer(doc);
+  return Buffer.from(buf);
+}
 
 export async function quotationToDocxBuffer(
   quote: QuotationWithRelations,
   company: CompanySettings | null,
 ): Promise<Buffer> {
+  const specs = quote.projectSpecifications as any;
+  if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+    return generateKleanTechDocx(quote, company);
+  }
   const specs = quote.projectSpecifications as ProjectSpecifications;
   const c = company;
 

@@ -43,10 +43,14 @@ model Product {
   defaultRate   Decimal  @db.Decimal(14, 2)
   unit          String   @default("Nos")
   warranty      String   @default("")
-  templateText  String   @default("") @db.Text
-  templateVariables Json   @default("[]")
+//  code          String   @default("")
+//  hsnCode       String   @default("")
+//  brand         String   @default("")
+//  defaultQty    Int      @default(1)
+//  templateText  String   @default("") @db.Text
+//  templateVariables Json   @default("[]")
   imagePath     String?  @db.Text
-  sortOrder     Int      @default(0)
+//  sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -93,12 +97,14 @@ model Quotation {
   isDraft              Boolean         @default(false)
   deletedAt            DateTime?
   items                QuotationItem[]
+//  quotationType        String          @default("MR_SWIMMING_POOLS")
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
 
   @@index([quoteNumber])
   @@index([date])
   @@index([deletedAt])
+//  @@index([quotationType])
 }
 
 model QuotationItem {

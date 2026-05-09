@@ -1,0 +1,230 @@
+/* Klean Tech Quotation Template Styles */
+
+.quotation-template {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  color: #000;
+  line-height: 1.4;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.logo-section {
+  flex: 0 0 20%;
+}
+
+.logo {
+  max-width: 130px;
+  height: auto;
+  object-fit: contain;
+}
+
+.company-details {
+  flex: 0 0 50%;
+  text-align: left;
+  font-size: 9pt;
+  border-left: 1px solid #000;
+  padding-left: 15px;
+  line-height: 1.2;
+}
+
+.company-name {
+  font-size: 12pt;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.quote-meta {
+  flex: 0 0 30%;
+  text-align: right;
+  font-size: 10pt;
+}
+
+.quote-title {
+  font-size: 16pt;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.invoice-to {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+  min-height: 100px;
+}
+
+.invoice-to-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 10pt;
+}
+
+.product-table th, .product-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  vertical-align: top;
+}
+
+.product-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: center;
+}
+
+.product-description-title {
+  font-weight: bold;
+  text-decoration: underline;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.product-description-specs {
+  white-space: pre-wrap;
+}
+
+.product-image {
+  max-width: 80px;
+  max-height: 80px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.numeric-cell {
+  text-align: center;
+}
+
+.payment-term {
+  margin-bottom: 20px;
+  font-size: 10pt;
+}
+
+.payment-term-label {
+  font-weight: bold;
+}
+
+.footer-line {
+  border-top: 1px solid #ccc;
+  margin-top: 40px;
+  padding-top: 10px;
+  text-align: center;
+  font-size: 8pt;
+  color: #666;
+}
+
+.terms-section {
+  margin-top: 30px;
+  font-size: 10pt;
+}
+
+.terms-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.terms-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.terms-list li {
+  margin-bottom: 5px;
+}
+
+.bank-details {
+  margin-top: 30px;
+  font-size: 10pt;
+}
+
+.bank-details-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.bank-details-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 5px;
+}
+
+.bank-details-label {
+  font-weight: bold;
+}
+
+.signature-block {
+  margin-top: 40px;
+  text-align: right;
+  font-size: 10pt;
+}
+
+.disclaimer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 8pt;
+  color: #666;
+}
+
+@media print {
+  .quotation-template {
+    padding: 0;
+    max-width: 100%;
+  }
+  
+  .product-table th {
+    background-color: #f2f2f2 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Multi-page Header/Footer and Border Styles */
+@page {
+  margin: 140px 30px 70px 30px;
+}
+
+.header {
+  position: fixed;
+  top: 10px;
+  left: 30px;
+  right: 30px;
+  height: 120px;
+  background: white;
+  z-index: 1000;
+}
+
+.footer {
+  position: fixed;
+  bottom: 10px;
+  left: 30px;
+  right: 30px;
+  text-align: center;
+  font-size: 8pt;
+  color: #666;
+  background: white;
+  z-index: 1000;
+}
+
+.page-border {
+  position: fixed;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  border: 1px solid #000;
+  pointer-events: none;
+  z-index: 999;
+}

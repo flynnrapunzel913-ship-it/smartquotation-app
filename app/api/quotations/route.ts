@@ -68,7 +68,10 @@ export async function POST(req: Request) {
         terms: data.terms || "",
         paymentTerms: data.paymentTerms || "",
         isDraft: data.isDraft || false,
-        projectSpecifications: data.projectSpecifications as any,
+        projectSpecifications: {
+          ...(data.projectSpecifications as any),
+          quotationType: (data as any).quotationType || "MR_SWIMMING_POOLS",
+        },
         sections: (data.sections as any) || [],
         items: {
           create: data.items.map((item) => ({

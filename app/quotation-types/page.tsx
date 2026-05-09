@@ -37,7 +37,6 @@ export default function QuotationTypesPage() {
             title="KLEAN TECH SYSTEMS"
             description="Water treatment systems, RO plants, and industrial filters quotation module."
             href="/quotations/klean-tech/new"
-            disabled={true}
           />
         </div>
       </div>

@@ -42,6 +42,10 @@ async function main() {
   // Seed new product master
   await seedProducts();
 
+  // Seed Klean Tech products
+  const { seedKleanTech } = require("./seed-klean-tech");
+  await seedKleanTech();
+
   console.log("Seed complete. Admin login:", adminEmail, "Password:", adminPassword);
 }
 

@@ -38,7 +38,13 @@ export default function HistoryPage() {
   };
 
   const handleDuplicate = async (id: string) => {
-    router.push(`/quotations/mr-swimming-pools/new?id=${id}&mode=duplicate`);
+    const q = quotations.find((item) => item.id === id);
+    const specs = q?.projectSpecifications as any;
+    if (q?.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+      router.push(`/quotations/klean-tech/new?id=${id}&mode=duplicate`);
+    } else {
+      router.push(`/quotations/mr-swimming-pools/new?id=${id}&mode=duplicate`);
+    }
   };
 
   return (
@@ -99,7 +105,17 @@ export default function HistoryPage() {
                     </td>
                     <td>
                       <div className="actions-cell">
-                        <button className="btn btn-small btn-edit" onClick={() => router.push(`/quotations/mr-swimming-pools/new?id=${q.id}`)}>
+                        <button 
+                          className="btn btn-small btn-edit" 
+                          onClick={() => {
+                            const specs = q.projectSpecifications as any;
+                            if (q.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+                              router.push(`/quotations/klean-tech/${q.id}/edit`);
+                            } else {
+                              router.push(`/quotations/mr-swimming-pools/new?id=${q.id}`);
+                            }
+                          }}
+                        >
                           Edit
                         </button>
                         <button className="btn btn-small btn-duplicate" style={{ background: "#e0f2fe", color: "#0369a1" }} onClick={() => handleDuplicate(q.id)}>

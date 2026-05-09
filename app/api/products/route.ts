@@ -7,6 +7,26 @@ export async function GET() {
   if (!session.isLoggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const products = await prisma.product.findMany({ orderBy: [{ category: "asc" }, { name: "asc" }] });
-  return NextResponse.json(products);
+  
+  try {
+    const products = await prisma.product.findMany({ 
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        category: true,
+        defaultRate: true,
+        unit: true,
+      },
+      orderBy: [{ category: "asc" }, { name: "asc" }] 
+    });
+    console.log("Products returned:", products.length);
+    return NextResponse.json(products);
+  } catch (error: any) {
+    console.error("API products error:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to load products" },
+      { status: 500 }
+    );
+  }
 }
