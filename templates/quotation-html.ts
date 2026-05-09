@@ -155,6 +155,19 @@ export function buildQuotationHtml(
             }).join("")}
         </tbody>
       </table>`;
+    
+    if (sec.code === "D") {
+      tablesHtml += `
+        <table class="boq-table" style="margin-top: -21px; border-top: 0;">
+          <tbody>
+            <tr>
+              <td colspan="7" style="text-align: right; padding: 10px; font-weight: 700;">TOTAL (A+B+C+D)</td>
+              <td class="num" style="width: 100px; padding: 10px; font-weight: 700; background: #f8fafc;">${formatAmountWithoutCurrency(part1Total)}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
   }
 
   const specificationSectionHtml = buildMRPoolSpecificationSectionHtml({
