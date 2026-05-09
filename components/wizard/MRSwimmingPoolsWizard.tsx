@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
 import { calculatePoolMetrics, renderTemplate, extractTemplateVariables } from "@/lib/utils";
+import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
 
 const DEFAULT_TERMS = `1. Single phase connection up to the plant room is in your scope of work.
@@ -46,27 +47,15 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     customerEmail: "",
     quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
     date: new Date().toISOString().split("T")[0],
-    gstPercent: 18,
+    gstPercent: MR_MASTER_TEMPLATE.gstPercent || 18,
     projectSpecifications: {
-      poolLength: "",
-      poolWidth: "",
-      poolDepth: "",
-      poolVolume: "",
-      plantRoomSize: "",
-      shapeOfPool: "",
-      typeOfPool: "",
-      totalPoolVolume: "",
-      filtrationVolume: "",
-      turnoverPeriod: "",
-      tilingArea: "",
-      copingArea: "",
-      waterproofingArea: "",
+      ...MR_MASTER_TEMPLATE.projectSpecifications as any,
     },
-    items: [],
-    sections: DEFAULT_SECTIONS,
-    notes: "",
-    terms: DEFAULT_TERMS,
-    paymentTerms: DEFAULT_PAYMENT,
+    items: [...(MR_MASTER_TEMPLATE.items || [])] as any,
+    sections: [...(MR_MASTER_TEMPLATE.sections || [])] as any,
+    notes: MR_MASTER_TEMPLATE.notes || "",
+    terms: MR_MASTER_TEMPLATE.terms || DEFAULT_TERMS,
+    paymentTerms: MR_MASTER_TEMPLATE.paymentTerms || DEFAULT_PAYMENT,
     title: "",
   });
 
