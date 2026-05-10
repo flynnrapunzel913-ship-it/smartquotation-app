@@ -5,14 +5,16 @@ import React, { useState, useEffect, useRef } from "react";
 interface Product {
   id: string;
   name: string;
-  templateText: string;
-  templateVariables: string[];
+  description: string;
   category: string;
   sectionCode: string;
   unit: string;
   warranty: string;
   defaultRate: number;
   imagePath?: string | null;
+  imageText?: string | null;
+  templateText?: string;
+  templateVariables?: string[];
 }
 
 interface ProductSelectProps {
@@ -32,9 +34,20 @@ export default function ProductSelect({ value, onChange, placeholder, className 
   useEffect(() => {
     fetch("/api/products")
       .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
+      .then((data: Product[]) => {
+        const enriched = data.map(p => {
+          const tText = p.description || "";
+          // Extract variables like {{VarName}}
+          const matches = tText.matchAll(/{{(\w+)}}/g);
+          const vars = Array.from(new Set(Array.from(matches).map(m => m[1])));
+          return {
+            ...p,
+            templateText: tText,
+            templateVariables: vars
+          };
+        });
+        setProducts(enriched);
+        setFilteredProducts(enriched);
       })
       .catch((err) => console.error("Error fetching products:", err));
   }, []);

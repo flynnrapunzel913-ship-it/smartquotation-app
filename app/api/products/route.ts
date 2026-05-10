@@ -17,6 +17,10 @@ export async function GET() {
         category: true,
         defaultRate: true,
         unit: true,
+        warranty: true,
+        imagePath: true,
+        imageText: true,
+        sectionCode: true,
       },
       orderBy: [{ category: "asc" }, { name: "asc" }] 
     });
