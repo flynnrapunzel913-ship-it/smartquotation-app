@@ -21,6 +21,7 @@ interface Props {
 export default function DatabaseProductsTable({ products: initialProducts, databaseId, onRemove }: Props) {
   const [products, setProducts] = useState<Product[]>(initialProducts || []);
   const [isLoading, setIsLoading] = useState(!!databaseId);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (databaseId) {
@@ -36,18 +37,49 @@ export default function DatabaseProductsTable({ products: initialProducts, datab
 
   const fetchProducts = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch(`/api/invoice-databases/${databaseId}`);
+      
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response from database API:", text);
+        setError("Could not load products. The server returned an invalid response (HTML). This usually means the database connection is down.");
+        return;
+      }
+
       const data = await response.json();
-      setProducts(data.products || []);
+      if (!response.ok) {
+        setError(data.error || "Failed to load database products.");
+      } else {
+        setProducts(data.products || []);
+      }
     } catch (error) {
       console.error("Error fetching products:", error);
+      setError("Network error: Could not reach the database API.");
     } finally {
       setIsLoading(false);
     }
   };
 
   if (isLoading) return <p className="text-center py-20 text-[#94a3b8] animate-pulse">Loading products...</p>;
+
+  if (error) {
+    return (
+      <div className="p-8 text-center bg-red-50 border border-red-100 rounded-2xl mx-auto max-w-lg my-10">
+        <div className="text-4xl mb-4">⚠️</div>
+        <div className="text-sm font-black text-red-700 uppercase tracking-tight mb-2">Connection Error</div>
+        <div className="text-xs text-red-600 leading-relaxed">{error}</div>
+        <button 
+          className="mt-6 px-6 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-all"
+          onClick={() => fetchProducts()}
+        >
+          RETRY CONNECTION
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-hidden border border-[#f1f5f9] rounded-xl shadow-sm">

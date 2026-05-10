@@ -2,15 +2,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
+    const session = await getSession();
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const database = await prisma.productDatabase.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         products: {
           orderBy: { name: "asc" },
@@ -18,19 +19,23 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       },
     });
     return NextResponse.json(database);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching database:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: `Database Error: ${error.message || "Failed to fetch database."}`,
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
+    const session = await getSession();
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { name, isActive } = await req.json();
 
     if (isActive) {
@@ -42,7 +47,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 
     const database = await prisma.productDatabase.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(name !== undefined && { name }),
         ...(isActive !== undefined && { isActive }),
@@ -50,30 +55,37 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     });
 
     return NextResponse.json(database);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating database:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: `Database Error: ${error.message || "Failed to update database."}`,
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    // Delete all products first (cascade should handle it if defined, but better to be safe or Prisma will do it if relation is set)
+    const { id } = await params;
+    const session = await getSession();
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Delete all products first
     await prisma.product.deleteMany({
-      where: { databaseId: params.id }
+      where: { databaseId: id }
     });
 
     await prisma.productDatabase.delete({
-      where: { id: params.id }
+      where: { id }
     });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error deleting database:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: `Database Error: ${error.message || "Failed to delete database."}`,
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined
+    }, { status: 500 });
   }
 }

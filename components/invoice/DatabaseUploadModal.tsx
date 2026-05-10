@@ -31,6 +31,14 @@ export default function DatabaseUploadModal({ isOpen, onClose, onSuccess }: Prop
         body: formData,
       });
       
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Server returned non-JSON response:", text);
+        setError(`Server Error: Received unexpected response format (HTML). This often happens if the route is missing or the server crashed.`);
+        return;
+      }
+
       const data = await response.json();
       
       if (!response.ok) {

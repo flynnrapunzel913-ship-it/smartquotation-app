@@ -3,12 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 
 export async function GET() {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    const session = await getSession();
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const databases = await prisma.productDatabase.findMany({
       where: { module: "INVOICE" },
       include: {
@@ -19,19 +19,22 @@ export async function GET() {
       orderBy: { createdAt: "desc" }
     });
     return NextResponse.json(databases);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching databases:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: `Database Error: ${error.message || "Failed to fetch databases."}`,
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    const session = await getSession();
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { name, products, sourceFile } = await req.json();
 
     // Create database
@@ -56,8 +59,11 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(database);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating database:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: `Database Error: ${error.message || "Failed to save database."}`,
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined
+    }, { status: 500 });
   }
 }

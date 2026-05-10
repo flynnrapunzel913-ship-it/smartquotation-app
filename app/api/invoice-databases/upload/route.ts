@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
-import * as xlsx from "xlsx";
-import pdfParse from "pdf-parse";
-import mammoth from "mammoth";
 
 export async function POST(req: Request) {
-  const session = await getSession();
-  if (!session.isLoggedIn) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    const session = await getSession();
+    if (!session.isLoggedIn) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File;
     if (!file) {
@@ -23,8 +20,10 @@ export async function POST(req: Request) {
     let products: any[] = [];
     let errorMessage = "";
 
+    // Dynamic imports to prevent top-level crashes and improve route resilience
     try {
       if (fileExtension === "xlsx" || fileExtension === "xls" || fileExtension === "csv") {
+        const xlsx = await import("xlsx");
         const workbook = xlsx.read(buffer, { type: "buffer" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
@@ -69,6 +68,7 @@ export async function POST(req: Request) {
           }
         }
       } else if (fileExtension === "pdf") {
+        const pdfParse = (await import("pdf-parse")).default;
         const data = await pdfParse(buffer);
         const text = data.text;
         if (!text || text.trim().length < 10) {
@@ -77,9 +77,6 @@ export async function POST(req: Request) {
           const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
           
           lines.forEach(line => {
-            // Regex to find a pattern like: [Optional Code] [Product Name] [Optional HSN] [Price/Rate] [Unit]
-            // Example: "A101 LED UNDERWATER LIGHT 12V/10W 8402 12500 Nos"
-            // Example: "BUTTERFLY VALVE 110MM 5692 Nos"
             const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
             if (rateMatch) {
               products.push({
@@ -95,10 +92,11 @@ export async function POST(req: Request) {
           });
 
           if (products.length === 0) {
-            errorMessage = "Could not identify any product-rate patterns in the PDF text. Please ensure the PDF is a text-based document and not a scanned image.";
+            errorMessage = "Could not identify any product-rate patterns in the PDF text.";
           }
         }
       } else if (fileExtension === "docx") {
+        const mammoth = await import("mammoth");
         const result = await mammoth.extractRawText({ buffer });
         const text = result.value;
         if (!text || text.trim().length < 10) {
@@ -125,7 +123,7 @@ export async function POST(req: Request) {
           }
         }
       } else {
-        errorMessage = `Unsupported file format: .${fileExtension}. Please upload XLSX, XLS, CSV, PDF, or DOCX.`;
+        errorMessage = `Unsupported file format: .${fileExtension}`;
       }
     } catch (parseError: any) {
       console.error("Internal parsing error:", parseError);
@@ -144,8 +142,11 @@ export async function POST(req: Request) {
       columns: ["Product Code", "Product Name", "Description", "Unit", "Rate", "HSN Code", "GST %"],
       products: products
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Critical upload error:", error);
-    return NextResponse.json({ error: "A critical error occurred during file upload." }, { status: 500 });
+    return NextResponse.json({ 
+      error: `Critical Error: ${error.message || "An unexpected server error occurred."}`,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined
+    }, { status: 500 });
   }
 }
