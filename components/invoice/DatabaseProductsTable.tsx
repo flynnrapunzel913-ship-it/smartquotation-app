@@ -49,39 +49,45 @@ export default function DatabaseProductsTable({ products: initialProducts, datab
   if (isLoading) return <p className="text-center" style={{ padding: "20px" }}>Loading products...</p>;
 
   return (
-    <table className="items-table" style={{ margin: 0 }}>
-      <thead style={{ position: "sticky", top: 0, zIndex: 1, background: "#f8fafc" }}>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th style={{ width: "60px" }}>Unit</th>
-          <th style={{ width: "100px" }}>Rate</th>
-          <th style={{ width: "80px" }}>HSN</th>
-          <th style={{ width: "60px" }}>GST%</th>
-          {onRemove && <th style={{ width: "50px" }}></th>}
-        </tr>
-      </thead>
-      <tbody>
-        {products.length === 0 ? (
-          <tr><td colSpan={onRemove ? 7 : 6} className="text-center" style={{ padding: "20px", color: "#64748b" }}>No products found.</td></tr>
-        ) : (
-          products.map((p, idx) => (
-            <tr key={idx}>
-              <td style={{ fontWeight: 600 }}>{p.name}</td>
-              <td style={{ fontSize: "12px", color: "#64748b" }}>{p.description}</td>
-              <td className="text-center">{p.unit}</td>
-              <td className="text-right">₹{Number(p.defaultRate).toLocaleString()}</td>
-              <td className="text-center" style={{ fontSize: "11px" }}>{p.hsnCode}</td>
-              <td className="text-center" style={{ fontSize: "11px" }}>{p.gstRate}%</td>
-              {onRemove && (
-                <td className="text-center">
-                  <button className="btn-icon btn-danger" onClick={() => onRemove(idx)} style={{ padding: "4px" }}>×</button>
+    <div className="overflow-auto border border-[#f1f5f9] rounded-xl">
+      <table className="w-full text-left border-collapse">
+        <thead className="bg-[#f8fafc] text-[#64748b] text-[10px] uppercase tracking-widest sticky top-0 z-10">
+          <tr>
+            <th className="px-4 py-3 font-bold">Product Name</th>
+            <th className="px-4 py-3 font-bold">Details</th>
+            <th className="px-4 py-3 font-bold text-center">Unit</th>
+            <th className="px-4 py-3 font-bold text-right">Price</th>
+            <th className="px-4 py-3 font-bold text-center">HSN</th>
+            <th className="px-4 py-3 font-bold text-center">GST</th>
+            {onRemove && <th className="px-4 py-3"></th>}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-[#f1f5f9]">
+          {products.length === 0 ? (
+            <tr><td colSpan={onRemove ? 7 : 6} className="text-center py-20 text-[#94a3b8]">No products detected.</td></tr>
+          ) : (
+            products.map((p, idx) => (
+              <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                <td className="px-4 py-3.5">
+                  <div className="font-semibold text-[#1e293b] text-sm">{p.name}</div>
                 </td>
-              )}
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
+                <td className="px-4 py-3.5">
+                  <div className="text-xs text-[#64748b] line-clamp-2">{p.description}</div>
+                </td>
+                <td className="px-4 py-3.5 text-center text-xs font-medium text-[#475569]">{p.unit}</td>
+                <td className="px-4 py-3.5 text-right font-bold text-[#0ea5e9] text-sm">₹{Number(p.defaultRate).toLocaleString()}</td>
+                <td className="px-4 py-3.5 text-center text-[10px] font-mono text-[#94a3b8]">{p.hsnCode || "—"}</td>
+                <td className="px-4 py-3.5 text-center text-[10px] font-bold text-emerald-600 bg-emerald-50 rounded-lg">{p.gstRate}%</td>
+                {onRemove && (
+                  <td className="px-4 py-3.5 text-center">
+                    <button className="w-8 h-8 rounded-full hover:bg-red-50 text-red-400 hover:text-red-600 transition-all" onClick={() => onRemove(idx)}>×</button>
+                  </td>
+                )}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }

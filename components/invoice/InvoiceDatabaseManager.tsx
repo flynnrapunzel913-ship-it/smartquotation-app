@@ -13,7 +13,11 @@ interface Database {
   _count: { products: number };
 }
 
-export default function InvoiceDatabaseManager() {
+interface Props {
+  onRefresh?: () => void;
+}
+
+export default function InvoiceDatabaseManager({ onRefresh }: Props) {
   const [databases, setDatabases] = useState<Database[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -30,7 +34,8 @@ export default function InvoiceDatabaseManager() {
     try {
       const response = await fetch("/api/invoice-databases");
       const data = await response.json();
-      setDatabases(data);
+      setDatabases(Array.isArray(data) ? data : []);
+      if (onRefresh) onRefresh();
     } catch (error) {
       console.error("Error fetching databases:", error);
     } finally {
@@ -49,7 +54,7 @@ export default function InvoiceDatabaseManager() {
   };
 
   const toggleActive = async (id: string, currentActive: boolean) => {
-    if (currentActive) return; // Cannot deactivate manually, must activate another
+    if (currentActive) return; 
     try {
       const response = await fetch(`/api/invoice-databases/${id}`, {
         method: "PATCH",
@@ -85,78 +90,78 @@ export default function InvoiceDatabaseManager() {
 
   return (
     <div className="database-manager">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <h2 style={{ margin: 0 }}>Product Databases</h2>
-          <div className="badge badge-warning" style={{ opacity: 0.7 }}>
-            Security PIN Protection: Not Enabled (Disabled)
-          </div>
-        </div>
-        <button className="btn btn-primary" onClick={() => setIsUploadModalOpen(true)}>
-          Upload New Database
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-lg font-bold text-[#334155]">Available Price Lists</h3>
+        <button 
+          className="btn btn-primary btn-sm flex items-center gap-2" 
+          onClick={() => setIsUploadModalOpen(true)}
+        >
+          <span className="text-lg">+</span> Upload New
         </button>
       </div>
 
-      <div className="card" style={{ padding: "0", overflow: "hidden" }}>
-        <table className="items-table" style={{ margin: 0 }}>
-          <thead>
+      <div className="overflow-hidden border border-[#f1f5f9] rounded-xl">
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-[#f8fafc] text-[#64748b] text-xs uppercase tracking-wider">
             <tr>
-              <th>Status</th>
-              <th>Database Name</th>
-              <th>Products</th>
-              <th>Source File</th>
-              <th>Upload Date</th>
-              <th className="text-right">Actions</th>
+              <th className="px-4 py-3 font-semibold">Active</th>
+              <th className="px-4 py-3 font-semibold">Database Name</th>
+              <th className="px-4 py-3 font-semibold">Products</th>
+              <th className="px-4 py-3 font-semibold">Created</th>
+              <th className="px-4 py-3 text-right font-semibold">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-[#f1f5f9]">
             {isLoading ? (
-              <tr><td colSpan={6} className="text-center" style={{ padding: "40px" }}>Loading databases...</td></tr>
+              <tr><td colSpan={5} className="text-center py-12 text-[#94a3b8]">Loading price lists...</td></tr>
             ) : databases.length === 0 ? (
-              <tr><td colSpan={6} className="text-center" style={{ padding: "40px", color: "#64748b" }}>No databases uploaded yet.</td></tr>
+              <tr>
+                <td colSpan={5} className="text-center py-16">
+                  <div className="text-4xl mb-4">📂</div>
+                  <p className="text-[#64748b] font-medium">No product databases uploaded yet.</p>
+                  <p className="text-[#94a3b8] text-sm mt-1">Upload an Excel, PDF, or Word file to get started.</p>
+                </td>
+              </tr>
             ) : (
               databases.map((db) => (
-                <tr key={db.id} style={{ background: db.isActive ? "#f0f9ff" : "transparent" }}>
-                  <td className="text-center">
+                <tr key={db.id} className={`${db.isActive ? "bg-blue-50/50" : "hover:bg-slate-50"} transition-colors`}>
+                  <td className="px-4 py-4">
                     <button 
                       onClick={() => toggleActive(db.id, db.isActive)}
-                      style={{ 
-                        background: "none", 
-                        border: "none", 
-                        cursor: db.isActive ? "default" : "pointer",
-                        fontSize: "20px" 
-                      }}
-                      title={db.isActive ? "Active Database" : "Set as Active"}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${db.isActive ? "bg-blue-600 text-white shadow-md shadow-blue-200" : "bg-white border border-slate-200 text-slate-300 hover:border-blue-400 hover:text-blue-400"}`}
+                      title={db.isActive ? "Currently Active" : "Set as Active"}
                     >
-                      {db.isActive ? "⭐" : "☆"}
+                      {db.isActive ? "✓" : ""}
                     </button>
                   </td>
-                  <td>
+                  <td className="px-4 py-4">
                     {editingNameId === db.id ? (
-                      <div style={{ display: "flex", gap: "8px" }}>
+                      <div className="flex gap-2">
                         <input 
-                          className="form-control" 
+                          className="form-control text-sm py-1 h-8" 
                           value={editNameValue} 
                           onChange={(e) => setEditNameValue(e.target.value)} 
-                          style={{ padding: "4px 8px", height: "30px" }}
+                          autoFocus
                         />
-                        <button className="btn btn-primary btn-sm" onClick={() => handleRename(db.id)}>Save</button>
-                        <button className="btn btn-outline btn-sm" onClick={() => setEditingNameId(null)}>×</button>
+                        <button className="btn btn-primary btn-sm px-2 h-8" onClick={() => handleRename(db.id)}>Save</button>
+                        <button className="text-slate-400 hover:text-slate-600" onClick={() => setEditingNameId(null)}>×</button>
                       </div>
                     ) : (
-                      <div style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: "8px" }}>
-                        {db.name}
-                        <button className="btn-text" onClick={() => startRename(db)} style={{ fontSize: "12px", color: "#0ea5e9" }}>✏</button>
+                      <div>
+                        <div className="font-semibold text-[#1e293b] flex items-center gap-2">
+                          {db.name}
+                          <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500 text-xs" onClick={() => startRename(db)}>edit</button>
+                        </div>
+                        <div className="text-[10px] text-[#94a3b8] truncate max-w-[200px]">{db.sourceFile}</div>
                       </div>
                     )}
                   </td>
-                  <td className="text-center">{db._count.products} items</td>
-                  <td style={{ fontSize: "12px", color: "#64748b" }}>{db.sourceFile}</td>
-                  <td style={{ fontSize: "12px", color: "#64748b" }}>{new Date(db.createdAt).toLocaleDateString()}</td>
-                  <td className="text-right">
-                    <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-                      <button className="btn btn-outline btn-sm" onClick={() => setViewingDatabaseId(db.id)}>View</button>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(db.id)}>Delete</button>
+                  <td className="px-4 py-4 text-sm text-[#475569]">{db._count.products} items</td>
+                  <td className="px-4 py-4 text-xs text-[#94a3b8]">{new Date(db.createdAt).toLocaleDateString()}</td>
+                  <td className="px-4 py-4 text-right">
+                    <div className="flex gap-2 justify-end">
+                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all" onClick={() => setViewingDatabaseId(db.id)}>View</button>
+                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-red-500 hover:border-red-500 hover:bg-red-50 transition-all" onClick={() => handleDelete(db.id)}>Delete</button>
                     </div>
                   </td>
                 </tr>
@@ -174,12 +179,12 @@ export default function InvoiceDatabaseManager() {
 
       {viewingDatabaseId && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{ maxWidth: "1000px", height: "80vh", display: "flex", flexDirection: "column" }}>
-            <div className="modal-header">
-              <h3>View Products</h3>
-              <button className="close-btn" onClick={() => setViewingDatabaseId(null)}>×</button>
+          <div className="modal-content !max-w-4xl !h-[80vh] flex flex-col p-0 overflow-hidden rounded-3xl">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <h3 className="text-xl font-bold text-[#1e293b]">Database Products</h3>
+              <button className="w-10 h-10 rounded-full hover:bg-white flex items-center justify-center text-slate-400 hover:text-slate-600 transition-all" onClick={() => setViewingDatabaseId(null)}>×</button>
             </div>
-            <div className="modal-body" style={{ flex: 1, overflowY: "auto" }}>
+            <div className="flex-1 overflow-auto p-0">
               <DatabaseProductsTable databaseId={viewingDatabaseId} />
             </div>
           </div>
