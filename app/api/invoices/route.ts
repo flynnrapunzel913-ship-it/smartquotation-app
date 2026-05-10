@@ -30,6 +30,8 @@ export async function POST(req: Request) {
       grandTotal,
       amountInWords,
       bankDetails,
+      sectionHeadings,
+      customSections,
       isDraft,
     } = data;
 
@@ -55,6 +57,8 @@ export async function POST(req: Request) {
         grandTotal,
         amountInWords,
         bankDetails,
+        sectionHeadings,
+        customSections,
         isDraft,
       },
       create: {
@@ -74,6 +78,8 @@ export async function POST(req: Request) {
         grandTotal,
         amountInWords,
         bankDetails,
+        sectionHeadings,
+        customSections,
         isDraft,
       },
     });

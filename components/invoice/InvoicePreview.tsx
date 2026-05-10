@@ -11,6 +11,19 @@ interface InvoiceItem {
   total: number;
 }
 
+interface BankDetails {
+  accountHolder: string;
+  accountNumber: string;
+  bankName: string;
+  branch: string;
+  ifscCode: string;
+}
+
+interface CustomSection {
+  title: string;
+  content: string;
+}
+
 interface Props {
   data: {
     invoiceNumber: string;
@@ -26,7 +39,8 @@ interface Props {
     cgstRate: number;
     sgstRate: number;
     roundOff: number;
-    bankDetails: string;
+    bankDetails: BankDetails;
+    customSections?: CustomSection[];
   };
   totals: {
     subTotal: number;
@@ -127,8 +141,20 @@ export default function InvoicePreview({ data, totals }: Props) {
 
       <div className="bank-details-section">
         <h4>OUR BANK DETAILS-</h4>
-        <div style={{ whiteSpace: 'pre-wrap' }}>{data.bankDetails}</div>
+        <div style={{ fontSize: '13px', lineHeight: '1.5' }}>
+          <div>{data.bankDetails.accountHolder}</div>
+          <div>A/C NO - {data.bankDetails.accountNumber}</div>
+          <div>{data.bankDetails.bankName}, {data.bankDetails.branch}</div>
+          <div>IFSC CODE - {data.bankDetails.ifscCode}</div>
+        </div>
       </div>
+
+      {(data.customSections || []).map((section, idx) => (
+        <div key={idx} className="custom-section" style={{ marginTop: '20px' }}>
+          <h4 style={{ textDecoration: 'underline', marginBottom: '8px' }}>{section.title}</h4>
+          <div style={{ whiteSpace: 'pre-wrap', fontSize: '12px' }}>{section.content}</div>
+        </div>
+      ))}
 
       <div className="signature-section">
         <div style={{ fontWeight: 800 }}>For M R SWIMMING POOL AND SPA CONSTRUCTION CO,</div>

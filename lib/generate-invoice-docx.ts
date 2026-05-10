@@ -206,13 +206,22 @@ export async function generateInvoiceDocx(invoice: any): Promise<Buffer> {
               new TextRun({ text: "OUR BANK DETAILS-", bold: true, underline: {} }),
             ],
           }),
-          ...(invoice.bankDetails || "").split('\n').map((line: string) => 
+          new Paragraph({ children: [new TextRun({ text: invoice.bankDetails?.accountHolder || "" })] }),
+          new Paragraph({ children: [new TextRun({ text: `A/C NO - ${invoice.bankDetails?.accountNumber || ""}` })] }),
+          new Paragraph({ children: [new TextRun({ text: `${invoice.bankDetails?.bankName || ""}, ${invoice.bankDetails?.branch || ""}` })] }),
+          new Paragraph({ children: [new TextRun({ text: `IFSC CODE - ${invoice.bankDetails?.ifscCode || ""}` })] }),
+
+          ...(invoice.customSections || []).map((section: any) => ([
             new Paragraph({
+              spacing: { before: 400 },
               children: [
-                new TextRun({ text: line }),
+                new TextRun({ text: section.title, bold: true, underline: {} }),
               ],
-            })
-          ),
+            }),
+            ...section.content.split('\n').map((line: string) => (
+              new Paragraph({ children: [new TextRun({ text: line })] })
+            ))
+          ])).flat(),
 
           new Paragraph({
             alignment: AlignmentType.RIGHT,

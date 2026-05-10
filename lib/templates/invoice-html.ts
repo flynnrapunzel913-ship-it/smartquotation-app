@@ -220,8 +220,20 @@ export function generateInvoiceHtml(data: any) {
 
     <div class="bank-details-section">
       <h4>OUR BANK DETAILS-</h4>
-      <div style="white-space: pre-wrap;">${data.bankDetails}</div>
+      <div style="line-height: 1.5;">
+        <div>${data.bankDetails?.accountHolder || ""}</div>
+        <div>A/C NO - ${data.bankDetails?.accountNumber || ""}</div>
+        <div>${data.bankDetails?.bankName || ""}, ${data.bankDetails?.branch || ""}</div>
+        <div>IFSC CODE - ${data.bankDetails?.ifscCode || ""}</div>
+      </div>
     </div>
+
+    ${(data.customSections || []).map((section: any) => `
+      <div style="margin-top: 5mm;">
+        <h4 style="text-decoration: underline; font-size: 13px; margin-bottom: 2mm;">${section.title}</h4>
+        <div style="white-space: pre-wrap; font-size: 11px;">${section.content}</div>
+      </div>
+    `).join("")}
 
     <div class="signature-section">
       <div style="font-weight: 800;">For M R SWIMMING POOL AND SPA CONSTRUCTION CO,</div>

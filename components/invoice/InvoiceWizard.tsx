@@ -16,6 +16,19 @@ interface InvoiceItem {
   total: number;
 }
 
+interface BankDetails {
+  accountHolder: string;
+  accountNumber: string;
+  bankName: string;
+  branch: string;
+  ifscCode: string;
+}
+
+interface CustomSection {
+  title: string;
+  content: string;
+}
+
 interface InvoiceForm {
   invoiceNumber: string;
   invoiceDate: string;
@@ -30,14 +43,26 @@ interface InvoiceForm {
   cgstRate: number;
   sgstRate: number;
   roundOff: number;
-  bankDetails: string;
+  bankDetails: BankDetails;
+  sectionHeadings: Record<string, string>;
+  customSections: CustomSection[];
 }
 
-const DEFAULT_BANK_DETAILS = `OUR BANK DETAILS
-M R SWIMMING POOLS AND SPA CONSTRUCTION COMPANY
-A/C NO - 38693647843
-STATE BANK OF INDIA, KESHWAPUR, HUBLI
-IFSC CODE - SBIN0040641`;
+const DEFAULT_BANK_DETAILS: BankDetails = {
+  accountHolder: "M R SWIMMING POOLS AND SPA CONSTRUCTION COMPANY",
+  accountNumber: "38693647843",
+  bankName: "STATE BANK OF INDIA",
+  branch: "KESHWAPUR, HUBLI",
+  ifscCode: "SBIN0040641",
+};
+
+const DEFAULT_SECTION_HEADINGS: Record<string, string> = {
+  step1: "Step 1: Customer Details",
+  step2: "Step 2: Invoice Items",
+  step3: "Step 3: Tax Summary",
+  step4: "Step 4: Bank Details",
+  step5: "Step 5: Review & Generate",
+};
 
 interface Props {
   initialData?: any;
@@ -61,6 +86,8 @@ export default function InvoiceWizard({ initialData }: Props) {
     sgstRate: 9,
     roundOff: 0,
     bankDetails: DEFAULT_BANK_DETAILS,
+    sectionHeadings: DEFAULT_SECTION_HEADINGS,
+    customSections: [],
   });
 
   const [totals, setTotals] = useState({
@@ -114,6 +141,94 @@ export default function InvoiceWizard({ initialData }: Props) {
     
     newItems[index] = item;
     setFormData((prev) => ({ ...prev, items: newItems }));
+  };
+
+  const handleHeadingChange = (stepKey: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      sectionHeadings: { ...prev.sectionHeadings, [stepKey]: value },
+    }));
+  };
+
+  const resetHeading = (stepKey: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      sectionHeadings: { ...prev.sectionHeadings, [stepKey]: DEFAULT_SECTION_HEADINGS[stepKey] },
+    }));
+  };
+
+  const addCustomSection = () => {
+    setFormData((prev) => ({
+      ...prev,
+      customSections: [...(prev.customSections || []), { title: "New Section", content: "" }],
+    }));
+  };
+
+  const removeCustomSection = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      customSections: prev.customSections.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleCustomSectionChange = (index: number, field: "title" | "content", value: string) => {
+    const newSections = [...formData.customSections];
+    newSections[index] = { ...newSections[index], [field]: value };
+    setFormData((prev) => ({ ...prev, customSections: newSections }));
+  };
+
+  const handleBankDetailChange = (field: keyof BankDetails, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      bankDetails: { ...prev.bankDetails, [field]: value },
+    }));
+  };
+
+  const resetBankDetails = () => {
+    setFormData((prev) => ({ ...prev, bankDetails: DEFAULT_BANK_DETAILS }));
+  };
+
+  const SectionHeader = ({ stepKey, defaultTitle }: { stepKey: string, defaultTitle: string }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const title = formData.sectionHeadings?.[stepKey] || defaultTitle;
+
+    return (
+      <div className="section-header-editable" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        {isEditing ? (
+          <div style={{ display: "flex", gap: "8px", flex: 1 }}>
+            <input 
+              type="text" 
+              className="form-control" 
+              value={title} 
+              onChange={(e) => handleHeadingChange(stepKey, e.target.value)}
+              autoFocus
+              onBlur={() => setIsEditing(false)}
+            />
+            <button className="btn btn-primary btn-sm" onClick={() => setIsEditing(false)}>Done</button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1 }}>
+            <h3 style={{ margin: 0 }}>{title}</h3>
+            <button 
+              className="btn-text" 
+              onClick={() => setIsEditing(true)}
+              style={{ fontSize: "12px", color: "#0ea5e9", display: "flex", alignItems: "center", gap: "4px" }}
+            >
+              <span>✏</span> Edit Title
+            </button>
+            {title !== defaultTitle && (
+              <button 
+                className="btn-text" 
+                onClick={() => resetHeading(stepKey)}
+                style={{ fontSize: "12px", color: "#64748b", display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <span>↺</span> Reset
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const handleDatasetSelect = (id: string, name: string) => {
@@ -200,7 +315,7 @@ export default function InvoiceWizard({ initialData }: Props) {
       <div className="wizard-step-content">
         {step === 1 && (
           <div className="step-fade-in">
-            <h3>Step 1: Customer Details</h3>
+            <SectionHeader stepKey="step1" defaultTitle="Step 1: Customer Details" />
             <div className="form-grid">
               <div className="form-group">
                 <label>Invoice Number</label>
@@ -300,7 +415,7 @@ export default function InvoiceWizard({ initialData }: Props) {
         {step === 2 && (
           <div className="step-fade-in">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <h3>Step 2: Invoice Items</h3>
+              <SectionHeader stepKey="step2" defaultTitle="Step 2: Invoice Items" />
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 {datasetId ? (
                   <div className="dataset-badge" style={{ padding: "6px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "6px", fontSize: "14px", color: "#0369a1" }}>
@@ -389,7 +504,7 @@ export default function InvoiceWizard({ initialData }: Props) {
 
         {step === 3 && (
           <div className="step-fade-in">
-            <h3>Step 3: Tax Settings</h3>
+            <SectionHeader stepKey="step3" defaultTitle="Step 3: Tax Summary" />
             <div className="form-grid">
               <div className="form-group">
                 <label>CGST Rate (%)</label>
@@ -454,23 +569,100 @@ export default function InvoiceWizard({ initialData }: Props) {
 
         {step === 4 && (
           <div className="step-fade-in">
-            <h3>Step 4: Bank Details</h3>
-            <div className="form-group">
-              <label>Edit Bank Details</label>
-              <textarea
-                name="bankDetails"
-                value={formData.bankDetails}
-                onChange={handleInputChange}
-                className="form-control"
-                rows={6}
-              />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <SectionHeader stepKey="step4" defaultTitle="Step 4: Bank Details" />
+              <button className="btn btn-outline btn-sm" onClick={resetBankDetails}>Use Default</button>
+            </div>
+            
+            <div className="form-grid" style={{ marginBottom: "32px" }}>
+              <div className="form-group">
+                <label>Account Holder Name</label>
+                <input
+                  type="text"
+                  value={formData.bankDetails.accountHolder}
+                  onChange={(e) => handleBankDetailChange("accountHolder", e.target.value)}
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group">
+                <label>Account Number</label>
+                <input
+                  type="text"
+                  value={formData.bankDetails.accountNumber}
+                  onChange={(e) => handleBankDetailChange("accountNumber", e.target.value)}
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group">
+                <label>Bank Name</label>
+                <input
+                  type="text"
+                  value={formData.bankDetails.bankName}
+                  onChange={(e) => handleBankDetailChange("bankName", e.target.value)}
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group">
+                <label>Branch</label>
+                <input
+                  type="text"
+                  value={formData.bankDetails.branch}
+                  onChange={(e) => handleBankDetailChange("branch", e.target.value)}
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group">
+                <label>IFSC Code</label>
+                <input
+                  type="text"
+                  value={formData.bankDetails.ifscCode}
+                  onChange={(e) => handleBankDetailChange("ifscCode", e.target.value)}
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            <div className="custom-sections-manager">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", borderTop: "1px solid #e2e8f0", paddingTop: "24px" }}>
+                <h4>Additional Custom Sections</h4>
+                <button className="btn btn-outline btn-sm" onClick={addCustomSection}>+ Add Section</button>
+              </div>
+
+              {(formData.customSections || []).length === 0 ? (
+                <p style={{ color: "#64748b", fontSize: "14px", fontStyle: "italic" }}>No custom sections added yet. (e.g. Terms, Notes, etc.)</p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                  {formData.customSections.map((section, index) => (
+                    <div key={index} className="card" style={{ padding: "16px", background: "#f8fafc" }}>
+                      <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+                        <input 
+                          type="text"
+                          className="form-control"
+                          style={{ fontWeight: 700 }}
+                          value={section.title}
+                          onChange={(e) => handleCustomSectionChange(index, "title", e.target.value)}
+                          placeholder="Section Title (e.g. Terms & Conditions)"
+                        />
+                        <button className="btn-icon btn-danger" onClick={() => removeCustomSection(index)}>×</button>
+                      </div>
+                      <textarea
+                        className="form-control"
+                        rows={3}
+                        value={section.content}
+                        onChange={(e) => handleCustomSectionChange(index, "content", e.target.value)}
+                        placeholder="Section content..."
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {step === 5 && (
           <div className="step-fade-in">
-            <h3>Step 5: Review & Generate</h3>
+            <SectionHeader stepKey="step5" defaultTitle="Step 5: Review & Generate" />
             <p>Please review the details before generating the invoice.</p>
             <div style={{ marginTop: "20px", border: "1px solid #e2e8f0", padding: "20px", background: "#f8fafc", borderRadius: "8px", overflow: "auto", maxHeight: "800px" }}>
               <InvoicePreview data={formData} totals={totals} />
