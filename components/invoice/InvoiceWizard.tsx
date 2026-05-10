@@ -8,6 +8,7 @@ import "@/styles/wizard.css";
 import "@/styles/invoice.css";
 import InvoicePreview from "./InvoicePreview";
 import AddProductFromDatabaseModal from "./AddProductFromDatabaseModal";
+import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
 
 interface InvoiceItem {
   description: string;
@@ -101,6 +102,7 @@ export default function InvoiceWizard({ initialData }: Props) {
   const [databaseId, setDatabaseId] = useState<string>("");
   const [databaseName, setDatabaseName] = useState<string>("");
   const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [showDatabaseModal, setShowDatabaseModal] = useState(false);
 
   useEffect(() => {
     fetchActiveDatabase();

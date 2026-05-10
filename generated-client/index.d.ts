@@ -58,6 +58,11 @@ export type Invoice = $Result.DefaultSelection<Prisma.$InvoicePayload>
  * 
  */
 export type ProductDatabase = $Result.DefaultSelection<Prisma.$ProductDatabasePayload>
+/**
+ * Model InvoiceProduct
+ * 
+ */
+export type InvoiceProduct = $Result.DefaultSelection<Prisma.$InvoiceProductPayload>
 
 /**
  * Enums
@@ -296,6 +301,16 @@ export class PrismaClient<
     * ```
     */
   get productDatabase(): Prisma.ProductDatabaseDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.invoiceProduct`: Exposes CRUD operations for the **InvoiceProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InvoiceProducts
+    * const invoiceProducts = await prisma.invoiceProduct.findMany()
+    * ```
+    */
+  get invoiceProduct(): Prisma.InvoiceProductDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -745,7 +760,8 @@ export namespace Prisma {
     QuotationItem: 'QuotationItem',
     ProductCatalog: 'ProductCatalog',
     Invoice: 'Invoice',
-    ProductDatabase: 'ProductDatabase'
+    ProductDatabase: 'ProductDatabase',
+    InvoiceProduct: 'InvoiceProduct'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -764,7 +780,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "customer" | "product" | "companySettings" | "quotation" | "quotationItem" | "productCatalog" | "invoice" | "productDatabase"
+      modelProps: "user" | "customer" | "product" | "companySettings" | "quotation" | "quotationItem" | "productCatalog" | "invoice" | "productDatabase" | "invoiceProduct"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1434,6 +1450,80 @@ export namespace Prisma {
           }
         }
       }
+      InvoiceProduct: {
+        payload: Prisma.$InvoiceProductPayload<ExtArgs>
+        fields: Prisma.InvoiceProductFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InvoiceProductFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InvoiceProductFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>
+          }
+          findFirst: {
+            args: Prisma.InvoiceProductFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InvoiceProductFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>
+          }
+          findMany: {
+            args: Prisma.InvoiceProductFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>[]
+          }
+          create: {
+            args: Prisma.InvoiceProductCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>
+          }
+          createMany: {
+            args: Prisma.InvoiceProductCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InvoiceProductCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>[]
+          }
+          delete: {
+            args: Prisma.InvoiceProductDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>
+          }
+          update: {
+            args: Prisma.InvoiceProductUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>
+          }
+          deleteMany: {
+            args: Prisma.InvoiceProductDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InvoiceProductUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InvoiceProductUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>[]
+          }
+          upsert: {
+            args: Prisma.InvoiceProductUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InvoiceProductPayload>
+          }
+          aggregate: {
+            args: Prisma.InvoiceProductAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInvoiceProduct>
+          }
+          groupBy: {
+            args: Prisma.InvoiceProductGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InvoiceProductGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InvoiceProductCountArgs<ExtArgs>
+            result: $Utils.Optional<InvoiceProductCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1539,6 +1629,7 @@ export namespace Prisma {
     productCatalog?: ProductCatalogOmit
     invoice?: InvoiceOmit
     productDatabase?: ProductDatabaseOmit
+    invoiceProduct?: InvoiceProductOmit
   }
 
   /* Types for Logging */
@@ -12359,6 +12450,1087 @@ export namespace Prisma {
 
 
   /**
+   * Model InvoiceProduct
+   */
+
+  export type AggregateInvoiceProduct = {
+    _count: InvoiceProductCountAggregateOutputType | null
+    _avg: InvoiceProductAvgAggregateOutputType | null
+    _sum: InvoiceProductSumAggregateOutputType | null
+    _min: InvoiceProductMinAggregateOutputType | null
+    _max: InvoiceProductMaxAggregateOutputType | null
+  }
+
+  export type InvoiceProductAvgAggregateOutputType = {
+    unitPrice: number | null
+  }
+
+  export type InvoiceProductSumAggregateOutputType = {
+    unitPrice: number | null
+  }
+
+  export type InvoiceProductMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    type: string | null
+    unitPrice: number | null
+    hsnCode: string | null
+    imagePath: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InvoiceProductMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    type: string | null
+    unitPrice: number | null
+    hsnCode: string | null
+    imagePath: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InvoiceProductCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    type: number
+    unitPrice: number
+    hsnCode: number
+    imagePath: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InvoiceProductAvgAggregateInputType = {
+    unitPrice?: true
+  }
+
+  export type InvoiceProductSumAggregateInputType = {
+    unitPrice?: true
+  }
+
+  export type InvoiceProductMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    type?: true
+    unitPrice?: true
+    hsnCode?: true
+    imagePath?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InvoiceProductMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    type?: true
+    unitPrice?: true
+    hsnCode?: true
+    imagePath?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InvoiceProductCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    type?: true
+    unitPrice?: true
+    hsnCode?: true
+    imagePath?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InvoiceProductAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InvoiceProduct to aggregate.
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InvoiceProducts to fetch.
+     */
+    orderBy?: InvoiceProductOrderByWithRelationInput | InvoiceProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InvoiceProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InvoiceProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InvoiceProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InvoiceProducts
+    **/
+    _count?: true | InvoiceProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InvoiceProductAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InvoiceProductSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InvoiceProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InvoiceProductMaxAggregateInputType
+  }
+
+  export type GetInvoiceProductAggregateType<T extends InvoiceProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateInvoiceProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInvoiceProduct[P]>
+      : GetScalarType<T[P], AggregateInvoiceProduct[P]>
+  }
+
+
+
+
+  export type InvoiceProductGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InvoiceProductWhereInput
+    orderBy?: InvoiceProductOrderByWithAggregationInput | InvoiceProductOrderByWithAggregationInput[]
+    by: InvoiceProductScalarFieldEnum[] | InvoiceProductScalarFieldEnum
+    having?: InvoiceProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InvoiceProductCountAggregateInputType | true
+    _avg?: InvoiceProductAvgAggregateInputType
+    _sum?: InvoiceProductSumAggregateInputType
+    _min?: InvoiceProductMinAggregateInputType
+    _max?: InvoiceProductMaxAggregateInputType
+  }
+
+  export type InvoiceProductGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    type: string | null
+    unitPrice: number
+    hsnCode: string | null
+    imagePath: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InvoiceProductCountAggregateOutputType | null
+    _avg: InvoiceProductAvgAggregateOutputType | null
+    _sum: InvoiceProductSumAggregateOutputType | null
+    _min: InvoiceProductMinAggregateOutputType | null
+    _max: InvoiceProductMaxAggregateOutputType | null
+  }
+
+  type GetInvoiceProductGroupByPayload<T extends InvoiceProductGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InvoiceProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InvoiceProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InvoiceProductGroupByOutputType[P]>
+            : GetScalarType<T[P], InvoiceProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InvoiceProductSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    type?: boolean
+    unitPrice?: boolean
+    hsnCode?: boolean
+    imagePath?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["invoiceProduct"]>
+
+  export type InvoiceProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    type?: boolean
+    unitPrice?: boolean
+    hsnCode?: boolean
+    imagePath?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["invoiceProduct"]>
+
+  export type InvoiceProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    type?: boolean
+    unitPrice?: boolean
+    hsnCode?: boolean
+    imagePath?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["invoiceProduct"]>
+
+  export type InvoiceProductSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    type?: boolean
+    unitPrice?: boolean
+    hsnCode?: boolean
+    imagePath?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InvoiceProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "type" | "unitPrice" | "hsnCode" | "imagePath" | "createdAt" | "updatedAt", ExtArgs["result"]["invoiceProduct"]>
+
+  export type $InvoiceProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InvoiceProduct"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      type: string | null
+      unitPrice: number
+      hsnCode: string | null
+      imagePath: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["invoiceProduct"]>
+    composites: {}
+  }
+
+  type InvoiceProductGetPayload<S extends boolean | null | undefined | InvoiceProductDefaultArgs> = $Result.GetResult<Prisma.$InvoiceProductPayload, S>
+
+  type InvoiceProductCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InvoiceProductFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InvoiceProductCountAggregateInputType | true
+    }
+
+  export interface InvoiceProductDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InvoiceProduct'], meta: { name: 'InvoiceProduct' } }
+    /**
+     * Find zero or one InvoiceProduct that matches the filter.
+     * @param {InvoiceProductFindUniqueArgs} args - Arguments to find a InvoiceProduct
+     * @example
+     * // Get one InvoiceProduct
+     * const invoiceProduct = await prisma.invoiceProduct.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InvoiceProductFindUniqueArgs>(args: SelectSubset<T, InvoiceProductFindUniqueArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InvoiceProduct that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InvoiceProductFindUniqueOrThrowArgs} args - Arguments to find a InvoiceProduct
+     * @example
+     * // Get one InvoiceProduct
+     * const invoiceProduct = await prisma.invoiceProduct.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InvoiceProductFindUniqueOrThrowArgs>(args: SelectSubset<T, InvoiceProductFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InvoiceProduct that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductFindFirstArgs} args - Arguments to find a InvoiceProduct
+     * @example
+     * // Get one InvoiceProduct
+     * const invoiceProduct = await prisma.invoiceProduct.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InvoiceProductFindFirstArgs>(args?: SelectSubset<T, InvoiceProductFindFirstArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InvoiceProduct that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductFindFirstOrThrowArgs} args - Arguments to find a InvoiceProduct
+     * @example
+     * // Get one InvoiceProduct
+     * const invoiceProduct = await prisma.invoiceProduct.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InvoiceProductFindFirstOrThrowArgs>(args?: SelectSubset<T, InvoiceProductFindFirstOrThrowArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InvoiceProducts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InvoiceProducts
+     * const invoiceProducts = await prisma.invoiceProduct.findMany()
+     * 
+     * // Get first 10 InvoiceProducts
+     * const invoiceProducts = await prisma.invoiceProduct.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const invoiceProductWithIdOnly = await prisma.invoiceProduct.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InvoiceProductFindManyArgs>(args?: SelectSubset<T, InvoiceProductFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InvoiceProduct.
+     * @param {InvoiceProductCreateArgs} args - Arguments to create a InvoiceProduct.
+     * @example
+     * // Create one InvoiceProduct
+     * const InvoiceProduct = await prisma.invoiceProduct.create({
+     *   data: {
+     *     // ... data to create a InvoiceProduct
+     *   }
+     * })
+     * 
+     */
+    create<T extends InvoiceProductCreateArgs>(args: SelectSubset<T, InvoiceProductCreateArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InvoiceProducts.
+     * @param {InvoiceProductCreateManyArgs} args - Arguments to create many InvoiceProducts.
+     * @example
+     * // Create many InvoiceProducts
+     * const invoiceProduct = await prisma.invoiceProduct.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InvoiceProductCreateManyArgs>(args?: SelectSubset<T, InvoiceProductCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InvoiceProducts and returns the data saved in the database.
+     * @param {InvoiceProductCreateManyAndReturnArgs} args - Arguments to create many InvoiceProducts.
+     * @example
+     * // Create many InvoiceProducts
+     * const invoiceProduct = await prisma.invoiceProduct.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InvoiceProducts and only return the `id`
+     * const invoiceProductWithIdOnly = await prisma.invoiceProduct.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InvoiceProductCreateManyAndReturnArgs>(args?: SelectSubset<T, InvoiceProductCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InvoiceProduct.
+     * @param {InvoiceProductDeleteArgs} args - Arguments to delete one InvoiceProduct.
+     * @example
+     * // Delete one InvoiceProduct
+     * const InvoiceProduct = await prisma.invoiceProduct.delete({
+     *   where: {
+     *     // ... filter to delete one InvoiceProduct
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InvoiceProductDeleteArgs>(args: SelectSubset<T, InvoiceProductDeleteArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InvoiceProduct.
+     * @param {InvoiceProductUpdateArgs} args - Arguments to update one InvoiceProduct.
+     * @example
+     * // Update one InvoiceProduct
+     * const invoiceProduct = await prisma.invoiceProduct.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InvoiceProductUpdateArgs>(args: SelectSubset<T, InvoiceProductUpdateArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InvoiceProducts.
+     * @param {InvoiceProductDeleteManyArgs} args - Arguments to filter InvoiceProducts to delete.
+     * @example
+     * // Delete a few InvoiceProducts
+     * const { count } = await prisma.invoiceProduct.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InvoiceProductDeleteManyArgs>(args?: SelectSubset<T, InvoiceProductDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InvoiceProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InvoiceProducts
+     * const invoiceProduct = await prisma.invoiceProduct.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InvoiceProductUpdateManyArgs>(args: SelectSubset<T, InvoiceProductUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InvoiceProducts and returns the data updated in the database.
+     * @param {InvoiceProductUpdateManyAndReturnArgs} args - Arguments to update many InvoiceProducts.
+     * @example
+     * // Update many InvoiceProducts
+     * const invoiceProduct = await prisma.invoiceProduct.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InvoiceProducts and only return the `id`
+     * const invoiceProductWithIdOnly = await prisma.invoiceProduct.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InvoiceProductUpdateManyAndReturnArgs>(args: SelectSubset<T, InvoiceProductUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InvoiceProduct.
+     * @param {InvoiceProductUpsertArgs} args - Arguments to update or create a InvoiceProduct.
+     * @example
+     * // Update or create a InvoiceProduct
+     * const invoiceProduct = await prisma.invoiceProduct.upsert({
+     *   create: {
+     *     // ... data to create a InvoiceProduct
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InvoiceProduct we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InvoiceProductUpsertArgs>(args: SelectSubset<T, InvoiceProductUpsertArgs<ExtArgs>>): Prisma__InvoiceProductClient<$Result.GetResult<Prisma.$InvoiceProductPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InvoiceProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductCountArgs} args - Arguments to filter InvoiceProducts to count.
+     * @example
+     * // Count the number of InvoiceProducts
+     * const count = await prisma.invoiceProduct.count({
+     *   where: {
+     *     // ... the filter for the InvoiceProducts we want to count
+     *   }
+     * })
+    **/
+    count<T extends InvoiceProductCountArgs>(
+      args?: Subset<T, InvoiceProductCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InvoiceProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InvoiceProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InvoiceProductAggregateArgs>(args: Subset<T, InvoiceProductAggregateArgs>): Prisma.PrismaPromise<GetInvoiceProductAggregateType<T>>
+
+    /**
+     * Group by InvoiceProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InvoiceProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InvoiceProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InvoiceProductGroupByArgs['orderBy'] }
+        : { orderBy?: InvoiceProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InvoiceProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInvoiceProductGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InvoiceProduct model
+   */
+  readonly fields: InvoiceProductFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InvoiceProduct.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InvoiceProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InvoiceProduct model
+   */
+  interface InvoiceProductFieldRefs {
+    readonly id: FieldRef<"InvoiceProduct", 'String'>
+    readonly name: FieldRef<"InvoiceProduct", 'String'>
+    readonly description: FieldRef<"InvoiceProduct", 'String'>
+    readonly type: FieldRef<"InvoiceProduct", 'String'>
+    readonly unitPrice: FieldRef<"InvoiceProduct", 'Float'>
+    readonly hsnCode: FieldRef<"InvoiceProduct", 'String'>
+    readonly imagePath: FieldRef<"InvoiceProduct", 'String'>
+    readonly createdAt: FieldRef<"InvoiceProduct", 'DateTime'>
+    readonly updatedAt: FieldRef<"InvoiceProduct", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InvoiceProduct findUnique
+   */
+  export type InvoiceProductFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * Filter, which InvoiceProduct to fetch.
+     */
+    where: InvoiceProductWhereUniqueInput
+  }
+
+  /**
+   * InvoiceProduct findUniqueOrThrow
+   */
+  export type InvoiceProductFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * Filter, which InvoiceProduct to fetch.
+     */
+    where: InvoiceProductWhereUniqueInput
+  }
+
+  /**
+   * InvoiceProduct findFirst
+   */
+  export type InvoiceProductFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * Filter, which InvoiceProduct to fetch.
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InvoiceProducts to fetch.
+     */
+    orderBy?: InvoiceProductOrderByWithRelationInput | InvoiceProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InvoiceProducts.
+     */
+    cursor?: InvoiceProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InvoiceProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InvoiceProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InvoiceProducts.
+     */
+    distinct?: InvoiceProductScalarFieldEnum | InvoiceProductScalarFieldEnum[]
+  }
+
+  /**
+   * InvoiceProduct findFirstOrThrow
+   */
+  export type InvoiceProductFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * Filter, which InvoiceProduct to fetch.
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InvoiceProducts to fetch.
+     */
+    orderBy?: InvoiceProductOrderByWithRelationInput | InvoiceProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InvoiceProducts.
+     */
+    cursor?: InvoiceProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InvoiceProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InvoiceProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InvoiceProducts.
+     */
+    distinct?: InvoiceProductScalarFieldEnum | InvoiceProductScalarFieldEnum[]
+  }
+
+  /**
+   * InvoiceProduct findMany
+   */
+  export type InvoiceProductFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * Filter, which InvoiceProducts to fetch.
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InvoiceProducts to fetch.
+     */
+    orderBy?: InvoiceProductOrderByWithRelationInput | InvoiceProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InvoiceProducts.
+     */
+    cursor?: InvoiceProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InvoiceProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InvoiceProducts.
+     */
+    skip?: number
+    distinct?: InvoiceProductScalarFieldEnum | InvoiceProductScalarFieldEnum[]
+  }
+
+  /**
+   * InvoiceProduct create
+   */
+  export type InvoiceProductCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * The data needed to create a InvoiceProduct.
+     */
+    data: XOR<InvoiceProductCreateInput, InvoiceProductUncheckedCreateInput>
+  }
+
+  /**
+   * InvoiceProduct createMany
+   */
+  export type InvoiceProductCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InvoiceProducts.
+     */
+    data: InvoiceProductCreateManyInput | InvoiceProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InvoiceProduct createManyAndReturn
+   */
+  export type InvoiceProductCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * The data used to create many InvoiceProducts.
+     */
+    data: InvoiceProductCreateManyInput | InvoiceProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InvoiceProduct update
+   */
+  export type InvoiceProductUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * The data needed to update a InvoiceProduct.
+     */
+    data: XOR<InvoiceProductUpdateInput, InvoiceProductUncheckedUpdateInput>
+    /**
+     * Choose, which InvoiceProduct to update.
+     */
+    where: InvoiceProductWhereUniqueInput
+  }
+
+  /**
+   * InvoiceProduct updateMany
+   */
+  export type InvoiceProductUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InvoiceProducts.
+     */
+    data: XOR<InvoiceProductUpdateManyMutationInput, InvoiceProductUncheckedUpdateManyInput>
+    /**
+     * Filter which InvoiceProducts to update
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * Limit how many InvoiceProducts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InvoiceProduct updateManyAndReturn
+   */
+  export type InvoiceProductUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * The data used to update InvoiceProducts.
+     */
+    data: XOR<InvoiceProductUpdateManyMutationInput, InvoiceProductUncheckedUpdateManyInput>
+    /**
+     * Filter which InvoiceProducts to update
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * Limit how many InvoiceProducts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InvoiceProduct upsert
+   */
+  export type InvoiceProductUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * The filter to search for the InvoiceProduct to update in case it exists.
+     */
+    where: InvoiceProductWhereUniqueInput
+    /**
+     * In case the InvoiceProduct found by the `where` argument doesn't exist, create a new InvoiceProduct with this data.
+     */
+    create: XOR<InvoiceProductCreateInput, InvoiceProductUncheckedCreateInput>
+    /**
+     * In case the InvoiceProduct was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InvoiceProductUpdateInput, InvoiceProductUncheckedUpdateInput>
+  }
+
+  /**
+   * InvoiceProduct delete
+   */
+  export type InvoiceProductDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+    /**
+     * Filter which InvoiceProduct to delete.
+     */
+    where: InvoiceProductWhereUniqueInput
+  }
+
+  /**
+   * InvoiceProduct deleteMany
+   */
+  export type InvoiceProductDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InvoiceProducts to delete
+     */
+    where?: InvoiceProductWhereInput
+    /**
+     * Limit how many InvoiceProducts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InvoiceProduct without action
+   */
+  export type InvoiceProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InvoiceProduct
+     */
+    select?: InvoiceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InvoiceProduct
+     */
+    omit?: InvoiceProductOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12545,6 +13717,21 @@ export namespace Prisma {
   };
 
   export type ProductDatabaseScalarFieldEnum = (typeof ProductDatabaseScalarFieldEnum)[keyof typeof ProductDatabaseScalarFieldEnum]
+
+
+  export const InvoiceProductScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    type: 'type',
+    unitPrice: 'unitPrice',
+    hsnCode: 'hsnCode',
+    imagePath: 'imagePath',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InvoiceProductScalarFieldEnum = (typeof InvoiceProductScalarFieldEnum)[keyof typeof InvoiceProductScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -13606,6 +14793,80 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ProductDatabase"> | Date | string
   }
 
+  export type InvoiceProductWhereInput = {
+    AND?: InvoiceProductWhereInput | InvoiceProductWhereInput[]
+    OR?: InvoiceProductWhereInput[]
+    NOT?: InvoiceProductWhereInput | InvoiceProductWhereInput[]
+    id?: StringFilter<"InvoiceProduct"> | string
+    name?: StringFilter<"InvoiceProduct"> | string
+    description?: StringNullableFilter<"InvoiceProduct"> | string | null
+    type?: StringNullableFilter<"InvoiceProduct"> | string | null
+    unitPrice?: FloatFilter<"InvoiceProduct"> | number
+    hsnCode?: StringNullableFilter<"InvoiceProduct"> | string | null
+    imagePath?: StringNullableFilter<"InvoiceProduct"> | string | null
+    createdAt?: DateTimeFilter<"InvoiceProduct"> | Date | string
+    updatedAt?: DateTimeFilter<"InvoiceProduct"> | Date | string
+  }
+
+  export type InvoiceProductOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    type?: SortOrderInput | SortOrder
+    unitPrice?: SortOrder
+    hsnCode?: SortOrderInput | SortOrder
+    imagePath?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InvoiceProductWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InvoiceProductWhereInput | InvoiceProductWhereInput[]
+    OR?: InvoiceProductWhereInput[]
+    NOT?: InvoiceProductWhereInput | InvoiceProductWhereInput[]
+    name?: StringFilter<"InvoiceProduct"> | string
+    description?: StringNullableFilter<"InvoiceProduct"> | string | null
+    type?: StringNullableFilter<"InvoiceProduct"> | string | null
+    unitPrice?: FloatFilter<"InvoiceProduct"> | number
+    hsnCode?: StringNullableFilter<"InvoiceProduct"> | string | null
+    imagePath?: StringNullableFilter<"InvoiceProduct"> | string | null
+    createdAt?: DateTimeFilter<"InvoiceProduct"> | Date | string
+    updatedAt?: DateTimeFilter<"InvoiceProduct"> | Date | string
+  }, "id">
+
+  export type InvoiceProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    type?: SortOrderInput | SortOrder
+    unitPrice?: SortOrder
+    hsnCode?: SortOrderInput | SortOrder
+    imagePath?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InvoiceProductCountOrderByAggregateInput
+    _avg?: InvoiceProductAvgOrderByAggregateInput
+    _max?: InvoiceProductMaxOrderByAggregateInput
+    _min?: InvoiceProductMinOrderByAggregateInput
+    _sum?: InvoiceProductSumOrderByAggregateInput
+  }
+
+  export type InvoiceProductScalarWhereWithAggregatesInput = {
+    AND?: InvoiceProductScalarWhereWithAggregatesInput | InvoiceProductScalarWhereWithAggregatesInput[]
+    OR?: InvoiceProductScalarWhereWithAggregatesInput[]
+    NOT?: InvoiceProductScalarWhereWithAggregatesInput | InvoiceProductScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InvoiceProduct"> | string
+    name?: StringWithAggregatesFilter<"InvoiceProduct"> | string
+    description?: StringNullableWithAggregatesFilter<"InvoiceProduct"> | string | null
+    type?: StringNullableWithAggregatesFilter<"InvoiceProduct"> | string | null
+    unitPrice?: FloatWithAggregatesFilter<"InvoiceProduct"> | number
+    hsnCode?: StringNullableWithAggregatesFilter<"InvoiceProduct"> | string | null
+    imagePath?: StringNullableWithAggregatesFilter<"InvoiceProduct"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InvoiceProduct"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InvoiceProduct"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -14654,6 +15915,90 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type InvoiceProductCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    type?: string | null
+    unitPrice: number
+    hsnCode?: string | null
+    imagePath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InvoiceProductUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    type?: string | null
+    unitPrice: number
+    hsnCode?: string | null
+    imagePath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InvoiceProductUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InvoiceProductUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InvoiceProductCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    type?: string | null
+    unitPrice: number
+    hsnCode?: string | null
+    imagePath?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InvoiceProductUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InvoiceProductUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15555,6 +16900,77 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type InvoiceProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    unitPrice?: SortOrder
+    hsnCode?: SortOrder
+    imagePath?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InvoiceProductAvgOrderByAggregateInput = {
+    unitPrice?: SortOrder
+  }
+
+  export type InvoiceProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    unitPrice?: SortOrder
+    hsnCode?: SortOrder
+    imagePath?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InvoiceProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    unitPrice?: SortOrder
+    hsnCode?: SortOrder
+    imagePath?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InvoiceProductSumOrderByAggregateInput = {
+    unitPrice?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -15833,6 +17249,14 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutDatabaseInput | ProductUpdateWithWhereUniqueWithoutDatabaseInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutDatabaseInput | ProductUpdateManyWithWhereWithoutDatabaseInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -16141,6 +17565,22 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type QuotationCreateWithoutCustomerInput = {

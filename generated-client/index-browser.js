@@ -269,6 +269,18 @@ exports.Prisma.ProductDatabaseScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.InvoiceProductScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  unitPrice: 'unitPrice',
+  hsnCode: 'hsnCode',
+  imagePath: 'imagePath',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -318,7 +330,8 @@ exports.Prisma.ModelName = {
   QuotationItem: 'QuotationItem',
   ProductCatalog: 'ProductCatalog',
   Invoice: 'Invoice',
-  ProductDatabase: 'ProductDatabase'
+  ProductDatabase: 'ProductDatabase',
+  InvoiceProduct: 'InvoiceProduct'
 };
 
 /**

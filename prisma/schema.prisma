@@ -195,3 +195,15 @@ model ProductDatabase {
 
   @@index([module])
 }
+
+model InvoiceProduct {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        String?
+  unitPrice   Float
+  hsnCode     String?
+  imagePath   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

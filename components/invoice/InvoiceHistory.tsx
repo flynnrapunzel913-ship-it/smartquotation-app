@@ -56,67 +56,86 @@ export default function InvoiceHistory() {
 
   return (
     <div className="invoice-history">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-[#1e293b]">Invoice Records</h2>
-        <div className="flex-1 max-w-md ml-4">
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
-            <input 
-              type="text" 
-              className="w-full pl-10 pr-4 h-10 rounded-xl border border-[#e2e8f0] focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm" 
-              placeholder="Search invoices or customers..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+        <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1e293b", margin: 0 }}>Invoice Records</h2>
+        <div style={{ position: "relative", width: "100%", maxWidth: "400px" }}>
+          <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }}>🔍</span>
+          <input 
+            type="text" 
+            style={{ 
+              width: "100%", 
+              padding: "10px 12px 10px 36px", 
+              borderRadius: "10px", 
+              border: "1px solid #e2e8f0", 
+              fontSize: "0.875rem",
+              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+              outline: "none",
+              transition: "border-color 0.2s"
+            }}
+            placeholder="Search invoices or customers..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
 
-      <div className="border border-[#e2e8f0] rounded-xl bg-white shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="bg-[#f8fafc] text-[#475569] text-xs uppercase tracking-wider font-bold border-bottom border-[#e2e8f0] grid grid-cols-12 gap-4 px-6 py-4">
-          <div className="col-span-2">Invoice No</div>
-          <div className="col-span-4">Customer Name</div>
-          <div className="col-span-2">Date</div>
-          <div className="col-span-2 text-right">Grand Total</div>
-          <div className="col-span-1 text-center">Status</div>
-          <div className="col-span-1 text-right">Actions</div>
-        </div>
-
-        {/* Body */}
-        <div className="divide-y divide-[#e2e8f0]">
-          {isLoading ? (
-            <div className="text-center py-20 text-[#94a3b8] animate-pulse">Loading history...</div>
-          ) : filteredInvoices.length === 0 ? (
-            <div className="text-center py-24">
-              <div className="text-5xl mb-4 opacity-20 grayscale">📜</div>
-              <p className="text-[#64748b] font-medium text-lg">No invoices created yet.</p>
-              <p className="text-[#94a3b8] mt-1">Click <Link href="/dashboard/invoices/new" className="text-indigo-600 font-bold hover:underline">“Create New Invoice”</Link> to generate your first invoice.</p>
-            </div>
-          ) : (
-            filteredInvoices.map((inv) => (
-              <div key={inv.id} className="hover:bg-slate-50 transition-colors group grid grid-cols-12 gap-4 px-6 py-4 items-center">
-                <div className="col-span-2 font-bold text-[#1e293b]">{inv.invoiceNumber}</div>
-                <div className="col-span-4 text-[#475569]">{inv.customerName}</div>
-                <div className="col-span-2 text-sm text-[#64748b]">{new Date(inv.invoiceDate).toLocaleDateString("en-IN")}</div>
-                <div className="col-span-2 text-right font-bold text-indigo-700">{formatCurrencyINR(inv.grandTotal)}</div>
-                <div className="col-span-1 text-center">
-                  <span className={`badge ${inv.isDraft ? "badge-warning" : "badge-success"} text-[10px]`}>
-                    {inv.isDraft ? "Draft" : "Finalized"}
-                  </span>
-                </div>
-                <div className="col-span-1 text-right">
-                  <div className="flex gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Link href={`/dashboard/invoices/preview/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-[#475569] hover:border-indigo-500 hover:text-indigo-500 transition-all">View</Link>
-                    <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-[#475569] hover:border-indigo-500 hover:text-indigo-500 transition-all">Edit</Link>
-                    <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-emerald-600 hover:bg-emerald-50 transition-all">PDF</a>
-                    <button className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-red-500 hover:bg-red-50 transition-all" onClick={() => handleDelete(inv.invoiceNumber)}>✕</button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+      <div style={{ border: "1px solid #e2e8f0", borderRadius: "12px", overflow: "hidden", background: "white", boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
+              <th style={{ padding: "14px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Invoice No</th>
+              <th style={{ padding: "14px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Customer Name</th>
+              <th style={{ padding: "14px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Date</th>
+              <th style={{ padding: "14px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Grand Total</th>
+              <th style={{ padding: "14px 16px", textAlign: "center", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Status</th>
+              <th style={{ padding: "14px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan={6} style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>Loading history...</td>
+              </tr>
+            ) : filteredInvoices.length === 0 ? (
+              <tr>
+                <td colSpan={6} style={{ padding: "40px", textAlign: "center" }}>
+                  <div style={{ fontSize: "3rem", marginBottom: "12px", opacity: 0.3 }}>📜</div>
+                  <p style={{ color: "#64748b", fontWeight: "600", fontSize: "1rem", margin: 0 }}>No invoices created yet.</p>
+                  <p style={{ color: "#94a3b8", fontSize: "0.875rem", marginTop: "4px" }}>Click <Link href="/dashboard/invoices/new" style={{ color: "#4f46e5", fontWeight: "700", textDecoration: "underline" }}>“Create New Invoice”</Link> to generate your first invoice.</p>
+                </td>
+              </tr>
+            ) : (
+              filteredInvoices.map((inv) => (
+                <tr key={inv.id} style={{ borderBottom: "1px solid #e2e8f0" }}>
+                  <td style={{ padding: "14px 16px", fontWeight: "700", color: "#1e293b", fontSize: "0.875rem" }}>{inv.invoiceNumber}</td>
+                  <td style={{ padding: "14px 16px", color: "#475569", fontSize: "0.875rem" }}>{inv.customerName}</td>
+                  <td style={{ padding: "14px 16px", color: "#64748b", fontSize: "0.875rem" }}>{new Date(inv.invoiceDate).toLocaleDateString("en-IN")}</td>
+                  <td style={{ padding: "14px 16px", textAlign: "right", fontWeight: "700", color: "#4f46e5", fontSize: "0.875rem" }}>{formatCurrencyINR(inv.grandTotal)}</td>
+                  <td style={{ padding: "14px 16px", textAlign: "center" }}>
+                    <span style={{ 
+                      padding: "4px 8px", 
+                      borderRadius: "6px", 
+                      fontSize: "0.75rem", 
+                      fontWeight: "700",
+                      background: inv.isDraft ? "#fef3c7" : "#d1fae5",
+                      color: inv.isDraft ? "#92400e" : "#065f46"
+                    }}>
+                      {inv.isDraft ? "Draft" : "Finalized"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "14px 16px", textAlign: "right" }}>
+                    <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
+                      <Link href={`/dashboard/invoices/preview/${inv.invoiceNumber}`} style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#475569", textDecoration: "none" }}>View</Link>
+                      <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#475569", textDecoration: "none" }}>Edit</Link>
+                      <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#16a34a", textDecoration: "none" }}>PDF</a>
+                      <button style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#dc2626", cursor: "pointer" }} onClick={() => handleDelete(inv.invoiceNumber)}>✕</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
