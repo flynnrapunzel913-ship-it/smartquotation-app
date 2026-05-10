@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
-import CatalogSelect from "@/components/CatalogSelect";
 import { calculatePoolMetrics, renderTemplate, extractTemplateVariables } from "@/lib/utils";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
@@ -511,39 +510,6 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     setIsSubmitting(false);
   };
 
-  const matchFromCatalog = (idx: number, catalogProduct: any) => {
-    const item = formData.items[idx];
-    const newVars = { ...(item.variableValues || {}) };
-    
-    if (catalogProduct.specifications) {
-      if (catalogProduct.specifications.diameter) newVars["Size"] = catalogProduct.specifications.diameter + "mm";
-      if (catalogProduct.specifications.hp) newVars["HP"] = catalogProduct.specifications.hp + " HP";
-      if (catalogProduct.specifications.flowRate) newVars["Flow Rate"] = catalogProduct.specifications.flowRate + " m³/hr";
-    }
-
-    // Update commercials
-    setFormData(prev => {
-      const newItems = [...prev.items];
-      newItems[idx] = {
-        ...newItems[idx],
-        rate: Number(catalogProduct.unitPrice),
-        unit: catalogProduct.unit || "Nos",
-        variableValues: newVars,
-        amount: Number(catalogProduct.unitPrice) * (newItems[idx].qty || 1)
-      };
-
-      // Update description
-      if (newItems[idx].productId) {
-        newItems[idx].description = renderTemplate(newItems[idx].templateText || "", newVars);
-      } else {
-        newItems[idx].description = catalogProduct.description;
-        newItems[idx].descriptionOverride = true;
-      }
-
-      return { ...prev, items: newItems };
-    });
-  };
-
   const renderProductCard = (idx: number, displaySerial: number) => {
     const item = formData.items[idx];
     const isTemplate = !!item.productId;
@@ -557,19 +523,11 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         
         <div className="product-card-content">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-               <h4 className="product-card-title">{displaySerial}. {item.category}</h4>
-               {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
-               {!item.descriptionOverride && isTemplate && <span className="badge auto">Template Driven</span>}
-            </div>
+             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <h4 className="product-card-title">{displaySerial}. {item.category}</h4>
+                {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
+             </div>
             <div style={{ display: "flex", gap: "8px" }}>
-                <div style={{ width: "240px" }}>
-                   <CatalogSelect 
-                      companyType="MR_SWIMMING_POOLS" 
-                      placeholder="Match from Aqvastar catalog..." 
-                      onSelect={(p) => matchFromCatalog(idx, p)} 
-                   />
-                </div>
                <button className="btn-icon" onClick={() => {
                   updateItem(idx, "isExpanded", !item.isExpanded);
                   if (!item.isExpanded) updateItem(idx, "descriptionOverride", true);
