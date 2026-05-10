@@ -83,9 +83,9 @@ export default function InvoicePreview({ data, totals }: Props) {
             <tr key={index}>
               <td className="text-center">{index + 1}</td>
               <td style={{ textTransform: 'uppercase' }}>{item.description}</td>
-              <td className="text-right">{item.unitPrice.toFixed(2)}</td>
+              <td className="text-right">{Number(item.unitPrice || 0).toFixed(2)}</td>
               <td className="text-center">{item.qty}</td>
-              <td className="text-right">{item.total.toFixed(2)}</td>
+              <td className="text-right">{Number(item.total || 0).toFixed(2)}</td>
             </tr>
           ))}
           {/* Fill empty rows to maintain height if needed, or just let it be dynamic */}
@@ -97,25 +97,25 @@ export default function InvoicePreview({ data, totals }: Props) {
           <tbody>
             <tr>
               <td>Sub Total</td>
-              <td className="text-right">{totals.subTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              <td className="text-right">{Number(totals.subTotal || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
             </tr>
             <tr>
               <td>CGST@{data.cgstRate}%</td>
-              <td className="text-right">{totals.cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              <td className="text-right">{Number(totals.cgstAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
             </tr>
             <tr>
               <td>SGST@{data.sgstRate}%</td>
-              <td className="text-right">{totals.sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              <td className="text-right">{Number(totals.sgstAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
             </tr>
             {Number(data.roundOff) !== 0 && (
               <tr>
                 <td>Round Off</td>
-                <td className="text-right">{Number(data.roundOff).toFixed(2)}</td>
+                <td className="text-right">{Number(data.roundOff || 0).toFixed(2)}</td>
               </tr>
             )}
             <tr>
               <td>Grand Total</td>
-              <td className="text-right" style={{ fontWeight: 800 }}>{totals.grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              <td className="text-right" style={{ fontWeight: 800 }}>{Number(totals.grandTotal || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
             </tr>
           </tbody>
         </table>

@@ -148,6 +148,7 @@ enum UserRole {
 enum CompanyType {
   MR_SWIMMING_POOLS
   KLEAN_TECH_SYSTEMS
+  MR_ACADEMY
 }
 
 model Invoice {

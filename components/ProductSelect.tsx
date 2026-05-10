@@ -19,7 +19,7 @@ interface Product {
 
 interface ProductSelectProps {
   value: string;
-  companyType: "MR_SWIMMING_POOLS" | "KLEAN_TECH_SYSTEMS";
+  companyType: "MR_SWIMMING_POOLS" | "KLEAN_TECH_SYSTEMS" | "MR_ACADEMY";
   onChange: (product: Product | null, manualValue?: string) => void;
   placeholder?: string;
   className?: string;

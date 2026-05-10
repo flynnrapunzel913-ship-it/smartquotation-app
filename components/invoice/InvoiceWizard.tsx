@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
+import ProductSelect from "@/components/ProductSelect";
 import "@/styles/wizard.css";
 import "@/styles/invoice.css";
 import InvoicePreview from "./InvoicePreview";
@@ -87,18 +88,39 @@ export default function InvoiceWizard({ initialData }: Props) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "cgstRate" || name === "sgstRate" || name === "roundOff") {
+      setFormData((prev) => ({ ...prev, [name]: Number(value || 0) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleItemChange = (index: number, field: keyof InvoiceItem, value: any) => {
     const newItems = [...formData.items];
     const item = { ...newItems[index], [field]: value };
     
+    // Normalize numeric values
     if (field === "unitPrice" || field === "qty") {
-      item.total = Number(item.unitPrice) * Number(item.qty);
+      item.unitPrice = Number(item.unitPrice || 0);
+      item.qty = Number(item.qty || 0);
+      item.total = item.unitPrice * item.qty;
     }
     
     newItems[index] = item;
+    setFormData((prev) => ({ ...prev, items: newItems }));
+  };
+
+  const handleProductSelect = (index: number, product: any) => {
+    if (!product) return;
+    const newItems = [...formData.items];
+    const unitPrice = Number(product.defaultRate || 0);
+    newItems[index] = {
+      ...newItems[index],
+      description: product.name,
+      unitPrice: unitPrice,
+      qty: 1,
+      total: unitPrice,
+    };
     setFormData((prev) => ({ ...prev, items: newItems }));
   };
 
@@ -279,11 +301,18 @@ export default function InvoiceWizard({ initialData }: Props) {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>
-                      <input
-                        type="text"
+                      <ProductSelect
                         value={item.description}
-                        onChange={(e) => handleItemChange(index, "description", e.target.value)}
+                        companyType="MR_ACADEMY"
+                        onChange={(prod, manual) => {
+                          if (prod) {
+                            handleProductSelect(index, prod);
+                          } else {
+                            handleItemChange(index, "description", manual || "");
+                          }
+                        }}
                         className="form-control"
+                        placeholder="Select or type description..."
                       />
                     </td>
                     <td>
