@@ -20,7 +20,6 @@ export async function POST(req: Request) {
     let products: any[] = [];
     let errorMessage = "";
 
-    // Dynamic imports to prevent top-level crashes and improve route resilience
     try {
       if (fileExtension === "xlsx" || fileExtension === "xls" || fileExtension === "csv") {
         const xlsx = await import("xlsx");
@@ -32,10 +31,8 @@ export async function POST(req: Request) {
         if (rawData.length === 0) {
           errorMessage = "The uploaded spreadsheet appears to be empty.";
         } else {
-          // Smart column detection
           const firstRow = rawData[0] as any;
           const columns = Object.keys(firstRow);
-          
           const findCol = (patterns: string[]) => 
             columns.find(col => patterns.some(p => col.toLowerCase().includes(p.toLowerCase())));
 
@@ -48,9 +45,9 @@ export async function POST(req: Request) {
           const gstCol = findCol(["gst", "tax", "gst %", "igst"]);
 
           if (!nameCol) {
-            errorMessage = "Could not detect a product name column (e.g., 'Product', 'Item', 'Name').";
+            errorMessage = "Could not detect a product name column.";
           } else if (!rateCol) {
-            errorMessage = "Could not detect a rate or price column (e.g., 'Rate', 'Price', 'MRP').";
+            errorMessage = "Could not detect a rate or price column.";
           } else {
             products = rawData.map((row: any) => ({
               productCode: codeCol ? String(row[codeCol] || "").trim() : "",
@@ -63,19 +60,27 @@ export async function POST(req: Request) {
             })).filter(p => p.name && p.defaultRate > 0);
 
             if (products.length === 0) {
-              errorMessage = "No valid product rows (with name and price) were found in the spreadsheet.";
+              errorMessage = "No valid product rows were found.";
             }
           }
         }
       } else if (fileExtension === "pdf") {
-        const pdfParse = (await import("pdf-parse")).default;
-        const data = await pdfParse(buffer);
-        const text = data.text;
-        if (!text || text.trim().length < 10) {
-          errorMessage = "PDF text extraction failed or returned no content.";
-        } else {
-          const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
-          
+        // Robust PDF text extraction using pdfjs-dist directly if available, or fallback
+        try {
+          const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+          const data = new Uint8Array(buffer);
+          const loadingTask = pdfjs.getDocument({ data });
+          const pdf = await loadingTask.promise;
+          let fullText = "";
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            const strings = content.items.map((item: any) => item.str);
+            fullText += strings.join(" ") + "\n";
+          }
+
+          const lines = fullText.split("\n").map(l => l.trim()).filter(l => l.length > 0);
           lines.forEach(line => {
             const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
             if (rateMatch) {
@@ -90,44 +95,61 @@ export async function POST(req: Request) {
               });
             }
           });
+        } catch (pdfError) {
+          console.error("PDFJS failed, trying fallback...", pdfError);
+          // Fallback to pdf-parse if pdfjs-dist fails
+          const pdfParse = (await import("pdf-parse")).default || (await import("pdf-parse"));
+          const data = await (typeof pdfParse === 'function' ? pdfParse(buffer) : pdfParse.default(buffer));
+          const text = data.text;
+          const lines = text.split("\n").map((l: string) => l.trim()).filter((l: string) => l.length > 0);
+          lines.forEach((line: string) => {
+            const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
+            if (rateMatch) {
+              products.push({
+                productCode: rateMatch[1] || "",
+                name: rateMatch[2].trim(),
+                description: "",
+                unit: rateMatch[5],
+                defaultRate: parseFloat(rateMatch[4]),
+                hsnCode: rateMatch[3] || "",
+                gstRate: 18,
+              });
+            }
+          });
+        }
 
-          if (products.length === 0) {
-            errorMessage = "Could not identify any product-rate patterns in the PDF text.";
-          }
+        if (products.length === 0) {
+          errorMessage = "Could not identify any product-rate patterns in the PDF text.";
         }
       } else if (fileExtension === "docx") {
         const mammoth = await import("mammoth");
         const result = await mammoth.extractRawText({ buffer });
         const text = result.value;
-        if (!text || text.trim().length < 10) {
-          errorMessage = "Word document text extraction failed.";
-        } else {
-          const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
-          lines.forEach(line => {
-            const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
-            if (rateMatch) {
-              products.push({
-                productCode: rateMatch[1] || "",
-                name: rateMatch[2].trim(),
-                description: "",
-                unit: rateMatch[5],
-                defaultRate: parseFloat(rateMatch[4]),
-                hsnCode: rateMatch[3] || "",
-                gstRate: 18,
-              });
-            }
-          });
-
-          if (products.length === 0) {
-            errorMessage = "Could not identify any product-rate patterns in the Word document.";
+        const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+        lines.forEach(line => {
+          const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
+          if (rateMatch) {
+            products.push({
+              productCode: rateMatch[1] || "",
+              name: rateMatch[2].trim(),
+              description: "",
+              unit: rateMatch[5],
+              defaultRate: parseFloat(rateMatch[4]),
+              hsnCode: rateMatch[3] || "",
+              gstRate: 18,
+            });
           }
+        });
+
+        if (products.length === 0) {
+          errorMessage = "Could not identify any product-rate patterns in the Word document.";
         }
       } else {
         errorMessage = `Unsupported file format: .${fileExtension}`;
       }
     } catch (parseError: any) {
       console.error("Internal parsing error:", parseError);
-      errorMessage = `Parsing error: ${parseError.message || "An unexpected error occurred while reading the file."}`;
+      errorMessage = `Parsing error: ${parseError.message || "An unexpected error occurred."}`;
     }
 
     if (errorMessage) {
