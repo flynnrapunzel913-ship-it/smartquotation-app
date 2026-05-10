@@ -19,7 +19,10 @@ export default function QuotationTypesPage() {
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
             <button className="btn btn-primary" onClick={() => router.push("/history")}>
-              View History
+              Quotation History
+            </button>
+            <button className="btn btn-outline" onClick={() => router.push("/dashboard/invoices")}>
+              Invoice History
             </button>
           </div>
         </div>
@@ -37,6 +40,13 @@ export default function QuotationTypesPage() {
             title="KLEAN TECH SYSTEMS"
             description="Water treatment systems, RO plants, and industrial filters quotation module."
             href="/quotations/klean-tech/new"
+          />
+
+          <QuotationTypeCard
+            theme="mr-invoice"
+            title="MR SWIMMING POOLS & SPA INVOICE"
+            description="Generate professional GST tax invoices"
+            href="/dashboard/invoices/new"
           />
         </div>
       </div>

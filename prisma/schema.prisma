@@ -29,20 +29,22 @@ model Customer {
 }
 
 model Product {
-  id          String          @id @default(cuid())
-  name        String
-  description String          @default("")
-  category    String          @default("General")
-  sectionCode String          @default("A")
-  defaultRate Decimal         @db.Decimal(14, 2)
-  unit        String          @default("Nos")
-  warranty    String          @default("")
-  imagePath   String?
-  imageText   String?
-  sortOrder   Int             @default(0)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  items       QuotationItem[]
+  id                String          @id @default(cuid())
+  name              String
+  description       String          @default("")
+  category          String          @default("General")
+  sectionCode       String          @default("A")
+  defaultRate       Decimal         @db.Decimal(14, 2)
+  unit              String          @default("Nos")
+  warranty          String          @default("")
+  templateText      String?         @default("")
+  templateVariables String[]
+  imagePath         String?
+  imageText         String?
+  sortOrder         Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  items             QuotationItem[]
 
   @@index([name])
   @@index([category])
@@ -146,4 +148,30 @@ enum UserRole {
 enum CompanyType {
   MR_SWIMMING_POOLS
   KLEAN_TECH_SYSTEMS
+}
+
+model Invoice {
+  id              String   @id @default(cuid())
+  invoiceNumber   String   @unique
+  invoiceDate     DateTime
+  customerName    String
+  customerAddress String
+  customerGST     String?
+  customerMobile  String?
+  items           Json     // Array of { description, unitPrice, qty, total }
+  subTotal        Decimal  @db.Decimal(14, 2)
+  cgstPercent     Decimal  @default(9) @db.Decimal(5, 2)
+  sgstPercent     Decimal  @default(9) @db.Decimal(5, 2)
+  cgstAmount      Decimal  @db.Decimal(14, 2)
+  sgstAmount      Decimal  @db.Decimal(14, 2)
+  roundOff        Decimal  @default(0) @db.Decimal(10, 2)
+  grandTotal      Decimal  @db.Decimal(14, 2)
+  amountInWords   String
+  bankDetails     String?
+  isDraft         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([invoiceNumber])
+  @@index([invoiceDate])
 }

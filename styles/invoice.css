@@ -1,0 +1,235 @@
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.items-table th {
+  background: #f8fafc;
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  color: #475569;
+  font-weight: 600;
+}
+
+.items-table td {
+  padding: 8px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.items-table tr:hover {
+  background: #fdfdfd;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.btn-danger {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+}
+
+.totals-summary-card {
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 8px;
+  margin-top: 24px;
+  border: 1px solid #e2e8f0;
+  max-width: 500px;
+  margin-left: auto;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.summary-row.grand-total {
+  border-top: 1px solid #cbd5e1;
+  padding-top: 12px;
+  margin-top: 12px;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.summary-row.words {
+  margin-top: 8px;
+  font-style: italic;
+  font-size: 12px;
+  color: #0369a1;
+  text-align: right;
+  display: block;
+}
+
+.preview-placeholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #94a3b8;
+  margin-top: 20px;
+}
+
+/* Invoice Preview Layout (Matches PDF) */
+.invoice-paper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  color: #000;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.4;
+  border: 1px solid #eee;
+  position: relative;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.invoice-logo {
+  height: 80px;
+}
+
+.invoice-company-info {
+  text-align: right;
+  font-size: 12px;
+}
+
+.invoice-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+  text-decoration: underline;
+  margin: 20px 0;
+  text-transform: uppercase;
+}
+
+.invoice-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.invoice-to {
+  flex: 1;
+}
+
+.invoice-to h4 {
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.invoice-details {
+  text-align: right;
+  font-weight: 600;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.invoice-table th, .invoice-table td {
+  border: 1.5px solid #000;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.invoice-table th {
+  background: #fff;
+  text-transform: uppercase;
+}
+
+.invoice-totals-section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.totals-table {
+  width: 300px;
+  border-collapse: collapse;
+}
+
+.totals-table td {
+  border: 1.5px solid #000;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.totals-table td:first-child {
+  font-weight: 700;
+}
+
+.amount-words-section {
+  margin-top: 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bank-details-section {
+  margin-top: 30px;
+  font-size: 12px;
+}
+
+.bank-details-section h4 {
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+
+.signature-section {
+  margin-top: 50px;
+  text-align: right;
+}
+
+.signature-line {
+  margin-top: 60px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.footer-banner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(90deg, #0ea5e9, #6366f1);
+}
