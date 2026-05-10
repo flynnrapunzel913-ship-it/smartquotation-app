@@ -274,21 +274,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           plantRoomWidth: "8",
           plantRoomHeight: "6",
           turnoverPeriod: "4",
-          poolVolumeOverride: false,
-          totalPoolVolumeOverride: false,
-          filtrationVolumeOverride: false,
-          tilingAreaOverride: false,
-          copingAreaOverride: false,
-          waterproofingAreaOverride: false,
         };
-        const metrics = calculatePoolMetrics(nextSpecs);
         return {
           ...prev,
-          projectSpecifications: { ...nextSpecs, ...metrics }
+          projectSpecifications: nextSpecs
         };
       });
     } else if (step === 3) {
-      ["poolVolume", "totalPoolVolume", "filtrationVolume", "tilingArea", "copingArea", "waterproofingArea"].forEach(m => resetMetric(m));
+      ["poolVolume", "totalPoolVolume", "filtrationVolume", "tilingArea", "copingArea", "waterproofingArea", "plantRoomSize"].forEach(m => resetMetric(m));
     } else if (step >= 4 && step <= 8) {
       const sectionCodes = ["A", "B", "C", "D", "Part 2"];
       const code = sectionCodes[step - 4];
@@ -348,8 +341,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
         // Update values only if they are not overridden
         if (!nextSpecs.poolVolumeOverride) nextSpecs.poolVolume = `${metrics.volumeCubicFeet.toFixed(0)} Cft`;
-        if (!nextSpecs.totalPoolVolumeOverride) nextSpecs.totalPoolVolume = `${metrics.volumeLiters} Ltrs`;
-        if (!nextSpecs.filtrationVolumeOverride) nextSpecs.filtrationVolume = `${metrics.volumeLiters} Ltrs`;
+        if (!nextSpecs.totalPoolVolumeOverride) nextSpecs.totalPoolVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
+        if (!nextSpecs.filtrationVolumeOverride) nextSpecs.filtrationVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
         if (!nextSpecs.tilingAreaOverride) nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
         if (!nextSpecs.copingAreaOverride) nextSpecs.copingArea = `${metrics.copingArea} Rft`;
         if (!nextSpecs.waterproofingAreaOverride) nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
@@ -390,11 +383,18 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       if (l > 0 && w > 0 && d > 0) {
         const metrics = calculatePoolMetrics(l, w, d, shape);
         if (field === "poolVolume") nextSpecs.poolVolume = `${metrics.volumeCubicFeet.toFixed(0)} Cft`;
-        if (field === "totalPoolVolume") nextSpecs.totalPoolVolume = `${metrics.volumeLiters} Ltrs`;
-        if (field === "filtrationVolume") nextSpecs.filtrationVolume = `${metrics.volumeLiters} Ltrs`;
+        if (field === "totalPoolVolume") nextSpecs.totalPoolVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
+        if (field === "filtrationVolume") nextSpecs.filtrationVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
         if (field === "tilingArea") nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
         if (field === "copingArea") nextSpecs.copingArea = `${metrics.copingArea} Rft`;
         if (field === "waterproofingArea") nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
+      }
+      
+      if (field === "plantRoomSize") {
+        const pl = nextSpecs.plantRoomLength || "8";
+        const pw = nextSpecs.plantRoomWidth || "8";
+        const ph = nextSpecs.plantRoomHeight || "6";
+        nextSpecs.plantRoomSize = `${pl}'X${pw}'X${ph}'`;
       }
 
       return { ...prev, projectSpecifications: nextSpecs };
@@ -669,100 +669,89 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         )}
 
         {step === 2 && (
-          <div className="metrics-container">
-            <div className="metrics-card">
-              <h3 style={{ marginBottom: "20px" }}>Pool Dimensions</h3>
-              <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
-                <div className="form-group">
-                  <label>Pool Shape</label>
-                  <select
+          <div className="metrics-card" style={{ maxWidth: "800px", margin: "0 auto" }}>
+            <h3 style={{ marginBottom: "20px", textAlign: "center" }}>Pool Dimensions</h3>
+            <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
+              <div className="form-group">
+                <label>Pool Shape</label>
+                <select
+                  className="form-control"
+                  value={formData.projectSpecifications.shapeOfPool}
+                  onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)}
+                >
+                  <option value="Rectangle Pool">Rectangle Pool</option>
+                  <option value="Square Pool">Square Pool</option>
+                  <option value="Circular Pool">Circular Pool</option>
+                  <option value="Oval Pool">Oval Pool</option>
+                  <option value="L Shape Pool">L Shape Pool</option>
+                  <option value="Infinity Pool">Infinity Pool</option>
+                  <option value="Custom">Custom</option>
+                </select>
+                {formData.projectSpecifications.shapeOfPool === "Custom" && (
+                  <input
+                    type="text"
                     className="form-control"
-                    value={formData.projectSpecifications.shapeOfPool}
+                    style={{ marginTop: "8px" }}
+                    placeholder="Enter custom shape..."
                     onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)}
-                  >
-                    <option value="Rectangle Pool">Rectangle Pool</option>
-                    <option value="Square Pool">Square Pool</option>
-                    <option value="Circular Pool">Circular Pool</option>
-                    <option value="Oval Pool">Oval Pool</option>
-                    <option value="L Shape Pool">L Shape Pool</option>
-                    <option value="Infinity Pool">Infinity Pool</option>
-                    <option value="Custom">Custom</option>
-                  </select>
-                  {formData.projectSpecifications.shapeOfPool === "Custom" && (
-                    <input
-                      type="text"
-                      className="form-control"
-                      style={{ marginTop: "8px" }}
-                      placeholder="Enter custom shape..."
-                      onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)}
-                    />
-                  )}
+                  />
+                )}
+              </div>
+              <div className="form-group">
+                <label>Pool Type</label>
+                <select
+                  className="form-control"
+                  value={formData.projectSpecifications.typeOfPool}
+                  onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
+                >
+                  <option value="Skimmer Type">Skimmer Type</option>
+                  <option value="Overflow Type">Overflow Type</option>
+                  <option value="Infinity Type">Infinity Type</option>
+                  <option value="Jacuzzi">Jacuzzi</option>
+                  <option value="Kids Pool">Kids Pool</option>
+                  <option value="Lap Pool">Lap Pool</option>
+                  <option value="Custom">Custom</option>
+                </select>
+                {formData.projectSpecifications.typeOfPool === "Custom" && (
+                  <input
+                    type="text"
+                    className="form-control"
+                    style={{ marginTop: "8px" }}
+                    placeholder="Enter custom type..."
+                    onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
+                  />
+                )}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                <div className="form-group">
+                  <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
+                  <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>Pool Type</label>
-                  <select
+                  <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
+                  <input
+                    type="text"
                     className="form-control"
-                    value={formData.projectSpecifications.typeOfPool}
-                    onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
-                  >
-                    <option value="Skimmer Type">Skimmer Type</option>
-                    <option value="Overflow Type">Overflow Type</option>
-                    <option value="Infinity Type">Infinity Type</option>
-                    <option value="Jacuzzi">Jacuzzi</option>
-                    <option value="Kids Pool">Kids Pool</option>
-                    <option value="Lap Pool">Lap Pool</option>
-                    <option value="Custom">Custom</option>
-                  </select>
-                  {formData.projectSpecifications.typeOfPool === "Custom" && (
-                    <input
-                      type="text"
-                      className="form-control"
-                      style={{ marginTop: "8px" }}
-                      placeholder="Enter custom type..."
-                      onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
-                    />
-                  )}
+                    value={formData.projectSpecifications.poolWidth}
+                    disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
+                    onChange={(e) => handleSpecChange("poolWidth", e.target.value)}
+                  />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-                  <div className="form-group">
-                    <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
-                    <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
-                  </div>
-                  <div className="form-group">
-                    <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={formData.projectSpecifications.poolWidth}
-                      disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
-                      onChange={(e) => handleSpecChange("poolWidth", e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
-                </div>
+                <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
               </div>
-
-              <h3 style={{ margin: "24px 0 20px" }}>Plant Room</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-                <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomLength} onChange={(e) => handleSpecChange("plantRoomLength", e.target.value)} /></div>
-                <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomWidth} onChange={(e) => handleSpecChange("plantRoomWidth", e.target.value)} /></div>
-                <div className="form-group"><label>Height (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
-              </div>
-
-              <div className="form-group" style={{ marginTop: "12px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
             </div>
 
-            <div className="metrics-card read-only">
-              <h3 style={{ marginBottom: "20px" }}>Live Metrics Preview</h3>
-              <p style={{ fontSize: "12px", color: "#64748b", marginBottom: "24px" }}>These values update as you type.</p>
-              <div className="metrics-grid">
-                <div className="metric-row"><span className="metric-label">Water Volume (Cft)</span><span className="metric-value">{formData.projectSpecifications.poolVolume}</span></div>
-                <div className="metric-row"><span className="metric-label">Volume in Liters</span><span className="metric-value">{formData.projectSpecifications.totalPoolVolume}</span></div>
-                <div className="metric-row"><span className="metric-label">Tiling Area</span><span className="metric-value">{formData.projectSpecifications.tilingArea}</span></div>
-                <div className="metric-row"><span className="metric-label">Coping Area</span><span className="metric-value">{formData.projectSpecifications.copingArea}</span></div>
-                <div className="metric-row"><span className="metric-label">Waterproofing Area</span><span className="metric-value">{formData.projectSpecifications.waterproofingArea}</span></div>
-                <div className="metric-row"><span className="metric-label">Plant Room Size</span><span className="metric-value">{formData.projectSpecifications.plantRoomSize}</span></div>
-              </div>
+            <h3 style={{ margin: "24px 0 20px", textAlign: "center" }}>Plant Room</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+              <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomLength} onChange={(e) => handleSpecChange("plantRoomLength", e.target.value)} /></div>
+              <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomWidth} onChange={(e) => handleSpecChange("plantRoomWidth", e.target.value)} /></div>
+              <div className="form-group"><label>Height (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
+            </div>
+
+            <div className="form-group" style={{ marginTop: "12px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
+            
+            <div style={{ marginTop: "40px", textAlign: "center" }}>
+              <button className="btn-primary" onClick={nextStep}>Calculate Metrics →</button>
             </div>
           </div>
         )}
@@ -774,12 +763,13 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
               {[
-                { label: "Main Pool Volume", key: "poolVolume" },
+                { label: "Water Volume (Cft)", key: "poolVolume" },
                 { label: "Total Volume (Ltrs)", key: "totalPoolVolume" },
-                { label: "Filtration Volume", key: "filtrationVolume" },
-                { label: "Tiling Area", key: "tilingArea" },
-                { label: "Coping Area", key: "copingArea" },
-                { label: "Waterproofing Area", key: "waterproofingArea" },
+                { label: "Filtration Volume (Ltrs)", key: "filtrationVolume" },
+                { label: "Tiling Area (Sft)", key: "tilingArea" },
+                { label: "Coping Area (Rft)", key: "copingArea" },
+                { label: "Waterproofing Area (Sft)", key: "waterproofingArea" },
+                { label: "Plant Room Size", key: "plantRoomSize" },
               ].map((m) => {
                 const isOverridden = (formData.projectSpecifications as any)[`${m.key}Override`];
                 return (
