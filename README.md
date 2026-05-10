@@ -97,7 +97,7 @@ Ensure the following environment variables are set in your Vercel project settin
 For a successful deployment that handles database migrations and Prisma client generation, use the following build command in Vercel:
 
 ```bash
-npx prisma generate && npx prisma migrate deploy && npm run build
+npx prisma generate && npx prisma db push && npm run build
 ```
 
 ### PDF & DOCX Generation

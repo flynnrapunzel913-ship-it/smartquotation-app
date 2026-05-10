@@ -1,0 +1,347 @@
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 13px;
+  border: 1px solid #000;
+}
+
+.items-table th {
+  background: #f1f5f9;
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #000;
+  color: #000;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.items-table td {
+  padding: 4px 8px;
+  border: 1px solid #000;
+  vertical-align: top;
+}
+
+.items-table td textarea {
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.items-table td input {
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  font-family: inherit;
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Remove spin buttons for number inputs */
+.items-table td input::-webkit-outer-spin-button,
+.items-table td input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.items-table tr:hover {
+  background: #fdfdfd;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.btn-danger {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+}
+
+.totals-summary-card {
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 8px;
+  margin-top: 24px;
+  border: 1px solid #e2e8f0;
+  max-width: 500px;
+  margin-left: auto;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.summary-row.grand-total {
+  border-top: 1px solid #cbd5e1;
+  padding-top: 12px;
+  margin-top: 12px;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.summary-row.words {
+  margin-top: 8px;
+  font-style: italic;
+  font-size: 12px;
+  color: #0369a1;
+  text-align: right;
+  display: block;
+}
+
+.preview-placeholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #94a3b8;
+  margin-top: 20px;
+}
+
+/* Invoice Preview Layout (Matches PDF) */
+.invoice-paper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  color: #000;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.4;
+  border: 1px solid #eee;
+  position: relative;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.invoice-logo {
+  height: 80px;
+}
+
+.invoice-company-info {
+  text-align: right;
+  font-size: 12px;
+}
+
+.invoice-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+  text-decoration: underline;
+  margin: 20px 0;
+  text-transform: uppercase;
+}
+
+.invoice-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.invoice-to {
+  flex: 1;
+}
+
+.invoice-to h4 {
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.invoice-details {
+  text-align: right;
+  font-weight: 600;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.invoice-table th, .invoice-table td {
+  border: 1.5px solid #000;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.invoice-table th {
+  background: #fff;
+  text-transform: uppercase;
+}
+
+.invoice-totals-section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.totals-table {
+  width: 300px;
+  border-collapse: collapse;
+}
+
+.totals-table td {
+  border: 1.5px solid #000;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.totals-table td:first-child {
+  font-weight: 700;
+}
+
+.amount-words-section {
+  margin-top: 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bank-details-section {
+  margin-top: 30px;
+  font-size: 12px;
+}
+
+.bank-details-section h4 {
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+
+.signature-section {
+  margin-top: 50px;
+  text-align: right;
+}
+
+.signature-line {
+  margin-top: 60px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+/* Dashboard Redesign Utilities */
+.dashboard-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-warning { background: #fef3c7; color: #92400e; }
+.badge-success { background: #d1fae5; color: #065f46; }
+.badge-blue { background: #dbeafe; color: #1e40af; }
+
+/* Grid Utilities (if Tailwind isn't fully available/compiled) */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-4 { gap: 16px; }
+.gap-6 { gap: 24px; }
+.mb-8 { margin-bottom: 32px; }
+.mt-2 { margin-top: 8px; }
+.p-6 { padding: 24px; }
+.p-8 { padding: 32px; }
+.rounded-xl { border-radius: 12px; }
+.rounded-2xl { border-radius: 16px; }
+.font-bold { font-weight: 700; }
+.text-lg { font-size: 18px; }
+.text-2xl { font-size: 24px; }
+.text-3xl { font-size: 30px; }
+
+/* Modal Customizations */
+.modal-overlay {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  border: none;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.animate-in {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.slide-in-from-top-1 {
+  animation-name: slideInFromTop;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromTop {
+  from { transform: translateY(-4px); }
+  to { transform: translateY(0); }
+}

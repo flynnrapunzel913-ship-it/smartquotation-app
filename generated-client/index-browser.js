@@ -149,12 +149,21 @@ exports.Prisma.ProductScalarFieldEnum = {
   defaultRate: 'defaultRate',
   unit: 'unit',
   warranty: 'warranty',
+<<<<<<< HEAD:generated/prisma-client/index-browser.js
   hsnCode: 'hsnCode',
+=======
+  templateText: 'templateText',
+  templateVariables: 'templateVariables',
+>>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index-browser.js
   imagePath: 'imagePath',
   imageText: 'imageText',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  databaseId: 'databaseId',
+  hsnCode: 'hsnCode',
+  gstRate: 'gstRate',
+  productCode: 'productCode'
 };
 
 exports.Prisma.CompanySettingsScalarFieldEnum = {
@@ -210,7 +219,60 @@ exports.Prisma.QuotationItemScalarFieldEnum = {
   imageUrl: 'imageUrl',
   imageText: 'imageText',
   productId: 'productId',
-  variableValues: 'variableValues'
+  variableValues: 'variableValues',
+  title: 'title',
+  isCustom: 'isCustom'
+};
+
+exports.Prisma.ProductCatalogScalarFieldEnum = {
+  id: 'id',
+  companyType: 'companyType',
+  category: 'category',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  specifications: 'specifications',
+  unitPrice: 'unitPrice',
+  unit: 'unit',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InvoiceScalarFieldEnum = {
+  id: 'id',
+  invoiceNumber: 'invoiceNumber',
+  invoiceDate: 'invoiceDate',
+  customerName: 'customerName',
+  customerAddress: 'customerAddress',
+  customerGST: 'customerGST',
+  customerMobile: 'customerMobile',
+  items: 'items',
+  subTotal: 'subTotal',
+  cgstPercent: 'cgstPercent',
+  sgstPercent: 'sgstPercent',
+  cgstAmount: 'cgstAmount',
+  sgstAmount: 'sgstAmount',
+  roundOff: 'roundOff',
+  grandTotal: 'grandTotal',
+  amountInWords: 'amountInWords',
+  bankDetails: 'bankDetails',
+  sectionHeadings: 'sectionHeadings',
+  customSections: 'customSections',
+  isDraft: 'isDraft',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductDatabaseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  module: 'module',
+  sourceFile: 'sourceFile',
+  isActive: 'isActive',
+  securityPin: 'securityPin',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -219,6 +281,11 @@ exports.Prisma.SortOrder = {
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -242,13 +309,22 @@ exports.UserRole = exports.$Enums.UserRole = {
   USER: 'USER'
 };
 
+exports.CompanyType = exports.$Enums.CompanyType = {
+  MR_SWIMMING_POOLS: 'MR_SWIMMING_POOLS',
+  KLEAN_TECH_SYSTEMS: 'KLEAN_TECH_SYSTEMS',
+  MR_ACADEMY: 'MR_ACADEMY'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Customer: 'Customer',
   Product: 'Product',
   CompanySettings: 'CompanySettings',
   Quotation: 'Quotation',
-  QuotationItem: 'QuotationItem'
+  QuotationItem: 'QuotationItem',
+  ProductCatalog: 'ProductCatalog',
+  Invoice: 'Invoice',
+  ProductDatabase: 'ProductDatabase'
 };
 
 /**

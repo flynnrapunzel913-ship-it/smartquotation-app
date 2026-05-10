@@ -35,6 +35,19 @@ export async function PUT(
   const { id } = await params;
   const data = await req.json();
 
+  // 0. Verify all productIds exist
+  const productIds = data.items.map((i: any) => i.productId).filter(Boolean) as string[];
+  const validProducts = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true }
+  });
+  const validProductIds = new Set(validProducts.map(p => p.id));
+
+  const sanitizedItems = data.items.map((item: any) => ({
+    ...item,
+    productId: item.productId && validProductIds.has(item.productId) ? item.productId : null
+  }));
+
   try {
     // 1. Update the quotation and customer in a transaction
     const updatedQuote = await prisma.$transaction(async (tx) => {
@@ -83,7 +96,7 @@ export async function PUT(
       await tx.quotationItem.deleteMany({ where: { quotationId: id } });
 
       await tx.quotationItem.createMany({
-        data: data.items.map((item: any) => ({
+        data: sanitizedItems.map((item: any) => ({
           quotationId: id,
           section: item.section,
           serialNo: item.serialNo,
@@ -98,6 +111,7 @@ export async function PUT(
           imageText: item.imageText || null,
           productId: item.productId || null,
           variableValues: item.variableValues || {},
+          isCustom: item.isCustom || false,
         })),
       });
 

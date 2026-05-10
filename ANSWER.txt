@@ -1,12 +1,10 @@
-Admin Password: AdminSecure@12#
-
-Here are the steps to push your changes to GitHub:
+Great! Now that the app is running and conflicts are resolved, you can push the changes to GitHub:
 
 1. Open your terminal.
-2. Run these commands one by one:
+2. Run these commands:
 
 git add .
-git commit -m "Fix database connection, Excel import, and add password protection"
+git commit -m "Resolve merge conflicts and fix generate-docx errors"
 git push
 
-That's it! Your changes will be pushed to GitHub.
+That's it! Your changes will be on GitHub.

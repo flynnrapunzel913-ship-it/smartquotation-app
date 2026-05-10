@@ -42,7 +42,7 @@ function cell(
   widthPct: number,
   opts?: {
     bold?: boolean;
-    align?: (typeof AlignmentType)[keyof typeof AlignmentType];
+    align?: any;
   },
 ): TableCell {
   return new TableCell({
@@ -347,8 +347,15 @@ export async function quotationToDocxBuffer(
   if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || (quote.projectSpecifications as any)?.quotationType === "KLEAN_TECH_SYSTEMS") {
     return generateKleanTechDocx(quote, company);
   }
-  const specs = quote.projectSpecifications as ProjectSpecifications;
   const c = company;
+  let specs = quote.projectSpecifications as any;
+  if (typeof specs === "string") {
+    try {
+      specs = JSON.parse(specs);
+    } catch (e) {
+      specs = {};
+    }
+  }
 
   const sections = (quote as any).sections && (quote as any).sections.length > 0
     ? (quote as any).sections.filter((s: any) => s.included)
@@ -457,7 +464,8 @@ export async function quotationToDocxBuffer(
     }),
   );
 
-  const mainPoolSize = [specs.poolLength, specs.poolWidth, specs.poolDepth].map(plainValue).filter(Boolean).join("X");
+  const s = specs as any;
+  const mainPoolSize = [s.poolLength, s.poolWidth, s.poolDepth].map(plainValue).filter(Boolean).join("X");
 
   children.push(
     new Table({
@@ -471,15 +479,15 @@ export async function quotationToDocxBuffer(
               children: [
                 new Paragraph({ alignment: AlignmentType.CENTER, children: [specText("SWIMMING POOL SPECIFICATIONS", true)] }),
                 new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(`(Main Pool ${mainPoolSize})`)] }),
-                new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(`Plant Room -${String(specs.plantRoomSize ?? "")}`)] }),
+                new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(`Plant Room -${String(s.plantRoomSize ?? "")}`)] }),
               ],
             }),
             new TableCell({
               borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder },
               width: { size: 50, type: WidthType.PERCENTAGE },
               children: [
-                new Paragraph({ children: [specText("SHAPE OF POOL", true), specText(` - ${plainValue(specs.shapeOfPool)}`)] }),
-                new Paragraph({ children: [specText("TYPE OF POOL", true), specText(` - ${plainValue(specs.typeOfPool)}`)] }),
+                new Paragraph({ children: [specText("SHAPE OF POOL", true), specText(` - ${plainValue(s.shapeOfPool)}`)] }),
+                new Paragraph({ children: [specText("TYPE OF POOL", true), specText(` - ${plainValue(s.typeOfPool)}`)] }),
               ],
             }),
           ],
@@ -500,25 +508,25 @@ export async function quotationToDocxBuffer(
       new TableRow({
         children: [
           specSimpleCell("Length", 50),
-          specSimpleCell(plainValue(specs.poolLength), 50, { align: AlignmentType.CENTER }),
+          specSimpleCell(plainValue(s.poolLength), 50, { align: AlignmentType.CENTER }),
         ],
       }),
       new TableRow({
         children: [
           specSimpleCell("Width", 50),
-          specSimpleCell(plainValue(specs.poolWidth), 50, { align: AlignmentType.CENTER }),
+          specSimpleCell(plainValue(s.poolWidth), 50, { align: AlignmentType.CENTER }),
         ],
       }),
       new TableRow({
         children: [
           specSimpleCell("Depth", 50),
-          specSimpleCell(plainValue(specs.poolDepth), 50, { align: AlignmentType.CENTER }),
+          specSimpleCell(plainValue(s.poolDepth), 50, { align: AlignmentType.CENTER }),
         ],
       }),
       new TableRow({
         children: [
           specSimpleCell("Water Volume", 50),
-          specSimpleCell(plainValue(specs.poolVolume), 50, { align: AlignmentType.CENTER }),
+          specSimpleCell(plainValue(s.poolVolume), 50, { align: AlignmentType.CENTER }),
         ],
       }),
     ],
@@ -530,19 +538,19 @@ export async function quotationToDocxBuffer(
       new TableRow({
         children: [
           specSimpleCell("PLANT ROOM SIZE", 50, { bold: true }),
-          specSimpleCell(plainValue(String(specs.plantRoomSize ?? "")), 50, { align: AlignmentType.CENTER }),
+          specSimpleCell(plainValue(String(s.plantRoomSize ?? "")), 50, { align: AlignmentType.CENTER }),
         ],
       }),
     ],
   });
 
   const detailRows = [
-    ["Total Pool Volume in Liters", specs.totalPoolVolume],
-    ["Total Filtration Volume in Ltrs", specs.filtrationVolume],
-    ["Turnover Period", specs.turnoverPeriod],
-    ["Total Tiling Area in Sft", specs.tilingArea],
-    ["Total Coping Area in Rft", specs.copingArea],
-    ["Total Waterproofing Area in Sft", specs.waterproofingArea],
+    ["Total Pool Volume in Liters", s.totalPoolVolume],
+    ["Total Filtration Volume in Ltrs", s.filtrationVolume],
+    ["Turnover Period", s.turnoverPeriod],
+    ["Total Tiling Area in Sft", s.tilingArea],
+    ["Total Coping Area in Rft", s.copingArea],
+    ["Total Waterproofing Area in Sft", s.waterproofingArea],
   ];
 
   const detailsTable = new Table({
@@ -595,8 +603,8 @@ export async function quotationToDocxBuffer(
       children: [
         columnHeader("SL No.", 5),
         columnHeader("Description", 40),
-        columnHeader("Image*", 12),
-        columnHeader("Warranty**", 10),
+        columnHeader("Image", 12),
+        columnHeader("Warranty", 10),
         columnHeader("Qty", 5, AlignmentType.RIGHT),
         columnHeader("Unit", 6),
         columnHeader("Rate", 10, AlignmentType.RIGHT),
@@ -606,9 +614,8 @@ export async function quotationToDocxBuffer(
 
     const dataRows = rows.map(
       (it: (typeof quote.items)[number], index: number) => {
-        const descriptionLines = it.description.split("\n");
-        const titleText = descriptionLines[0];
-        const restLines = descriptionLines.slice(1);
+        const titleText = (it as any).title || it.description.split("\n")[0];
+        const restLines = (it as any).title ? it.description.split("\n") : it.description.split("\n").slice(1);
         
         const descriptionCellChildren: Paragraph[] = [
           new Paragraph({

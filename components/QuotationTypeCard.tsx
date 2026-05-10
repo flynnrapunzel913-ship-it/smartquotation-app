@@ -7,7 +7,7 @@ interface Props {
   title: string;
   description: string;
   href: string;
-  theme: "mr" | "klean";
+  theme: "mr" | "klean" | "mr-invoice";
   disabled?: boolean;
 }
 
@@ -33,7 +33,7 @@ export function QuotationTypeCard({ title, description, href, theme, disabled }:
           className={`btn ${disabled ? "btn-outline" : "btn-primary"}`}
           disabled={disabled}
         >
-          {disabled ? "Coming Soon" : "Create Quotation"}
+          {disabled ? "Coming Soon" : (theme === "mr-invoice" ? "Create Invoice" : "Create Quotation")}
         </button>
       </div>
     </div>

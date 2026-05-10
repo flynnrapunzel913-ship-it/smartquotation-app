@@ -5,24 +5,27 @@ import React, { useState, useEffect, useRef } from "react";
 interface Product {
   id: string;
   name: string;
-  templateText: string;
-  templateVariables: string[];
+  description: string;
   category: string;
   sectionCode: string;
   unit: string;
   warranty: string;
   defaultRate: number;
   imagePath?: string | null;
+  imageText?: string | null;
+  templateText?: string;
+  templateVariables?: string[];
 }
 
 interface ProductSelectProps {
   value: string;
+  companyType: "MR_SWIMMING_POOLS" | "KLEAN_TECH_SYSTEMS" | "MR_ACADEMY";
   onChange: (product: Product | null, manualValue?: string) => void;
   placeholder?: string;
   className?: string;
 }
 
-export default function ProductSelect({ value, onChange, placeholder, className }: ProductSelectProps) {
+export default function ProductSelect({ value, companyType, onChange, placeholder, className }: ProductSelectProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(value || "");
@@ -30,14 +33,36 @@ export default function ProductSelect({ value, onChange, placeholder, className 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/api/products")
+    if (!companyType) return;
+    
+    fetch(`/api/catalog?companyType=${companyType}`)
       .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
+      .then((data: any[]) => {
+        const enriched = data.map(p => {
+          const tText = p.description || "";
+          // Extract variables like {{VarName}}
+          const matches = tText.matchAll(/{{(\w+)}}/g);
+          const vars = Array.from(new Set(Array.from(matches).map(m => m[1])));
+          return {
+            id: p.id,
+            name: p.name,
+            description: tText,
+            category: p.category || "General",
+            sectionCode: p.sectionCode || "A", // Catalog might not have sectionCode, fallback to A
+            unit: p.unit || "Nos",
+            warranty: p.warranty || "",
+            defaultRate: Number(p.unitPrice) || 0,
+            imagePath: p.imagePath,
+            imageText: p.imageText,
+            templateText: tText,
+            templateVariables: vars
+          };
+        });
+        setProducts(enriched);
+        setFilteredProducts(enriched);
       })
       .catch((err) => console.error("Error fetching products:", err));
-  }, []);
+  }, [companyType]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
