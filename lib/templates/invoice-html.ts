@@ -176,7 +176,7 @@ export function generateInvoiceHtml(data: any) {
         ${data.items.map((item: any, index: number) => `
           <tr>
             <td class="text-center">${index + 1}</td>
-            <td style="text-transform: uppercase;">${item.description}</td>
+            <td style="text-transform: uppercase; white-space: pre-wrap;">${item.description}</td>
             <td class="text-right">${Number(item.unitPrice).toFixed(2)}</td>
             <td class="text-center">${item.qty}</td>
             <td class="text-right">${Number(item.total).toFixed(2)}</td>

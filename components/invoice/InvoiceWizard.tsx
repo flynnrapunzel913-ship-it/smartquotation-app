@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
-import ProductSelect from "@/components/ProductSelect";
 import "@/styles/wizard.css";
 import "@/styles/invoice.css";
 import InvoicePreview from "./InvoicePreview";
@@ -110,18 +109,11 @@ export default function InvoiceWizard({ initialData }: Props) {
     setFormData((prev) => ({ ...prev, items: newItems }));
   };
 
-  const handleProductSelect = (index: number, product: any) => {
-    if (!product) return;
-    const newItems = [...formData.items];
-    const unitPrice = Number(product.defaultRate || 0);
-    newItems[index] = {
-      ...newItems[index],
-      description: product.name,
-      unitPrice: unitPrice,
-      qty: 1,
-      total: unitPrice,
-    };
-    setFormData((prev) => ({ ...prev, items: newItems }));
+  const addItem = () => {
+    setFormData((prev) => ({
+      ...prev,
+      items: [...prev.items, { description: "", unitPrice: 0, qty: 1, total: 0 }],
+    }));
   };
 
   const addItem = () => {
@@ -299,20 +291,15 @@ export default function InvoiceWizard({ initialData }: Props) {
               <tbody>
                 {formData.items.map((item, index) => (
                   <tr key={index}>
-                    <td>{index + 1}</td>
+                    <td className="text-center" style={{ verticalAlign: 'middle' }}>{index + 1}</td>
                     <td>
-                      <ProductSelect
+                      <textarea
                         value={item.description}
-                        companyType="MR_ACADEMY"
-                        onChange={(prod, manual) => {
-                          if (prod) {
-                            handleProductSelect(index, prod);
-                          } else {
-                            handleItemChange(index, "description", manual || "");
-                          }
-                        }}
+                        onChange={(e) => handleItemChange(index, "description", e.target.value)}
                         className="form-control"
-                        placeholder="Select or type description..."
+                        rows={2}
+                        placeholder="Description"
+                        style={{ resize: 'vertical', minHeight: '40px' }}
                       />
                     </td>
                     <td>
@@ -331,8 +318,8 @@ export default function InvoiceWizard({ initialData }: Props) {
                         className="form-control text-center"
                       />
                     </td>
-                    <td className="text-right">{formatCurrencyINR(item.total)}</td>
-                    <td>
+                    <td className="text-right" style={{ verticalAlign: 'middle' }}>{formatCurrencyINR(item.total)}</td>
+                    <td style={{ verticalAlign: 'middle' }}>
                       <button className="btn-icon btn-danger" onClick={() => removeItem(index)}>
                         ×
                       </button>

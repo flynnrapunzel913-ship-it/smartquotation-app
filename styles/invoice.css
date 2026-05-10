@@ -2,38 +2,54 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 16px;
-  font-size: 14px;
+  font-size: 13px;
+  border: 1px solid #000;
 }
 
 .items-table th {
-  background: #f8fafc;
-  padding: 12px 8px;
+  background: #f1f5f9;
+  padding: 8px;
   text-align: left;
-  border-bottom: 2px solid #e2e8f0;
-  color: #475569;
-  font-weight: 600;
+  border: 1px solid #000;
+  color: #000;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .items-table td {
-  padding: 8px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 4px 8px;
+  border: 1px solid #000;
   vertical-align: top;
 }
 
-.items-table td .product-select-container textarea {
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  padding: 8px;
-  font-size: 14px;
-  transition: all 0.2s;
-  resize: vertical;
-  min-height: 40px !important;
+.items-table td textarea {
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 
-.items-table td .product-select-container textarea:focus {
-  outline: none;
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
+.items-table td input {
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  font-family: inherit;
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Remove spin buttons for number inputs */
+.items-table td input::-webkit-outer-spin-button,
+.items-table td input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .items-table tr:hover {

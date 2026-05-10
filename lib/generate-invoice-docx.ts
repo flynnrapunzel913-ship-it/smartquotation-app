@@ -109,7 +109,9 @@ export async function generateInvoiceDocx(invoice: any): Promise<Buffer> {
                     children: [
                       new Paragraph({ children: [new TextRun({ text: "To,", bold: true })] }),
                       new Paragraph({ children: [new TextRun({ text: `M/s. ${invoice.customerName}`, bold: true })] }),
-                      new Paragraph({ children: [new TextRun({ text: invoice.customerAddress })] }),
+                      ...(invoice.customerAddress || "").split('\n').map((line: string) => 
+                        new Paragraph({ children: [new TextRun({ text: line })] })
+                      ),
                       new Paragraph({ children: [new TextRun({ text: `GST: ${invoice.customerGST || ""}`, bold: true })] }),
                       new Paragraph({ children: [new TextRun({ text: `MOB: ${invoice.customerMobile || ""}`, bold: true })] }),
                     ],
@@ -148,7 +150,11 @@ export async function generateInvoiceDocx(invoice: any): Promise<Buffer> {
                 new TableRow({
                   children: [
                     new TableCell({ children: [new Paragraph({ text: (index + 1).toString(), alignment: AlignmentType.CENTER })] }),
-                    new TableCell({ children: [new Paragraph({ text: item.description.toUpperCase() })] }),
+                    new TableCell({ 
+                      children: (item.description || "").split('\n').map((line: string) => 
+                        new Paragraph({ text: line.toUpperCase(), spacing: { after: 0 } })
+                      )
+                    }),
                     new TableCell({ children: [new Paragraph({ text: Number(item.unitPrice).toFixed(2), alignment: AlignmentType.RIGHT })] }),
                     new TableCell({ children: [new Paragraph({ text: item.qty.toString(), alignment: AlignmentType.CENTER })] }),
                     new TableCell({ children: [new Paragraph({ text: Number(item.total).toFixed(2), alignment: AlignmentType.RIGHT })] }),
@@ -200,11 +206,13 @@ export async function generateInvoiceDocx(invoice: any): Promise<Buffer> {
               new TextRun({ text: "OUR BANK DETAILS-", bold: true, underline: {} }),
             ],
           }),
-          new Paragraph({
-            children: [
-              new TextRun({ text: invoice.bankDetails }),
-            ],
-          }),
+          ...(invoice.bankDetails || "").split('\n').map((line: string) => 
+            new Paragraph({
+              children: [
+                new TextRun({ text: line }),
+              ],
+            })
+          ),
 
           new Paragraph({
             alignment: AlignmentType.RIGHT,
