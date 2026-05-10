@@ -6,8 +6,7 @@ import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
 import "@/styles/wizard.css";
 import "@/styles/invoice.css";
 import InvoicePreview from "./InvoicePreview";
-import SelectDatasetModal from "./SelectDatasetModal";
-import AddProductFromDatasetModal from "./AddProductFromDatasetModal";
+import AddProductFromDatabaseModal from "./AddProductFromDatabaseModal";
 
 interface InvoiceItem {
   description: string;
@@ -98,10 +97,27 @@ export default function InvoiceWizard({ initialData }: Props) {
     amountInWords: "",
   });
 
-  const [datasetId, setDatasetId] = useState<string>("");
-  const [datasetName, setDatasetName] = useState<string>("");
-  const [showDatasetModal, setShowDatasetModal] = useState(!initialData);
+  const [databaseId, setDatabaseId] = useState<string>("");
+  const [databaseName, setDatabaseName] = useState<string>("");
   const [showAddProductModal, setShowAddProductModal] = useState(false);
+
+  useEffect(() => {
+    fetchActiveDatabase();
+  }, []);
+
+  const fetchActiveDatabase = async () => {
+    try {
+      const response = await fetch("/api/invoice-databases");
+      const data = await response.json();
+      const active = data.find((db: any) => db.isActive);
+      if (active) {
+        setDatabaseId(active.id);
+        setDatabaseName(active.name);
+      }
+    } catch (error) {
+      console.error("Error fetching active database:", error);
+    }
+  };
 
   useEffect(() => {
     const subTotal = formData.items.reduce((sum, item) => sum + item.total, 0);
@@ -231,13 +247,7 @@ export default function InvoiceWizard({ initialData }: Props) {
     );
   };
 
-  const handleDatasetSelect = (id: string, name: string) => {
-    setDatasetId(id);
-    setDatasetName(name);
-    setShowDatasetModal(false);
-  };
-
-  const handleAddProductFromDataset = (product: any) => {
+  const handleAddProductFromDatabase = (product: any) => {
     const unitPrice = Number(product.defaultRate || 0);
     setFormData((prev) => ({
       ...prev,
@@ -417,20 +427,20 @@ export default function InvoiceWizard({ initialData }: Props) {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
               <SectionHeader stepKey="step2" defaultTitle="Step 2: Invoice Items" />
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                {datasetId ? (
-                  <div className="dataset-badge" style={{ padding: "6px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "6px", fontSize: "14px", color: "#0369a1" }}>
-                    Dataset: <strong>{datasetName}</strong>
-                    <button 
-                      onClick={() => setShowDatasetModal(true)} 
-                      style={{ marginLeft: "8px", background: "none", border: "none", color: "#0ea5e9", cursor: "pointer", textDecoration: "underline", fontSize: "12px" }}
+                {databaseId ? (
+                  <div className="database-badge" style={{ padding: "6px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "6px", fontSize: "14px", color: "#0369a1" }}>
+                    Active Database: <strong>{databaseName}</strong>
+                    <Link 
+                      href="/dashboard/invoices" 
+                      style={{ marginLeft: "8px", color: "#0ea5e9", textDecoration: "underline", fontSize: "12px" }}
                     >
-                      Change
-                    </button>
+                      Change in Workspace
+                    </Link>
                   </div>
                 ) : (
-                  <button className="btn btn-outline btn-sm" onClick={() => setShowDatasetModal(true)}>
-                    Select Dataset
-                  </button>
+                  <div style={{ fontSize: "13px", color: "#64748b" }}>
+                    No active database. <Link href="/dashboard/invoices" style={{ color: "#0ea5e9", textDecoration: "underline" }}>Set one here</Link>
+                  </div>
                 )}
               </div>
             </div>
@@ -490,10 +500,10 @@ export default function InvoiceWizard({ initialData }: Props) {
               <button 
                 className="btn btn-primary" 
                 onClick={() => setShowAddProductModal(true)}
-                disabled={!datasetId}
-                title={!datasetId ? "Select a dataset first" : ""}
+                disabled={!databaseId}
+                title={!databaseId ? "Select an active database in the workspace first" : ""}
               >
-                + Add from Dataset
+                + Add from Database
               </button>
               <button className="btn btn-outline" onClick={addItem}>
                 + Add Blank Row
@@ -696,16 +706,10 @@ export default function InvoiceWizard({ initialData }: Props) {
         </div>
       </div>
 
-      <SelectDatasetModal
-        isOpen={showDatasetModal}
-        onSelect={handleDatasetSelect}
-        onSkip={() => setShowDatasetModal(false)}
-      />
-
-      <AddProductFromDatasetModal
+      <AddProductFromDatabaseModal
         isOpen={showAddProductModal}
-        datasetId={datasetId}
-        onSelect={handleAddProductFromDataset}
+        databaseId={databaseId}
+        onSelect={handleAddProductFromDatabase}
         onClose={() => setShowAddProductModal(false)}
       />
     </div>

@@ -1,129 +1,120 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { formatCurrencyINR } from "@/lib/utils";
-import "@/styles/history.css"; 
+
+interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  invoiceDate: string;
+  customerName: string;
+  grandTotal: number;
+  isDraft: boolean;
+}
 
 export default function InvoiceHistory() {
-  const [invoices, setInvoices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchInvoices();
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [search]);
+    fetchInvoices();
+  }, []);
 
   const fetchInvoices = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
-      const res = await fetch(`/api/invoices?search=${search}`);
-      const data = await res.json();
+      const response = await fetch("/api/invoices");
+      const data = await response.json();
       setInvoices(data);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const deleteInvoice = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this invoice?")) return;
+  const handleDelete = async (invoiceNumber: string) => {
+    if (!confirm(`Are you sure you want to delete invoice ${invoiceNumber}?`)) return;
     try {
-      const res = await fetch(`/api/invoices/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        fetchInvoices();
-      } else {
-        alert("Failed to delete invoice");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error deleting invoice");
+      const response = await fetch(`/api/invoices/${invoiceNumber}`, { method: "DELETE" });
+      if (response.ok) fetchInvoices();
+    } catch (error) {
+      console.error("Error deleting invoice:", error);
     }
   };
+
+  const handleDuplicate = async (id: string) => {
+    // Basic logic to duplicate an invoice
+    // This would likely fetch the original and then open the wizard with that data
+    window.location.href = `/dashboard/invoices/new?duplicate=${id}`;
+  };
+
+  const filteredInvoices = invoices.filter(inv => 
+    inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    inv.customerName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="history-container">
-      <div className="history-header">
-        <div>
-          <h1>Invoice History</h1>
-          <p>Manage and view all generated invoices</p>
-        </div>
-        <div className="search-bar" style={{ width: '400px' }}>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search by invoice number or customer name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+    <div className="invoice-history">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <h2 style={{ margin: 0 }}>Invoice History</h2>
+        <div className="form-group" style={{ margin: 0, width: "300px" }}>
+          <input 
+            type="text" 
+            className="form-control" 
+            placeholder="Search by Invoice No or Customer..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
 
-      {loading ? (
-        <div className="loading-state" style={{ padding: '40px', textAlign: 'center' }}>Loading invoices...</div>
-      ) : (
-        <div className="history-list">
-          {invoices.length === 0 ? (
-            <div className="empty-state" style={{ padding: '40px', textAlign: 'center', background: '#f8fafc', borderRadius: '8px' }}>
-              No invoices found.
-            </div>
-          ) : (
-            <table className="history-table">
-              <thead>
-                <tr>
-                  <th>Invoice No</th>
-                  <th>Date</th>
-                  <th>Customer</th>
-                  <th>Grand Total</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+      <div className="card" style={{ padding: "0", overflow: "hidden" }}>
+        <table className="items-table" style={{ margin: 0 }}>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Invoice No</th>
+              <th>Customer Name</th>
+              <th className="text-right">Grand Total</th>
+              <th className="text-center">Status</th>
+              <th className="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr><td colSpan={6} className="text-center" style={{ padding: "40px" }}>Loading invoices...</td></tr>
+            ) : filteredInvoices.length === 0 ? (
+              <tr><td colSpan={6} className="text-center" style={{ padding: "40px", color: "#64748b" }}>No invoices found.</td></tr>
+            ) : (
+              filteredInvoices.map((inv) => (
+                <tr key={inv.id}>
+                  <td style={{ fontSize: "14px" }}>{new Date(inv.invoiceDate).toLocaleDateString()}</td>
+                  <td style={{ fontWeight: 700 }}>{inv.invoiceNumber}</td>
+                  <td>{inv.customerName}</td>
+                  <td className="text-right" style={{ fontWeight: 600 }}>{formatCurrencyINR(inv.grandTotal)}</td>
+                  <td className="text-center">
+                    <span className={`badge ${inv.isDraft ? "badge-warning" : "badge-success"}`}>
+                      {inv.isDraft ? "Draft" : "Finalized"}
+                    </span>
+                  </td>
+                  <td className="text-right">
+                    <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                      <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} className="btn btn-outline btn-sm">Edit</Link>
+                      <button className="btn btn-outline btn-sm" onClick={() => handleDuplicate(inv.id)}>Duplicate</button>
+                      <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" className="btn btn-outline btn-sm">PDF</a>
+                      <a href={`/api/invoices/${inv.invoiceNumber}/docx`} className="btn btn-outline btn-sm">Word</a>
+                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(inv.invoiceNumber)}>Delete</button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {invoices.map((inv) => (
-                  <tr key={inv.id}>
-                    <td><strong>{inv.invoiceNumber}</strong></td>
-                    <td>{new Date(inv.invoiceDate).toLocaleDateString("en-GB")}</td>
-                    <td>{inv.customerName}</td>
-                    <td>{formatCurrencyINR(Number(inv.grandTotal))}</td>
-                    <td>
-                      <span className={`badge ${inv.isDraft ? "badge-draft" : "badge-final"}`} style={{
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        backgroundColor: inv.isDraft ? '#fef3c7' : '#dcfce7',
-                        color: inv.isDraft ? '#92400e' : '#166534'
-                      }}>
-                        {inv.isDraft ? "Draft" : "Final"}
-                      </span>
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => window.open(`/dashboard/invoices/preview/${inv.id}`)}>
-                            View
-                          </button>
-                          <button className="btn btn-outline btn-sm" onClick={() => router.push(`/dashboard/invoices/edit/${inv.id}`)}>
-                            Edit
-                          </button>
-                          <button className="btn btn-outline btn-sm" onClick={() => router.push(`/dashboard/invoices/duplicate/${inv.id}`)}>
-                            Duplicate
-                          </button>
-                          <button className="btn btn-outline btn-sm btn-danger-text" onClick={() => deleteInvoice(inv.id)}>
-                            Delete
-                          </button>
-                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

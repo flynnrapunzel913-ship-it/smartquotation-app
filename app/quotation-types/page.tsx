@@ -46,7 +46,7 @@ export default function QuotationTypesPage() {
             theme="mr-invoice"
             title="MR SWIMMING POOLS & SPA INVOICE"
             description="Generate professional GST tax invoices"
-            href="/dashboard/invoices/new"
+            href="/dashboard/invoices"
           />
         </div>
       </div>
