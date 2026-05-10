@@ -50,6 +50,19 @@ export async function POST(req: Request) {
     // Convert total to words (basic implementation, you can refine this later)
     const amountInWords = convertToWordsINR(grandTotal);
 
+    // 1. Verify all productIds exist
+    const productIds = data.items.map(i => i.productId).filter(Boolean) as string[];
+    const validProducts = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true }
+    });
+    const validProductIds = new Set(validProducts.map(p => p.id));
+
+    const sanitizedItems = data.items.map(item => ({
+      ...item,
+      productId: item.productId && validProductIds.has(item.productId) ? item.productId : null
+    }));
+
     // Upsert quotation based on quoteNumber
     const quotation = await prisma.quotation.upsert({
       where: { quoteNumber: data.quoteNumber },
@@ -73,7 +86,7 @@ export async function POST(req: Request) {
         },
         sections: (data.sections as any) || [],
         items: {
-          create: data.items.map((item) => ({
+          create: sanitizedItems.map((item) => ({
             section: item.section,
             serialNo: item.serialNo,
             category: item.category || "General",
@@ -86,7 +99,7 @@ export async function POST(req: Request) {
             imageUrl: item.imageUrl || null,
             productId: item.productId || null,
             variableValues: item.variableValues || {},
-            isCustom: (item as any).isCustom || false,
+            isCustom: item.isCustom || false,
           })),
         },
       },
@@ -106,7 +119,7 @@ export async function POST(req: Request) {
         sections: (data.sections as any) || [],
         items: {
           deleteMany: {},
-          create: data.items.map((item) => ({
+          create: sanitizedItems.map((item) => ({
             section: item.section,
             serialNo: item.serialNo,
             category: item.category || "General",
@@ -119,7 +132,7 @@ export async function POST(req: Request) {
             imageUrl: item.imageUrl || null,
             productId: item.productId || null,
             variableValues: item.variableValues || {},
-            isCustom: (item as any).isCustom || false,
+            isCustom: item.isCustom || false,
           })),
         },
       }

@@ -415,6 +415,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       amount: 0,
       productId: null,
       variableValues: {},
+      isCustom: true,
     };
     setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
     setHasUnsavedChanges(true);
