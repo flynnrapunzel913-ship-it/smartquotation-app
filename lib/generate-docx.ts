@@ -343,7 +343,6 @@ export async function quotationToDocxBuffer(
   if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
     return generateKleanTechDocx(quote, company);
   }
-  const specs = quote.projectSpecifications as ProjectSpecifications;
   const c = company;
 
   const sections = (quote as any).sections && (quote as any).sections.length > 0
