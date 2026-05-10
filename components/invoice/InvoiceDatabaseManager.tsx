@@ -90,85 +90,89 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
 
   return (
     <div className="database-manager">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-bold text-[#334155]">Available Price Lists</h3>
+      <div className="flex justify-between items-center mb-8">
+        <h3 className="text-xl font-bold text-[#1e293b]">Product Databases</h3>
         <button 
-          className="btn btn-primary btn-sm flex items-center gap-2" 
+          className="btn btn-primary rounded-xl px-6 py-2.5 text-sm font-bold shadow-lg hover:shadow-xl transition-all" 
           onClick={() => setIsUploadModalOpen(true)}
         >
-          <span className="text-lg">+</span> Upload New
+          + Upload Database
         </button>
       </div>
 
-      <div className="overflow-hidden border border-[#f1f5f9] rounded-xl">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-[#f8fafc] text-[#64748b] text-xs uppercase tracking-wider">
-            <tr>
-              <th className="px-4 py-3 font-semibold">Active</th>
-              <th className="px-4 py-3 font-semibold">Database Name</th>
-              <th className="px-4 py-3 font-semibold">Products</th>
-              <th className="px-4 py-3 font-semibold">Created</th>
-              <th className="px-4 py-3 text-right font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#f1f5f9]">
-            {isLoading ? (
-              <tr><td colSpan={5} className="text-center py-12 text-[#94a3b8]">Loading price lists...</td></tr>
-            ) : databases.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="text-center py-16">
-                  <div className="text-4xl mb-4">📂</div>
-                  <p className="text-[#64748b] font-medium">No product databases uploaded yet.</p>
-                  <p className="text-[#94a3b8] text-sm mt-1">Upload an Excel, PDF, or Word file to get started.</p>
-                </td>
-              </tr>
-            ) : (
-              databases.map((db) => (
-                <tr key={db.id} className={`${db.isActive ? "bg-blue-50/50" : "hover:bg-slate-50"} transition-colors`}>
-                  <td className="px-4 py-4">
-                    <button 
-                      onClick={() => toggleActive(db.id, db.isActive)}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${db.isActive ? "bg-blue-600 text-white shadow-md shadow-blue-200" : "bg-white border border-slate-200 text-slate-300 hover:border-blue-400 hover:text-blue-400"}`}
-                      title={db.isActive ? "Currently Active" : "Set as Active"}
-                    >
-                      {db.isActive ? "✓" : ""}
-                    </button>
-                  </td>
-                  <td className="px-4 py-4">
-                    {editingNameId === db.id ? (
-                      <div className="flex gap-2">
-                        <input 
-                          className="form-control text-sm py-1 h-8" 
-                          value={editNameValue} 
-                          onChange={(e) => setEditNameValue(e.target.value)} 
-                          autoFocus
-                        />
-                        <button className="btn btn-primary btn-sm px-2 h-8" onClick={() => handleRename(db.id)}>Save</button>
-                        <button className="text-slate-400 hover:text-slate-600" onClick={() => setEditingNameId(null)}>×</button>
-                      </div>
-                    ) : (
-                      <div>
-                        <div className="font-semibold text-[#1e293b] flex items-center gap-2">
-                          {db.name}
-                          <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500 text-xs" onClick={() => startRename(db)}>edit</button>
-                        </div>
-                        <div className="text-[10px] text-[#94a3b8] truncate max-w-[200px]">{db.sourceFile}</div>
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-4 text-sm text-[#475569]">{db._count.products} items</td>
-                  <td className="px-4 py-4 text-xs text-[#94a3b8]">{new Date(db.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-4 text-right">
-                    <div className="flex gap-2 justify-end">
-                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all" onClick={() => setViewingDatabaseId(db.id)}>View</button>
-                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-red-500 hover:border-red-500 hover:bg-red-50 transition-all" onClick={() => handleDelete(db.id)}>Delete</button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? (
+          <div className="col-span-full py-20 text-center text-[#94a3b8] animate-pulse">Loading catalogs...</div>
+        ) : databases.length === 0 ? (
+          <div className="col-span-full py-24 text-center">
+            <div className="text-6xl mb-4 grayscale opacity-20">🗄️</div>
+            <p className="text-[#64748b] font-medium text-lg">No product databases uploaded yet.</p>
+            <p className="text-[#94a3b8] mt-1">Upload an Excel, PDF, or Word file to create your first database.</p>
+          </div>
+        ) : (
+          databases.map((db) => (
+            <div key={db.id} className={`card p-6 flex flex-col justify-between border-2 transition-all ${db.isActive ? "border-blue-500 ring-4 ring-blue-50" : "border-transparent hover:border-slate-200"}`}>
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-2xl">📦</div>
+                  {db.isActive && (
+                    <span className="badge badge-blue text-[10px] py-1 px-3">Active Database</span>
+                  )}
+                </div>
+                
+                {editingNameId === db.id ? (
+                  <div className="flex flex-col gap-2 mb-4">
+                    <input 
+                      className="form-control text-sm py-2" 
+                      value={editNameValue} 
+                      onChange={(e) => setEditNameValue(e.target.value)} 
+                      autoFocus
+                    />
+                    <div className="flex gap-2">
+                      <button className="btn btn-primary btn-xs py-1" onClick={() => handleRename(db.id)}>Save</button>
+                      <button className="btn btn-outline btn-xs py-1" onClick={() => setEditingNameId(null)}>Cancel</button>
                     </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                  </div>
+                ) : (
+                  <div className="mb-4">
+                    <h4 className="text-lg font-bold text-[#1e293b] flex items-center gap-2 group">
+                      {db.name}
+                      <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500 text-xs font-medium" onClick={() => startRename(db)}>Rename</button>
+                    </h4>
+                    <p className="text-sm text-[#64748b] mt-1">{db._count.products} Products Found</p>
+                  </div>
+                )}
+
+                <div className="text-[10px] text-[#94a3b8] uppercase tracking-widest font-bold mt-auto mb-6">
+                  Uploaded: {new Date(db.createdAt).toLocaleDateString("en-IN")}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <button 
+                    className="text-xs font-bold py-2.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all"
+                    onClick={() => setViewingDatabaseId(db.id)}
+                  >
+                    View Products
+                  </button>
+                  <button 
+                    className={`text-xs font-bold py-2.5 rounded-lg transition-all ${db.isActive ? "bg-emerald-50 text-emerald-600 cursor-default" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                    onClick={() => toggleActive(db.id, db.isActive)}
+                  >
+                    {db.isActive ? "✓ Currently Active" : "Set Active"}
+                  </button>
+                </div>
+                <button 
+                  className="text-xs font-bold py-2 rounded-lg text-red-500 hover:bg-red-50 transition-all mt-1"
+                  onClick={() => handleDelete(db.id)}
+                >
+                  Delete Database
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       <DatabaseUploadModal 
@@ -179,13 +183,21 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
 
       {viewingDatabaseId && (
         <div className="modal-overlay">
-          <div className="modal-content !max-w-4xl !h-[80vh] flex flex-col p-0 overflow-hidden rounded-3xl">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="text-xl font-bold text-[#1e293b]">Database Products</h3>
-              <button className="w-10 h-10 rounded-full hover:bg-white flex items-center justify-center text-slate-400 hover:text-slate-600 transition-all" onClick={() => setViewingDatabaseId(null)}>×</button>
+          <div className="modal-content !max-w-5xl !h-[85vh] flex flex-col p-0 overflow-hidden rounded-3xl shadow-2xl">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+              <div>
+                <h3 className="text-xl font-bold text-[#1e293b]">Database Products</h3>
+                <p className="text-xs text-[#64748b] mt-1">Review the contents of this catalog</p>
+              </div>
+              <button className="w-10 h-10 rounded-full hover:bg-white flex items-center justify-center text-slate-400 hover:text-slate-600 transition-all text-2xl" onClick={() => setViewingDatabaseId(null)}>×</button>
             </div>
-            <div className="flex-1 overflow-auto p-0">
-              <DatabaseProductsTable databaseId={viewingDatabaseId} />
+            <div className="flex-1 overflow-auto bg-white">
+              <div className="p-6">
+                <DatabaseProductsTable databaseId={viewingDatabaseId} />
+              </div>
+            </div>
+            <div className="p-4 border-t border-slate-100 bg-slate-50/30 flex justify-end">
+               <button className="btn btn-outline px-6" onClick={() => setViewingDatabaseId(null)}>Close Viewer</button>
             </div>
           </div>
         </div>

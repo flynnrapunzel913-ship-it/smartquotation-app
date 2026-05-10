@@ -27,7 +27,7 @@ export default function InvoiceHistory() {
     try {
       const response = await fetch("/api/invoices");
       const data = await response.json();
-      setInvoices(data);
+      setInvoices(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching invoices:", error);
     } finally {
@@ -46,8 +46,6 @@ export default function InvoiceHistory() {
   };
 
   const handleDuplicate = async (id: string) => {
-    // Basic logic to duplicate an invoice
-    // This would likely fetch the original and then open the wizard with that data
     window.location.href = `/dashboard/invoices/new?duplicate=${id}`;
   };
 
@@ -58,55 +56,64 @@ export default function InvoiceHistory() {
 
   return (
     <div className="invoice-history">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <h2 style={{ margin: 0 }}>Invoice History</h2>
-        <div className="form-group" style={{ margin: 0, width: "300px" }}>
-          <input 
-            type="text" 
-            className="form-control" 
-            placeholder="Search by Invoice No or Customer..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-[#334155]">Invoice Records</h2>
+        <div className="w-80">
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+            <input 
+              type="text" 
+              className="form-control pl-10 h-10 rounded-xl border-[#e2e8f0] focus:border-blue-500" 
+              placeholder="Search invoices or customers..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="card" style={{ padding: "0", overflow: "hidden" }}>
-        <table className="items-table" style={{ margin: 0 }}>
-          <thead>
+      <div className="overflow-hidden border border-[#f1f5f9] rounded-xl">
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-[#f8fafc] text-[#64748b] text-xs uppercase tracking-wider font-bold">
             <tr>
-              <th>Date</th>
-              <th>Invoice No</th>
-              <th>Customer Name</th>
-              <th className="text-right">Grand Total</th>
-              <th className="text-center">Status</th>
-              <th className="text-right">Actions</th>
+              <th className="px-4 py-3">Invoice No</th>
+              <th className="px-4 py-3">Customer Name</th>
+              <th className="px-4 py-3">Date</th>
+              <th className="px-4 py-3 text-right">Grand Total</th>
+              <th className="px-4 py-3 text-center">Status</th>
+              <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-[#f1f5f9]">
             {isLoading ? (
-              <tr><td colSpan={6} className="text-center" style={{ padding: "40px" }}>Loading invoices...</td></tr>
+              <tr><td colSpan={6} className="text-center py-20 text-[#94a3b8] animate-pulse">Loading history...</td></tr>
             ) : filteredInvoices.length === 0 ? (
-              <tr><td colSpan={6} className="text-center" style={{ padding: "40px", color: "#64748b" }}>No invoices found.</td></tr>
+              <tr>
+                <td colSpan={6} className="text-center py-24">
+                  <div className="text-5xl mb-4 opacity-20 grayscale">📜</div>
+                  <p className="text-[#64748b] font-medium text-lg">No invoices created yet.</p>
+                  <p className="text-[#94a3b8] mt-1">Click <Link href="/dashboard/invoices/new" className="text-blue-600 font-bold hover:underline">“Create New Invoice”</Link> to generate your first invoice.</p>
+                </td>
+              </tr>
             ) : (
               filteredInvoices.map((inv) => (
-                <tr key={inv.id}>
-                  <td style={{ fontSize: "14px" }}>{new Date(inv.invoiceDate).toLocaleDateString()}</td>
-                  <td style={{ fontWeight: 700 }}>{inv.invoiceNumber}</td>
-                  <td>{inv.customerName}</td>
-                  <td className="text-right" style={{ fontWeight: 600 }}>{formatCurrencyINR(inv.grandTotal)}</td>
-                  <td className="text-center">
-                    <span className={`badge ${inv.isDraft ? "badge-warning" : "badge-success"}`}>
+                <tr key={inv.id} className="hover:bg-slate-50 transition-colors group">
+                  <td className="px-4 py-4 font-bold text-[#1e293b]">{inv.invoiceNumber}</td>
+                  <td className="px-4 py-4 text-[#475569]">{inv.customerName}</td>
+                  <td className="px-4 py-4 text-sm text-[#64748b]">{new Date(inv.invoiceDate).toLocaleDateString("en-IN")}</td>
+                  <td className="px-4 py-4 text-right font-bold text-blue-700">{formatCurrencyINR(inv.grandTotal)}</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className={`badge ${inv.isDraft ? "badge-warning" : "badge-success"} text-[10px]`}>
                       {inv.isDraft ? "Draft" : "Finalized"}
                     </span>
                   </td>
-                  <td className="text-right">
-                    <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-                      <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} className="btn btn-outline btn-sm">Edit</Link>
-                      <button className="btn btn-outline btn-sm" onClick={() => handleDuplicate(inv.id)}>Duplicate</button>
-                      <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" className="btn btn-outline btn-sm">PDF</a>
-                      <a href={`/api/invoices/${inv.invoiceNumber}/docx`} className="btn btn-outline btn-sm">Word</a>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(inv.invoiceNumber)}>Delete</button>
+                  <td className="px-4 py-4 text-right">
+                    <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Link href={`/dashboard/invoices/preview/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all">View</Link>
+                      <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all">Edit</Link>
+                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all" onClick={() => handleDuplicate(inv.id)}>Duplicate</button>
+                      <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-emerald-600 hover:bg-emerald-50 transition-all">PDF</a>
+                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-red-500 hover:bg-red-50 transition-all" onClick={() => handleDelete(inv.invoiceNumber)}>Delete</button>
                     </div>
                   </td>
                 </tr>
