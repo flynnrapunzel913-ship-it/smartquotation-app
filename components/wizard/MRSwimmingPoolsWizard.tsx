@@ -45,7 +45,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     customerAddress: "",
     customerPhone: "",
     customerEmail: "",
-    quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+    quoteNumber: `MR-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}`,
     date: new Date().toISOString().split("T")[0],
     gstPercent: MR_MASTER_TEMPLATE.gstPercent || 18,
     projectSpecifications: {
@@ -158,7 +158,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     localStorage.removeItem("mr_quotation_draft");
     const initial = {
       ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
-      quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+      quoteNumber: `MR-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}`,
       date: new Date().toISOString().split("T")[0],
       customerName: "",
       customerAddress: "",
@@ -190,7 +190,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             customerAddress: data.customer.address,
             customerPhone: data.customer.phone || "",
             customerEmail: data.customer.email || "",
-            quoteNumber: mode === "duplicate" ? `MR-${Date.now().toString().slice(-6)}` : data.quoteNumber,
+            quoteNumber: mode === "duplicate" ? `MR-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}` : data.quoteNumber,
             date: new Date(data.date).toISOString().split("T")[0],
             gstPercent: data.gstPercent,
             projectSpecifications: {
@@ -224,7 +224,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       } else {
         const initial = {
           ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
-          quoteNumber: `MR-${Date.now().toString().slice(-6)}`,
+          quoteNumber: `MR-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}`,
           date: new Date().toISOString().split("T")[0],
           customerName: "",
           customerAddress: "",
@@ -488,6 +488,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   };
 
   const handleSubmit = async (isDraft = false, silent = false) => {
+    if (isSubmitting) return;
     setIsSubmitting(true);
     try {
       const payload = { ...formData, subtotal, grandTotal, isDraft };
@@ -940,8 +941,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           {step < 9 && <button className="btn-icon" style={{ border: "1px solid #fecaca", color: "#ef4444" }} onClick={resetPhase} title="Reset this phase to defaults">Reset Phase</button>}
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
-          {step < 9 && <button className="btn-secondary" onClick={() => handleSubmit(true)}>Save Draft</button>}
-          {step < 9 && <button className="btn-primary" onClick={nextStep}>Next Step →</button>}
+          {step < 9 && <button className="btn-secondary" disabled={isSubmitting} onClick={() => handleSubmit(true)}>Save Draft</button>}
+          {step < 9 && <button className="btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : "Next Step →"}</button>}
         </div>
       </div>
     </div>
