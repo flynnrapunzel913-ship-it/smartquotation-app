@@ -45,6 +45,10 @@ model Product {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   items             QuotationItem[]
+  datasetId         String?
+  dataset           ProductDataset? @relation(fields: [datasetId], references: [id])
+  hsnCode           String?
+  gstRate           Decimal?        @db.Decimal(5, 2)
 
   @@index([name])
   @@index([category])
@@ -175,4 +179,14 @@ model Invoice {
 
   @@index([invoiceNumber])
   @@index([invoiceDate])
+}
+
+model ProductDataset {
+  id          String   @id @default(cuid())
+  name        String
+  module      String   // e.g., "INVOICE"
+  sourceFile  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  products    Product[]
 }
