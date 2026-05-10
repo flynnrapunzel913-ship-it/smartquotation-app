@@ -46,7 +46,25 @@ export default function Navbar() {
             SmartQuotation
           </Link>
         </div>
-        <div className="navbar-right">
+        <div className="navbar-right" style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          {pathname?.includes("/klean-tech") && (
+            <button 
+              onClick={() => router.push(pathname + "?manageProducts=true")} 
+              className="manage-products-button"
+              style={{
+                padding: "8px 16px",
+                background: "#0f172a",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "500",
+                fontSize: "14px"
+              }}
+            >
+              Upload / Manage Products
+            </button>
+          )}
           <button onClick={handleLogout} className="logout-button">
             Logout
           </button>

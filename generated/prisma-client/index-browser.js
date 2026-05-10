@@ -149,6 +149,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   defaultRate: 'defaultRate',
   unit: 'unit',
   warranty: 'warranty',
+  hsnCode: 'hsnCode',
   imagePath: 'imagePath',
   imageText: 'imageText',
   sortOrder: 'sortOrder',

@@ -24,12 +24,18 @@ function formatAmountWithoutCurrency(amount: number | string): string {
 function imageToBase64(src: string): string {
   if (!src) return "";
   if (src.startsWith("data:")) return src;
-  
+
   try {
     const publicPath = path.join(process.cwd(), "public", src.startsWith("/") ? src.slice(1) : src);
-    if (fs.existsSync(publicPath)) {
-      const buffer = fs.readFileSync(publicPath);
-      const ext = path.extname(publicPath).slice(1) || "png";
+    let filePath = publicPath;
+    
+    if (!fs.existsSync(filePath)) {
+      filePath = path.join(process.cwd(), src.startsWith("/") ? src.slice(1) : src);
+    }
+
+    if (fs.existsSync(filePath)) {
+      const buffer = fs.readFileSync(filePath);
+      const ext = path.extname(filePath).slice(1) || "png";
       return `data:image/${ext};base64,${buffer.toString("base64")}`;
     }
   } catch (e) {
@@ -50,6 +56,7 @@ const HEADER_CONTACTS = {
 function buildKleanTechQuotationHtml(
   quote: QuotationWithRelations,
   company: CompanySettings | null,
+  options?: { isForPdf?: boolean },
 ): string {
   const subtotal = quote.items.reduce((sum, item) => sum + Number(item.amount), 0);
   const specs = quote.projectSpecifications as any;
@@ -78,21 +85,21 @@ function buildKleanTechQuotationHtml(
     const lines = item.description.split("\n");
     const title = lines[0];
     const itemSpecs = lines.slice(1).join("\n");
-    
+
     return `
-      <tr>
-        <td class="numeric-cell">${idx + 1}</td>
-        <td>
-          <span class="product-description-title">${escapeHtml(title)}</span>
-          ${itemSpecs ? `<span class="product-description-specs">${escapeHtml(itemSpecs)}</span>` : ""}
+      <tr style="vertical-align: top;">
+        <td style="text-align: center; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${idx + 1}</td>
+        <td style="border: 1px solid #000; padding: 4px 6px;">
+          <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 4px; font-size: 10px;">${escapeHtml(title)}</div>
+          <div style="font-size: 9px; line-height: 1.3; text-align: left;">${escapeHtml(itemSpecs)}</div>
         </td>
-        <td>
-          ${item.imageUrl ? `<img src="${imageToBase64(item.imageUrl.replace(".jpg", ".png"))}" class="product-image" />` : "No Image"}
+        <td style="text-align: center; border: 1px solid #000; padding: 4px 6px;">
+          ${item.imageUrl ? `<img src="${imageToBase64(item.imageUrl.replace(".jpg", ".png"))}" style="max-width: 80px; max-height: 80px; object-fit: contain;" />` : `<span style="font-size: 9px; color: #64748b;">No Image</span>`}
         </td>
-        <td class="numeric-cell">${escapeHtml((item as any).hsnCode || "")}</td>
-        <td style="text-align: right;">${formatAmountWithoutCurrency(item.rate)}</td>
-        <td class="numeric-cell">${Number(item.qty)}</td>
-        <td style="text-align: right;">${formatAmountWithoutCurrency(item.amount)}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${escapeHtml((item as any).hsnCode || "N/A")}</td>
+        <td style="text-align: right; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${formatCurrencyINR(Number(item.rate))}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${Number(item.qty)}</td>
+        <td style="text-align: right; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${formatCurrencyINR(Number(item.amount))}</td>
       </tr>
     `;
   }).join("");
@@ -103,142 +110,221 @@ function buildKleanTechQuotationHtml(
   <meta charset="utf-8" />
   <title>Quotation ${quote.quoteNumber}</title>
   <style>
+    html, body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .pdf-content-wrapper > :first-child {
+      margin-top: 0 !important;
+    }
     ${cssContent}
+    .bank-details-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .bank-details-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+
+    .bank-details-table td {
+      padding: 2px 0;
+      vertical-align: top;
+    }
+
+    .bank-details-table .label {
+      width: 320px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .bank-details-table .value {
+      font-weight: 400;
+    }
+
+    .signature-block {
+      margin-top: 12px;
+      text-align: left;
+    }
+
+    .signature-company {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 0;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    .signature-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 0;
+      line-height: 1.2;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
-  <div class="page-border"></div>
-  <div class="quotation-template">
-    <!-- Header -->
-    <div class="header">
+  ${!options?.isForPdf ? `
+    <!-- Header (Preview Only) -->
+    <div style="display: grid; grid-template-columns: 180px 1fr 220px; align-items: start; column-gap: 20px; width: 100%; margin-bottom: 20px; font-family: Arial, Helvetica, sans-serif; border: 1px solid #000; padding: 12px 16px; box-sizing: border-box;">
       <div class="logo-section">
         ${logoHtml}
       </div>
       
-      <div class="company-details">
-        <div class="company-name">KLEAN TECH SYSTEMS</div>
-        <div>NO.191, “Shri Mallikarjuna”,</div>
-        <div>Opp. Keshwapur Police Station, Naveen Park,</div>
-        <div>Keshwapur, Hubli-580023</div>
+      <div style="text-align: left; font-size: 9pt; border-left: 1px solid #000; padding-left: 15px; line-height: 1.2;">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 3px;">KLEAN TECH SYSTEMS</div>
+        <div>No. 191, "Shri Mallikarjuna",</div>
+        <div>Opp. Police Station, Naveen Park, Kusugal Road,</div>
+        <div>Keshwapur, Hubballi-580023.</div>
         <div>GSTIN: 29AQEPS9928D1ZB</div>
         <div>Mob No: +91 9538840277</div>
         <div>Email: kleantechsystems@yahoo.co.in</div>
       </div>
       
-      <div class="quote-meta">
-        <div class="quote-title">QUOTATION</div>
+      <div style="text-align: right; width: 100%; overflow: hidden; word-break: break-word; font-size: 10pt;">
+        <div style="font-size: 16pt; font-weight: bold; margin-bottom: 5px;">QUOTATION</div>
         <div>${escapeHtml(quote.quoteNumber)}</div>
         <div>DATE: ${format(new Date(quote.date), "dd.MM.yyyy")}</div>
       </div>
     </div>
+  ` : ""}
+  <table class="pdf-page-table" style="width: 100%; height: calc(1122px - 95px - 75px); border-collapse: collapse; border-spacing: 0; table-layout: fixed;">
+    <thead>
+      <tr>
+        <th style="height: 35px; border-left: 1px solid #000; border-right: 1px solid #000; padding: 0;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="pdf-page-cell" style="${!options?.isForPdf ? "border-left: 1px solid #000; border-right: 1px solid #000;" : ""} padding: 0 20px 20px; box-sizing: border-box; vertical-align: top; font-family: Arial, sans-serif; font-size: 11px;">
 
     <!-- Invoice To -->
-    <div class="invoice-to">
-      <div class="invoice-to-title">Invoice To:</div>
-      <div><strong>${escapeHtml(quote.customer.name)}</strong></div>
+    <div style="width: 100%; max-width: 100%; box-sizing: border-box; border: 1px solid #d1d5db; padding: 16px 20px; background: white; margin: 20px 0 24px; font-size: 12px; line-height: 1.5; font-family: Arial, Helvetica, sans-serif;">
+      <div style="font-weight: bold; margin-bottom: 4px;">Invoice To:</div>
+      <div style="font-weight: bold;">${escapeHtml(quote.customer.name)}</div>
       <div style="white-space: pre-wrap;">${escapeHtml(quote.customer.address)}</div>
     </div>
 
     <!-- Product Table -->
-    <table class="product-table">
+    <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; background: white; font-family: Arial, Helvetica, sans-serif; font-size: 10px; table-layout: fixed;">
       <thead>
         <tr>
-          <th style="width: 5%">Sl.No</th>
-          <th style="width: 45%">Description</th>
-          <th style="width: 15%">Image</th>
-          <th style="width: 10%">HSN Code</th>
-          <th style="width: 10%">Unit Price (INR)</th>
-          <th style="width: 5%">Qty</th>
-          <th style="width: 10%">Total Price exclusive. Of Tax Rs.</th>
+          <th style="width: 6%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">Sl.No</th>
+          <th style="width: 44%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">Description</th>
+          <th style="width: 14%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">Image</th>
+          <th style="width: 8%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">HSN Code</th>
+          <th style="width: 10%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">Unit Price (INR)</th>
+          <th style="width: 6%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">Qty</th>
+          <th style="width: 12%; border: 1px solid #000; padding: 4px 6px; font-weight: bold; text-align: center; vertical-align: middle; background: #f1f5f9; font-size: 10px;">Total Price exclusive. Of Tax Rs.</th>
         </tr>
       </thead>
       <tbody>
         ${itemsHtml}
+        <tr style="font-weight: bold; background: #f1f5f9;">
+          <td colspan="6" style="text-align: right; border: 1px solid #000; padding: 4px 6px; font-size: 10px;">TOTAL</td>
+          <td style="text-align: right; border: 1px solid #000; padding: 4px 6px; font-size: 10px;">${formatCurrencyINR(Number(quote.subtotal))}</td>
+        </tr>
       </tbody>
     </table>
 
     <!-- Payment Term -->
-    <div class="payment-term">
-      <span class="payment-term-label">Payment Term : </span>
+    <div style="margin-top: 16px; font-size: 12px; font-family: Arial, Helvetica, sans-serif;">
+      <span style="font-weight: bold;">Payment Term : </span>
       <span>${escapeHtml(quote.paymentTerms || "100% Advance Payment along with Purchase Order")}</span>
     </div>
 
-    <!-- Footer Line -->
-    <div class="footer-line">
-      <div>No: 191, “Shri Mallikarjuna” Opp. Police Station, Naveen Park,</div>
-      <div>Kusugal Road, Keshwapur, Hubballi-580023.</div>
-      <div>GST No: 29AQEPS9928D1ZB. email: kleantechsystems@yahoo.co.in.</div>
-    </div>
-
-    <div style="page-break-before: always;"></div>
+    <!-- Horizontal Divider -->
+    <div style="border-top: 1px solid #d1d5db; margin: 20px 0;"></div>
 
     <!-- Terms and Conditions -->
-    <div class="terms-section">
-      <div class="terms-title">TERMS AND CONDITIONS:</div>
-      <ul class="terms-list">
-        <li>• Prices: Price quoted Ex Godown.</li>
-        <li>• Tax Applicable: GST ${gstPercent}% Extra</li>
-        <li>• Carrying & Forwarding: ${cfPercent}% Extra</li>
-        <li>• Freight: ${escapeHtml(specs?.freightType || "To be paid by buyer")}</li>
-        <li>• Delivery: Within 2 weeks from the date of receipt of your Purchase Order.</li>
-        <li>• Warranty: 12 Months from the date of delivery...</li>
-        <li>• Validity: The rates and terms are valid for 30 days...</li>
-        <li>• Commissioning & Training: Will be done by our Engineer at your site.</li>
+    <div style="font-family: Arial, Helvetica, sans-serif;">
+      <div style="font-weight: bold; text-transform: uppercase; font-size: 14px; margin-bottom: 12px;">TERMS AND CONDITIONS:</div>
+      <ul style="font-size: 11px; line-height: 1.8; padding-left: 20px; list-style-type: disc;">
+        <li>Prices: Price quoted Ex Godown.</li>
+        <li>Tax Applicable: GST ${gstPercent}% Extra</li>
+        <li>Carrying & Forwarding: ${cfPercent}% Extra</li>
+        <li>Freight: ${escapeHtml(specs?.freightType || "To be paid by buyer")}</li>
+        <li>Delivery: Within 2 weeks from the date of receipt of your Purchase Order.</li>
+        <li>Warranty: 12 Months from the date of delivery...</li>
+        <li>Validity: The rates and terms are valid for 30 days...</li>
+        <li>Commissioning & Training: Will be done by our Engineer at your site.</li>
       </ul>
     </div>
 
-    <!-- Bank Details -->
-    <div class="bank-details">
+    <!-- Closing Section (Wrapped to prevent page breaks) -->
+    <div style="margin-top: 32px; padding: 0 16px 12px; page-break-inside: avoid; break-inside: avoid; font-family: Arial, Helvetica, sans-serif;">
+      
+      <!-- Bank Details -->
       <div class="bank-details-title">* The Bank Details.</div>
-      <div class="bank-details-grid">
-        <span class="bank-details-label">Account Name:</span>
-        <span>KLEAN TECH SYSTEMS</span>
-        
-        <span class="bank-details-label">Bank Account Number:</span>
-        <span>37116560016</span>
-        
-        <span class="bank-details-label">Bank Name:</span>
-        <span>State Bank of India</span>
-        
-        <span class="bank-details-label">Bank Branch Name:</span>
-        <span>Kusugal Road Branch Hubli.</span>
-        
-        <span class="bank-details-label">IFSC Code of Bank Branch:</span>
-        <span>SBIN0040641</span>
-        
-        <span class="bank-details-label">Our E-mail ID (For sending payment advice):</span>
-        <span>kleantechsystems@yahoo.co.in</span>
-        
-        <span class="bank-details-label">GST No:</span>
-        <span>29AQEPS9928D1ZB</span>
-        
-        <span class="bank-details-label">PAN No:</span>
-        <span>AQEPS9928D</span>
+      <table class="bank-details-table">
+        <tbody>
+          <tr>
+            <td class="label">Account Name:</td>
+            <td class="value">KLEAN TECH SYSTEMS</td>
+          </tr>
+          <tr>
+            <td class="label">Bank Account Number:</td>
+            <td class="value">37116560016</td>
+          </tr>
+          <tr>
+            <td class="label">Bank Name:</td>
+            <td class="value">State Bank of India</td>
+          </tr>
+          <tr>
+            <td class="label">Bank Branch Name:</td>
+            <td class="value">Kusugal Road Branch Hubli.</td>
+          </tr>
+          <tr>
+            <td class="label">IFSC Code of Bank Branch:</td>
+            <td class="value">SBIN0040641</td>
+          </tr>
+          <tr>
+            <td class="label">Our E-mail ID (For sending payment advice):</td>
+            <td class="value">kleantechsystems@yahoo.co.in</td>
+          </tr>
+          <tr>
+            <td class="label">GST No:</td>
+            <td class="value">29AQEPS9928D1ZB</td>
+          </tr>
+          <tr>
+            <td class="label">PAN No:</td>
+            <td class="value">AQEPS9928D</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Signature Block -->
+      <div class="signature-block">
+        <div class="signature-company">For KLEAN TECH SYSTEMS</div>
+        <div class="signature-name">Rajesh V Shetti.</div>
       </div>
-    </div>
-
-    <!-- Signature Block -->
-    <div class="signature-block">
-      <div>For KLEAN TECH SYSTEMS</div>
-      <div style="height: 60px;"></div>
-      <div>Rajesh V Shetti.</div>
-    </div>
-
-    <!-- Disclaimer -->
-    <div class="disclaimer">
-      * This is a computer generated document and authenticated by KLEAN TECH SYSTEMS. 
-      Hence, it can be considered valid even if not signed manually.
-    </div>
-    <div class="body-footer">
-      NO.191, “Shri Mallikarjuna” Opp. Police Station, Naveen Park, Kusugal Road, Keshwapur, Hubballi-580023. GST No: 29AQEPS9928D1ZB. Email: kleantechsystems@yahoo.co.in.
-    </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+    ${!options?.isForPdf ? `
+      <!-- Footer (Preview Only) -->
+      <div style="margin-top: 12px; text-align: center; font-size: 8px; line-height: 1.3; color: #444; border: 1px solid #000; padding: 8px 16px; box-sizing: border-box;">
+        <div style="margin-bottom: 4px;">* This is a computer generated document and authenticated by KLEAN TECH SYSTEMS. Hence, it can be considered valid even if not signed manually.</div>
+        <div>No. 191, "Shri Mallikarjuna", Opp. Police Station, Naveen Park, Kusugal Road,</div>
+        <div>Keshwapur, Hubballi-580023.</div>
+        <div>GST No: 29AQEPS9928D1ZB. Email: kleantechsystems@yahoo.co.in.</div>
+      </div>
+    ` : ""}
   </body>
 </html>`;
 }
 export function buildQuotationHtml(
   quote: QuotationWithRelations,
   company: CompanySettings | null,
-  options?: { title?: string },
+  options?: { title?: string; isForPdf?: boolean },
 ): string {
   let specs = quote.projectSpecifications as any;
   if (typeof specs === "string") {
@@ -250,7 +336,7 @@ export function buildQuotationHtml(
   }
 
   if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
-    return buildKleanTechQuotationHtml(quote, company);
+    return buildKleanTechQuotationHtml(quote, company, options);
   }
   const title = options?.title ?? `Quotation ${quote.quoteNumber}`;
   const c = company;
@@ -258,7 +344,7 @@ export function buildQuotationHtml(
   // Use the extracted logo if it exists, otherwise fallback to DB
   const localLogoPath = path.join(process.cwd(), "public", "templates", "mr-swimming-pools", "logo.png");
   let logoHtml = `<div class="logo-placeholder">${escapeHtml(c?.companyName ?? "MR SWIMMING POOLS & SPA CONSTRUCTION COMPANY")}</div>`;
-  
+
   if (fs.existsSync(localLogoPath)) {
     logoHtml = `<img class="logo" src="${imageToBase64("/templates/mr-swimming-pools/logo.png")}" alt="logo" />`;
   } else if (c?.logoUrl) {
@@ -284,11 +370,11 @@ export function buildQuotationHtml(
   const sections = (quote as any).sections && (quote as any).sections.length > 0
     ? (quote as any).sections.filter((s: any) => s.included)
     : [
-        { code: "A", title: "Section A - MEP & Filtration" },
-        { code: "B", title: "Section B - Testing & Electrical" },
-        { code: "C", title: "Section C - Maintenance Cleaning Kit" },
-        { code: "Part 2", title: "Part 2 - Pool Finishes" },
-      ];
+      { code: "A", title: "Section A - MEP & Filtration" },
+      { code: "B", title: "Section B - Testing & Electrical" },
+      { code: "C", title: "Section C - Maintenance Cleaning Kit" },
+      { code: "Part 2", title: "Part 2 - Pool Finishes" },
+    ];
 
   const sumSections = (sectionCodes: string[]) =>
     quote.items
@@ -325,20 +411,20 @@ export function buildQuotationHtml(
         </thead>
         <tbody>
           ${rows
-            .map((it: (typeof quote.items)[number], index: number) => {
-              const descriptionLines = it.description.split("\n");
-              const title = descriptionLines[0];
-              const rest = descriptionLines.slice(1).join("\n");
-              
-              // Highlight MAKE : lines
-              const formattedBody = rest.split("\n").map(line => {
-                if (line.toUpperCase().includes("MAKE :")) {
-                  return `<div class="item-make">${escapeHtml(line)}</div>`;
-                }
-                return `<div class="item-body">${escapeHtml(line)}</div>`;
-              }).join("");
+        .map((it: (typeof quote.items)[number], index: number) => {
+          const descriptionLines = it.description.split("\n");
+          const title = descriptionLines[0];
+          const rest = descriptionLines.slice(1).join("\n");
 
-              return `
+          // Highlight MAKE : lines
+          const formattedBody = rest.split("\n").map(line => {
+            if (line.toUpperCase().includes("MAKE :")) {
+              return `<div class="item-make">${escapeHtml(line)}</div>`;
+            }
+            return `<div class="item-body">${escapeHtml(line)}</div>`;
+          }).join("");
+
+          return `
               <tr>
                 <td class="cen" style="vertical-align: top;">${index + 1}</td>
                 <td>
@@ -347,8 +433,8 @@ export function buildQuotationHtml(
                 </td>
                 <td class="cen">
                   <div class="item-image-container">
-                    ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" />` : 
-                      ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px;">${escapeHtml((it as any).imageText)}</div>` : "")}
+                    ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" />` :
+              ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px;">${escapeHtml((it as any).imageText)}</div>` : "")}
                   </div>
                 </td>
                 <td class="numeric-cell">${escapeHtml(it.warranty)}</td>
@@ -357,10 +443,10 @@ export function buildQuotationHtml(
                 <td class="num" style="vertical-align: middle;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
                 <td class="num" style="vertical-align: middle; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
               </tr>`;
-            }).join("")}
+        }).join("")}
         </tbody>
       </table>`;
-    
+
     if (sec.code === "D") {
       tablesHtml += `
         <table class="boq-table" style="margin-top: -21px; border-top: 0;">
@@ -376,20 +462,20 @@ export function buildQuotationHtml(
   }
 
   const specificationSectionHtml = buildMRPoolSpecificationSectionHtml({
-      poolLength: specs.poolLength,
-      poolWidth: specs.poolWidth,
-      poolDepth: specs.poolDepth,
-      waterVolume: specs.poolVolume,
-      totalPoolVolume: specs.totalPoolVolume,
-      filtrationVolume: specs.filtrationVolume,
-      turnoverPeriod: specs.turnoverPeriod,
-      tilingArea: specs.tilingArea,
-      copingArea: specs.copingArea,
-      waterproofingArea: specs.waterproofingArea,
-      plantRoomSize: specs.plantRoomSize,
-      poolShape: specs.shapeOfPool,
-      poolType: specs.typeOfPool,
-    });
+    poolLength: specs.poolLength,
+    poolWidth: specs.poolWidth,
+    poolDepth: specs.poolDepth,
+    waterVolume: specs.poolVolume,
+    totalPoolVolume: specs.totalPoolVolume,
+    filtrationVolume: specs.filtrationVolume,
+    turnoverPeriod: specs.turnoverPeriod,
+    tilingArea: specs.tilingArea,
+    copingArea: specs.copingArea,
+    waterproofingArea: specs.waterproofingArea,
+    plantRoomSize: specs.plantRoomSize,
+    poolShape: specs.shapeOfPool,
+    poolType: specs.typeOfPool,
+  });
   const summaryHtml = buildMRQuotationSummaryHtml({
     part1Total: formatCurrencyINR(part1Total),
     part2Total: formatCurrencyINR(part2Total),

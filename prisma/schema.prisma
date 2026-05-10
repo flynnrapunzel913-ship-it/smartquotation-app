@@ -45,7 +45,7 @@ model Product {
   unit          String   @default("Nos")
   warranty      String   @default("")
 //  code          String   @default("")
-//  hsnCode       String   @default("")
+  hsnCode       String?  @default("")
 //  brand         String   @default("")
 //  defaultQty    Int      @default(1)
 //  templateText  String   @default("") @db.Text

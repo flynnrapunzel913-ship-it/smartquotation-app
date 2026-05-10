@@ -180,29 +180,34 @@ async function generateKleanTechDocx(
   const headerRow = new TableRow({
     tableHeader: true,
     children: [
-      cell("Sl.No", { bold: true }),
-      cell("Description", { bold: true }),
-      cell("Image", { bold: true }),
-      cell("HSN Code", { bold: true }),
-      cell("Unit Price", { bold: true, align: AlignmentType.RIGHT }),
-      cell("Qty", { bold: true, align: AlignmentType.CENTER }),
-      cell("Total", { bold: true, align: AlignmentType.RIGHT }),
+      cell("Sl.No", 5, { bold: true }),
+      cell("Description", 40, { bold: true }),
+      cell("Image", 15, { bold: true }),
+      cell("HSN Code", 10, { bold: true }),
+      cell("Unit Price", 10, { bold: true, align: AlignmentType.RIGHT }),
+      cell("Qty", 10, { bold: true, align: AlignmentType.CENTER }),
+      cell("Total", 10, { bold: true, align: AlignmentType.RIGHT }),
     ],
   });
 
   const dataRows = quote.items.map((item, idx) => {
-    let imageCell = cell("");
+    let imageCell = cell("", 15);
     if (item.imageUrl) {
       const localImagePath = path.join(process.cwd(), "public", item.imageUrl);
       if (fs.existsSync(localImagePath)) {
         try {
           const imageBuffer = fs.readFileSync(localImagePath);
+          const ext = path.extname(localImagePath).slice(1);
+          const imageType = ext === "jpeg" ? "jpg" : ext;
+          
           imageCell = new TableCell({
+            width: { size: 15, type: WidthType.PERCENTAGE },
             children: [
               new Paragraph({
                 alignment: AlignmentType.CENTER,
                 children: [
                   new ImageRun({
+                    type: imageType as "jpg" | "png" | "gif" | "bmp",
                     data: imageBuffer,
                     transformation: { width: 60, height: 60 },
                   }),
@@ -218,13 +223,13 @@ async function generateKleanTechDocx(
 
     return new TableRow({
       children: [
-        cell(String(idx + 1), { align: AlignmentType.CENTER }),
-        cell(item.description),
+        cell(String(idx + 1), 5, { align: AlignmentType.CENTER }),
+        cell(item.description, 40),
         imageCell,
-        cell((item as any).hsnCode || ""),
-        cell(formatCurrencyINR(Number(item.rate)), { align: AlignmentType.RIGHT }),
-        cell(String(Number(item.qty)), { align: AlignmentType.CENTER }),
-        cell(formatCurrencyINR(Number(item.amount)), { align: AlignmentType.RIGHT }),
+        cell((item as any).hsnCode || "", 10),
+        cell(formatCurrencyINR(Number(item.rate)), 10, { align: AlignmentType.RIGHT }),
+        cell(String(Number(item.qty)), 10, { align: AlignmentType.CENTER }),
+        cell(formatCurrencyINR(Number(item.amount)), 10, { align: AlignmentType.RIGHT }),
       ],
     });
   });
@@ -252,12 +257,12 @@ async function generateKleanTechDocx(
     new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
       rows: [
-        new TableRow({ children: [cell("Sub Total", { bold: true }), cell(formatCurrencyINR(subtotal), { align: AlignmentType.RIGHT })] }),
-        new TableRow({ children: [cell("Service Charges", { bold: true }), cell(formatCurrencyINR(serviceCharges), { align: AlignmentType.RIGHT })] }),
-        new TableRow({ children: [cell(`C&F Charges (${cfPercent}%)`, { bold: true }), cell(formatCurrencyINR(carryingForwardCharge), { align: AlignmentType.RIGHT })] }),
-        new TableRow({ children: [cell("Taxable Amount", { bold: true }), cell(formatCurrencyINR(taxableAmount), { align: AlignmentType.RIGHT })] }),
-        new TableRow({ children: [cell(`GST (${gstPercent}%)`, { bold: true }), cell(formatCurrencyINR(gstAmount), { align: AlignmentType.RIGHT })] }),
-        new TableRow({ children: [cell("Grand Total", { bold: true }), cell(formatCurrencyINR(grandTotal), { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Sub Total", 70, { bold: true }), cell(formatCurrencyINR(subtotal), 30, { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Service Charges", 70, { bold: true }), cell(formatCurrencyINR(serviceCharges), 30, { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell(`C&F Charges (${cfPercent}%)`, 70, { bold: true }), cell(formatCurrencyINR(carryingForwardCharge), 30, { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Taxable Amount", 70, { bold: true }), cell(formatCurrencyINR(taxableAmount), 30, { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell(`GST (${gstPercent}%)`, 70, { bold: true }), cell(formatCurrencyINR(gstAmount), 30, { align: AlignmentType.RIGHT })] }),
+        new TableRow({ children: [cell("Grand Total", 70, { bold: true }), cell(formatCurrencyINR(grandTotal), 30, { align: AlignmentType.RIGHT })] }),
       ],
     }),
   );
@@ -339,8 +344,7 @@ export async function quotationToDocxBuffer(
   quote: QuotationWithRelations,
   company: CompanySettings | null,
 ): Promise<Buffer> {
-  const specs = quote.projectSpecifications as any;
-  if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+  if ((quote as any).quotationType === "KLEAN_TECH_SYSTEMS" || (quote.projectSpecifications as any)?.quotationType === "KLEAN_TECH_SYSTEMS") {
     return generateKleanTechDocx(quote, company);
   }
   const specs = quote.projectSpecifications as ProjectSpecifications;

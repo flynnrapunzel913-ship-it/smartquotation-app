@@ -3560,6 +3560,7 @@ export namespace Prisma {
     defaultRate: Decimal | null
     unit: string | null
     warranty: string | null
+    hsnCode: string | null
     imagePath: string | null
     imageText: string | null
     sortOrder: number | null
@@ -3576,6 +3577,7 @@ export namespace Prisma {
     defaultRate: Decimal | null
     unit: string | null
     warranty: string | null
+    hsnCode: string | null
     imagePath: string | null
     imageText: string | null
     sortOrder: number | null
@@ -3592,6 +3594,7 @@ export namespace Prisma {
     defaultRate: number
     unit: number
     warranty: number
+    hsnCode: number
     imagePath: number
     imageText: number
     sortOrder: number
@@ -3620,6 +3623,7 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
+    hsnCode?: true
     imagePath?: true
     imageText?: true
     sortOrder?: true
@@ -3636,6 +3640,7 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
+    hsnCode?: true
     imagePath?: true
     imageText?: true
     sortOrder?: true
@@ -3652,6 +3657,7 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
+    hsnCode?: true
     imagePath?: true
     imageText?: true
     sortOrder?: true
@@ -3755,6 +3761,7 @@ export namespace Prisma {
     defaultRate: Decimal
     unit: string
     warranty: string
+    hsnCode: string | null
     imagePath: string | null
     imageText: string | null
     sortOrder: number
@@ -3790,6 +3797,7 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
+    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
@@ -3808,6 +3816,7 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
+    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
@@ -3824,6 +3833,7 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
+    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
@@ -3840,6 +3850,7 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
+    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
@@ -3847,7 +3858,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "hsnCode" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | Product$itemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
@@ -3869,6 +3880,7 @@ export namespace Prisma {
       defaultRate: Prisma.Decimal
       unit: string
       warranty: string
+      hsnCode: string | null
       imagePath: string | null
       imageText: string | null
       sortOrder: number
@@ -4306,6 +4318,7 @@ export namespace Prisma {
     readonly defaultRate: FieldRef<"Product", 'Decimal'>
     readonly unit: FieldRef<"Product", 'String'>
     readonly warranty: FieldRef<"Product", 'String'>
+    readonly hsnCode: FieldRef<"Product", 'String'>
     readonly imagePath: FieldRef<"Product", 'String'>
     readonly imageText: FieldRef<"Product", 'String'>
     readonly sortOrder: FieldRef<"Product", 'Int'>
@@ -8487,6 +8500,7 @@ export namespace Prisma {
     defaultRate: 'defaultRate',
     unit: 'unit',
     warranty: 'warranty',
+    hsnCode: 'hsnCode',
     imagePath: 'imagePath',
     imageText: 'imageText',
     sortOrder: 'sortOrder',
@@ -8849,6 +8863,7 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
+    hsnCode?: StringNullableFilter<"Product"> | string | null
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
@@ -8866,6 +8881,7 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
+    hsnCode?: SortOrderInput | SortOrder
     imagePath?: SortOrderInput | SortOrder
     imageText?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
@@ -8886,6 +8902,7 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
+    hsnCode?: StringNullableFilter<"Product"> | string | null
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
@@ -8903,6 +8920,7 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
+    hsnCode?: SortOrderInput | SortOrder
     imagePath?: SortOrderInput | SortOrder
     imageText?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
@@ -8927,6 +8945,7 @@ export namespace Prisma {
     defaultRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringWithAggregatesFilter<"Product"> | string
     warranty?: StringWithAggregatesFilter<"Product"> | string
+    hsnCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     imagePath?: StringNullableWithAggregatesFilter<"Product"> | string | null
     imageText?: StringNullableWithAggregatesFilter<"Product"> | string | null
     sortOrder?: IntWithAggregatesFilter<"Product"> | number
@@ -9414,6 +9433,7 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
@@ -9431,6 +9451,7 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
@@ -9448,6 +9469,7 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -9465,6 +9487,7 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -9482,6 +9505,7 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
@@ -9498,6 +9522,7 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -9514,6 +9539,7 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -10135,6 +10161,7 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
+    hsnCode?: SortOrder
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
@@ -10156,6 +10183,7 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
+    hsnCode?: SortOrder
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
@@ -10172,6 +10200,7 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
+    hsnCode?: SortOrder
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
@@ -11317,6 +11346,7 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
@@ -11333,6 +11363,7 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
@@ -11420,6 +11451,7 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -11436,6 +11468,7 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number

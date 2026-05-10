@@ -1,0 +1,12 @@
+Admin Password: AdminSecure@12#
+
+Here are the steps to push your changes to GitHub:
+
+1. Open your terminal.
+2. Run these commands one by one:
+
+git add .
+git commit -m "Fix database connection, Excel import, and add password protection"
+git push
+
+That's it! Your changes will be pushed to GitHub.

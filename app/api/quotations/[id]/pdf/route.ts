@@ -21,7 +21,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   }
   try {
     const company = await getOrCreateCompanySettings();
-    const html = buildQuotationHtml(quote, company);
+    const html = buildQuotationHtml(quote, company, { isForPdf: true });
     
     let pdfOptions = {};
     const specs = quote.projectSpecifications as any;
@@ -30,7 +30,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
         displayHeaderFooter: true,
         headerTemplate: renderKleanTechPdfHeader(quote),
         footerTemplate: renderKleanTechPdfFooter(),
-        margin: { top: "150px", bottom: "80px", left: "30px", right: "30px" }
+        margin: { top: "95px", bottom: "75px", left: "24px", right: "24px" }
       };
     }
 

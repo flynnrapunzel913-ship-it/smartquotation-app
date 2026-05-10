@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import CategoryTabs from "@/components/klean-tech/CategoryTabs";
 import ProductCatalog from "@/components/klean-tech/ProductCatalog";
 import SelectedItemsTable from "@/components/klean-tech/SelectedItemsTable";
+import ProductManagerModal from "@/components/klean-tech/ProductManagerModal";
 import "@/styles/wizard.css"; // Reuse existing styles if possible
 
 interface Product {
@@ -57,7 +58,10 @@ interface Props {
 
 export default function KleanTechWizard({ id, mode = "edit" }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [step, setStep] = useState(1);
+  const showManageProducts = searchParams.get("manageProducts") === "true";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteId, setQuoteId] = useState<string | null>(id || null);
   const [isLoading, setIsLoading] = useState(!!id);
@@ -113,7 +117,7 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
       
       if (existingItemIndex >= 0) {
         const newItems = [...prev.items];
-        newItems[existingItemIndex].quantity += quantity;
+        newItems[existingItemIndex].quantity = quantity;
         newItems[existingItemIndex].lineTotal = newItems[existingItemIndex].quantity * newItems[existingItemIndex].unitPrice;
         return { ...prev, items: newItems };
       } else {
@@ -121,7 +125,7 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
           type: product.category as "MACHINE" | "SPARE",
           productId: product.id,
           code: product.code || "",
-          description: product.name,
+          description: product.description || product.name,
           imagePath: product.imagePath || "",
           hsnCode: product.hsnCode || "",
           unitPrice: product.defaultRate,
@@ -280,9 +284,77 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
         {step === 2 && (
           <div>
             <h2>Step 2: Add Products</h2>
-            <CategoryTabs activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
-            <ProductCatalog activeCategory={activeCategory} onAddProduct={handleAddProductFromCatalog} />
-            <SelectedItemsTable items={formData.items} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={deleteItem} />
+            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+              {/* Left Column - 70% */}
+              <div style={{ flex: "0 0 70%", maxWidth: "70%" }}>
+                <CategoryTabs activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+                <ProductCatalog activeCategory={activeCategory} onAddProduct={handleAddProductFromCatalog} selectedItems={formData.items} />
+              </div>
+
+              {/* Right Column - 30% */}
+              <div style={{ flex: "0 0 30%", maxWidth: "30%", position: "sticky", top: "20px" }}>
+                <div style={{ background: "#f8fafc", padding: "15px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                  <h3 style={{ marginTop: 0, fontSize: "16px", fontWeight: "600", borderBottom: "1px solid #e2e8f0", paddingBottom: "10px", marginBottom: "15px" }}>Selected Items</h3>
+                  
+                  <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+                    {formData.items.length === 0 ? (
+                      <p style={{ textAlign: "center", color: "#94a3b8", padding: "20px 0" }}>No items selected yet.</p>
+                    ) : (
+                      formData.items.map((item, idx) => (
+                        <div key={idx} style={{ display: "flex", gap: "10px", marginBottom: "15px", borderBottom: "1px solid #f1f5f9", paddingBottom: "10px" }}>
+                          <div style={{ width: "40px", height: "40px", background: "#e2e8f0", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                            {item.imagePath ? (
+                              <img src={item.imagePath} alt={item.description} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                            ) : (
+                              <span style={{ fontSize: "8px", color: "#64748b" }}>No Image</span>
+                            )}
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontWeight: "500", fontSize: "13px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.description}</div>
+                            <div style={{ fontSize: "11px", color: "#64748b" }}>{item.quantity} x ₹ {item.unitPrice.toLocaleString()}</div>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "5px" }}>
+                              <span style={{ fontWeight: "600", fontSize: "13px" }}>₹ {item.lineTotal.toLocaleString()}</span>
+                              <div style={{ display: "flex", gap: "5px" }}>
+                                <button 
+                                  type="button" 
+                                  onClick={() => handleUpdateQuantity(idx, Math.max(1, item.quantity - 1))}
+                                  style={{ padding: "1px 5px", background: "#cbd5e1", border: "none", borderRadius: "3px", cursor: "pointer" }}
+                                >-</button>
+                                <button 
+                                  type="button" 
+                                  onClick={() => handleUpdateQuantity(idx, item.quantity + 1)}
+                                  style={{ padding: "1px 5px", background: "#cbd5e1", border: "none", borderRadius: "3px", cursor: "pointer" }}
+                                >+</button>
+                                <button 
+                                  type="button" 
+                                  onClick={() => deleteItem(idx)}
+                                  style={{ padding: "1px 5px", background: "#fee2e2", color: "#ef4444", border: "none", borderRadius: "3px", cursor: "pointer", marginLeft: "5px" }}
+                                >✕</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  <div style={{ marginTop: "15px", borderTop: "1px solid #e2e8f0", paddingTop: "10px", fontSize: "14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
+                      <span>Subtotal:</span>
+                      <span>₹ {subtotal.toFixed(2)}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
+                      <span>GST ({formData.gstPercent}%):</span>
+                      <span>₹ {gstAmount.toFixed(2)}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0369a1", fontSize: "16px", marginTop: "10px", borderTop: "1px solid #e2e8f0", paddingTop: "10px" }}>
+                      <span>Grand Total:</span>
+                      <span>₹ {grandTotal.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -333,6 +405,9 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
           <div></div>
         )}
       </div>
+      {showManageProducts && (
+        <ProductManagerModal onClose={() => router.push(pathname)} />
+      )}
     </div>
   );
 }
