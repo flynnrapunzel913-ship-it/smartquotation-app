@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
 import "@/styles/wizard.css";
 import "@/styles/invoice.css";
@@ -307,22 +308,27 @@ export default function InvoiceWizard({ initialData }: Props) {
       <div className="wizard-header">
         <h1>MR Swimming Pools & Spa Invoice</h1>
         <div className="stepper">
-          {[1, 2, 3, 4, 5].map((s) => (
+          {[
+            { s: 1, name: "Customer" },
+            { s: 2, name: "Items" },
+            { s: 3, name: "Tax" },
+            { s: 4, name: "Bank" },
+            { s: 5, name: "Review" },
+          ].map(({ s, name }) => (
             <div
               key={s}
-              className={`step-indicator ${step === s ? "active" : ""} ${step > s ? "completed" : ""}`}
+              className={`step-indicator ${step === s ? "active" : step > s ? "completed" : ""}`}
+              onClick={() => setStep(s)}
+              style={{ cursor: "pointer" }}
             >
-              {s === 1 && "Customer"}
-              {s === 2 && "Items"}
-              {s === 3 && "Tax"}
-              {s === 4 && "Bank"}
-              {s === 5 && "Review"}
+              <span className="step-num">{s}</span>
+              <span className="step-text">{name}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="wizard-step-content">
+      <div className="wizard-step-content" style={{ padding: "32px", background: "white", borderRadius: "12px", marginTop: "24px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)" }}>
         {step === 1 && (
           <div className="step-fade-in">
             <SectionHeader stepKey="step1" defaultTitle="Step 1: Customer Details" />
@@ -445,51 +451,57 @@ export default function InvoiceWizard({ initialData }: Props) {
               </div>
             </div>
 
-            <table className="items-table">
+            <table className="items-table" style={{ width: "100%", borderCollapse: "collapse", marginTop: "16px" }}>
               <thead>
-                <tr>
-                  <th style={{ width: "50px" }}>SL</th>
-                  <th>Description</th>
-                  <th style={{ width: "120px" }}>Unit Price</th>
-                  <th style={{ width: "80px" }}>Qty</th>
-                  <th style={{ width: "120px" }}>Total</th>
-                  <th style={{ width: "50px" }}></th>
+                <tr style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
+                  <th style={{ padding: "12px", textAlign: "center", width: "60px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>SL</th>
+                  <th style={{ padding: "12px", textAlign: "left", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Description</th>
+                  <th style={{ padding: "12px", textAlign: "right", width: "140px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Unit Price</th>
+                  <th style={{ padding: "12px", textAlign: "center", width: "100px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Qty</th>
+                  <th style={{ padding: "12px", textAlign: "right", width: "140px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Total</th>
+                  <th style={{ padding: "12px", width: "60px" }}></th>
                 </tr>
               </thead>
               <tbody>
                 {formData.items.map((item, index) => (
-                  <tr key={index}>
-                    <td className="text-center" style={{ verticalAlign: 'middle' }}>{index + 1}</td>
-                    <td>
+                  <tr key={index} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                    <td style={{ padding: "12px", textAlign: "center", color: "#64748b", fontSize: "0.875rem", fontWeight: "500" }}>{index + 1}</td>
+                    <td style={{ padding: "12px" }}>
                       <textarea
                         value={item.description}
                         onChange={(e) => handleItemChange(index, "description", e.target.value)}
                         className="form-control"
                         rows={2}
                         placeholder="Description"
-                        style={{ resize: 'vertical', minHeight: '40px' }}
+                        style={{ minHeight: "60px" }}
                       />
                     </td>
-                    <td>
+                    <td style={{ padding: "12px" }}>
                       <input
                         type="number"
                         value={item.unitPrice}
                         onChange={(e) => handleItemChange(index, "unitPrice", e.target.value)}
-                        className="form-control text-right"
+                        className="form-control"
+                        style={{ textAlign: "right" }}
                       />
                     </td>
-                    <td>
+                    <td style={{ padding: "12px" }}>
                       <input
                         type="number"
                         value={item.qty}
                         onChange={(e) => handleItemChange(index, "qty", e.target.value)}
-                        className="form-control text-center"
+                        className="form-control"
+                        style={{ textAlign: "center" }}
                       />
                     </td>
-                    <td className="text-right" style={{ verticalAlign: 'middle' }}>{formatCurrencyINR(item.total)}</td>
-                    <td style={{ verticalAlign: 'middle' }}>
-                      <button className="btn-icon btn-danger" onClick={() => removeItem(index)}>
-                        ×
+                    <td style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#0f172a", fontSize: "0.875rem" }}>{formatCurrencyINR(item.total)}</td>
+                    <td style={{ padding: "12px", textAlign: "center" }}>
+                      <button 
+                        className="btn-icon" 
+                        style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "4px", width: "28px", height: "28px", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                        onClick={() => removeItem(index)}
+                      >
+                        ✕
                       </button>
                     </td>
                   </tr>
@@ -549,28 +561,28 @@ export default function InvoiceWizard({ initialData }: Props) {
               </div>
             </div>
             
-            <div className="totals-summary-card">
-              <div className="summary-row">
+            <div className="totals-summary-card" style={{ background: "#f8fafc", padding: "24px", borderRadius: "12px", border: "1px solid #e2e8f0", maxWidth: "450px", marginLeft: "auto", marginTop: "24px", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}>
+              <div className="summary-row" style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.875rem", color: "#64748b" }}>
                 <span>Sub Total:</span>
-                <span>{formatCurrencyINR(totals.subTotal)}</span>
+                <span style={{ fontWeight: "500", color: "#0f172a" }}>{formatCurrencyINR(totals.subTotal)}</span>
               </div>
-              <div className="summary-row">
+              <div className="summary-row" style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.875rem", color: "#64748b" }}>
                 <span>CGST ({formData.cgstRate}%):</span>
-                <span>{formatCurrencyINR(totals.cgstAmount)}</span>
+                <span style={{ fontWeight: "500", color: "#0f172a" }}>{formatCurrencyINR(totals.cgstAmount)}</span>
               </div>
-              <div className="summary-row">
+              <div className="summary-row" style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.875rem", color: "#64748b" }}>
                 <span>SGST ({formData.sgstRate}%):</span>
-                <span>{formatCurrencyINR(totals.sgstAmount)}</span>
+                <span style={{ fontWeight: "500", color: "#0f172a" }}>{formatCurrencyINR(totals.sgstAmount)}</span>
               </div>
-              <div className="summary-row">
+              <div className="summary-row" style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.875rem", color: "#64748b" }}>
                 <span>Round Off:</span>
-                <span>{formatCurrencyINR(formData.roundOff)}</span>
+                <span style={{ fontWeight: "500", color: "#0f172a" }}>{formatCurrencyINR(formData.roundOff)}</span>
               </div>
-              <div className="summary-row grand-total">
+              <div className="summary-row grand-total" style={{ display: "flex", justifyContent: "space-between", marginTop: "16px", paddingTop: "16px", borderTop: "2px solid #e2e8f0", fontSize: "1.125rem", fontWeight: "700", color: "#0f172a" }}>
                 <span>Grand Total:</span>
-                <span>{formatCurrencyINR(totals.grandTotal)}</span>
+                <span style={{ color: "#4f46e5" }}>{formatCurrencyINR(totals.grandTotal)}</span>
               </div>
-              <div className="summary-row words">
+              <div className="summary-row words" style={{ marginTop: "8px", fontSize: "0.75rem", color: "#64748b", fontStyle: "italic", textAlign: "right" }}>
                 <span>{totals.amountInWords}</span>
               </div>
             </div>
@@ -643,17 +655,23 @@ export default function InvoiceWizard({ initialData }: Props) {
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                   {formData.customSections.map((section, index) => (
-                    <div key={index} className="card" style={{ padding: "16px", background: "#f8fafc" }}>
+                    <div key={index} className="card" style={{ padding: "20px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}>
                       <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
                         <input 
                           type="text"
                           className="form-control"
-                          style={{ fontWeight: 700 }}
+                          style={{ fontWeight: 700, color: "#0f172a" }}
                           value={section.title}
                           onChange={(e) => handleCustomSectionChange(index, "title", e.target.value)}
                           placeholder="Section Title (e.g. Terms & Conditions)"
                         />
-                        <button className="btn-icon btn-danger" onClick={() => removeCustomSection(index)}>×</button>
+                        <button 
+                          className="btn-icon" 
+                          style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "4px", width: "28px", height: "28px", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                          onClick={() => removeCustomSection(index)}
+                        >
+                          ✕
+                        </button>
                       </div>
                       <textarea
                         className="form-control"
@@ -661,6 +679,7 @@ export default function InvoiceWizard({ initialData }: Props) {
                         value={section.content}
                         onChange={(e) => handleCustomSectionChange(index, "content", e.target.value)}
                         placeholder="Section content..."
+                        style={{ minHeight: "80px" }}
                       />
                     </div>
                   ))}
@@ -674,7 +693,7 @@ export default function InvoiceWizard({ initialData }: Props) {
           <div className="step-fade-in">
             <SectionHeader stepKey="step5" defaultTitle="Step 5: Review & Generate" />
             <p>Please review the details before generating the invoice.</p>
-            <div style={{ marginTop: "20px", border: "1px solid #e2e8f0", padding: "20px", background: "#f8fafc", borderRadius: "8px", overflow: "auto", maxHeight: "800px" }}>
+            <div style={{ marginTop: "20px", border: "1px solid #e2e8f0", padding: "24px", background: "#f8fafc", borderRadius: "12px", overflow: "auto", maxHeight: "800px", boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)" }}>
               <InvoicePreview data={formData} totals={totals} />
             </div>
           </div>

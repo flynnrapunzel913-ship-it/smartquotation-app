@@ -57,13 +57,13 @@ export default function InvoiceHistory() {
   return (
     <div className="invoice-history">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-[#334155]">Invoice Records</h2>
-        <div className="w-80">
+        <h2 className="text-xl font-bold text-[#1e293b]">Invoice Records</h2>
+        <div className="flex-1 max-w-md ml-4">
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
             <input 
               type="text" 
-              className="form-control pl-10 h-10 rounded-xl border-[#e2e8f0] focus:border-blue-500" 
+              className="w-full pl-10 pr-4 h-10 rounded-xl border border-[#e2e8f0] focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm" 
               placeholder="Search invoices or customers..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -72,55 +72,51 @@ export default function InvoiceHistory() {
         </div>
       </div>
 
-      <div className="overflow-hidden border border-[#f1f5f9] rounded-xl">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-[#f8fafc] text-[#64748b] text-xs uppercase tracking-wider font-bold">
-            <tr>
-              <th className="px-4 py-3">Invoice No</th>
-              <th className="px-4 py-3">Customer Name</th>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3 text-right">Grand Total</th>
-              <th className="px-4 py-3 text-center">Status</th>
-              <th className="px-4 py-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#f1f5f9]">
-            {isLoading ? (
-              <tr><td colSpan={6} className="text-center py-20 text-[#94a3b8] animate-pulse">Loading history...</td></tr>
-            ) : filteredInvoices.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="text-center py-24">
-                  <div className="text-5xl mb-4 opacity-20 grayscale">📜</div>
-                  <p className="text-[#64748b] font-medium text-lg">No invoices created yet.</p>
-                  <p className="text-[#94a3b8] mt-1">Click <Link href="/dashboard/invoices/new" className="text-blue-600 font-bold hover:underline">“Create New Invoice”</Link> to generate your first invoice.</p>
-                </td>
-              </tr>
-            ) : (
-              filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-50 transition-colors group">
-                  <td className="px-4 py-4 font-bold text-[#1e293b]">{inv.invoiceNumber}</td>
-                  <td className="px-4 py-4 text-[#475569]">{inv.customerName}</td>
-                  <td className="px-4 py-4 text-sm text-[#64748b]">{new Date(inv.invoiceDate).toLocaleDateString("en-IN")}</td>
-                  <td className="px-4 py-4 text-right font-bold text-blue-700">{formatCurrencyINR(inv.grandTotal)}</td>
-                  <td className="px-4 py-4 text-center">
-                    <span className={`badge ${inv.isDraft ? "badge-warning" : "badge-success"} text-[10px]`}>
-                      {inv.isDraft ? "Draft" : "Finalized"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4 text-right">
-                    <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Link href={`/dashboard/invoices/preview/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all">View</Link>
-                      <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all">Edit</Link>
-                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-[#475569] hover:border-blue-500 hover:text-blue-500 transition-all" onClick={() => handleDuplicate(inv.id)}>Duplicate</button>
-                      <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-emerald-600 hover:bg-emerald-50 transition-all">PDF</a>
-                      <button className="text-xs bg-white border border-slate-200 px-3 py-1.5 rounded-lg font-medium text-red-500 hover:bg-red-50 transition-all" onClick={() => handleDelete(inv.invoiceNumber)}>Delete</button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="border border-[#e2e8f0] rounded-xl bg-white shadow-sm overflow-hidden">
+        {/* Header */}
+        <div className="bg-[#f8fafc] text-[#475569] text-xs uppercase tracking-wider font-bold border-bottom border-[#e2e8f0] grid grid-cols-12 gap-4 px-6 py-4">
+          <div className="col-span-2">Invoice No</div>
+          <div className="col-span-4">Customer Name</div>
+          <div className="col-span-2">Date</div>
+          <div className="col-span-2 text-right">Grand Total</div>
+          <div className="col-span-1 text-center">Status</div>
+          <div className="col-span-1 text-right">Actions</div>
+        </div>
+
+        {/* Body */}
+        <div className="divide-y divide-[#e2e8f0]">
+          {isLoading ? (
+            <div className="text-center py-20 text-[#94a3b8] animate-pulse">Loading history...</div>
+          ) : filteredInvoices.length === 0 ? (
+            <div className="text-center py-24">
+              <div className="text-5xl mb-4 opacity-20 grayscale">📜</div>
+              <p className="text-[#64748b] font-medium text-lg">No invoices created yet.</p>
+              <p className="text-[#94a3b8] mt-1">Click <Link href="/dashboard/invoices/new" className="text-indigo-600 font-bold hover:underline">“Create New Invoice”</Link> to generate your first invoice.</p>
+            </div>
+          ) : (
+            filteredInvoices.map((inv) => (
+              <div key={inv.id} className="hover:bg-slate-50 transition-colors group grid grid-cols-12 gap-4 px-6 py-4 items-center">
+                <div className="col-span-2 font-bold text-[#1e293b]">{inv.invoiceNumber}</div>
+                <div className="col-span-4 text-[#475569]">{inv.customerName}</div>
+                <div className="col-span-2 text-sm text-[#64748b]">{new Date(inv.invoiceDate).toLocaleDateString("en-IN")}</div>
+                <div className="col-span-2 text-right font-bold text-indigo-700">{formatCurrencyINR(inv.grandTotal)}</div>
+                <div className="col-span-1 text-center">
+                  <span className={`badge ${inv.isDraft ? "badge-warning" : "badge-success"} text-[10px]`}>
+                    {inv.isDraft ? "Draft" : "Finalized"}
+                  </span>
+                </div>
+                <div className="col-span-1 text-right">
+                  <div className="flex gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Link href={`/dashboard/invoices/preview/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-[#475569] hover:border-indigo-500 hover:text-indigo-500 transition-all">View</Link>
+                    <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-[#475569] hover:border-indigo-500 hover:text-indigo-500 transition-all">Edit</Link>
+                    <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-emerald-600 hover:bg-emerald-50 transition-all">PDF</a>
+                    <button className="text-xs bg-white border border-slate-200 px-2 py-1 rounded-md font-medium text-red-500 hover:bg-red-50 transition-all" onClick={() => handleDelete(inv.invoiceNumber)}>✕</button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

@@ -214,20 +214,48 @@ export default function ProductManagerModal({ onClose }: Props) {
 
   if (!isAuthenticated) {
     return (
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-        <div style={{ background: "white", padding: "20px", borderRadius: "8px", width: "400px" }}>
-          <h3 style={{ marginTop: 0 }}>Admin Access Required</h3>
-          <p style={{ fontSize: "14px", color: "#64748b", marginBottom: "15px" }}>Please enter the admin password to manage products.</p>
-          <input 
-            type="password" 
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", marginBottom: "10px" }}
-            placeholder="Enter password"
-          />
-          {passwordError && <p style={{ color: "#ef4444", fontSize: "12px", marginBottom: "10px" }}>{passwordError}</p>}
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
-            <button onClick={onClose} style={{ padding: "8px 16px", background: "#cbd5e1", color: "#334155", border: "none", borderRadius: "4px", cursor: "pointer" }}>Cancel</button>
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+        <div style={{ background: "white", padding: "32px", borderRadius: "16px", width: "100%", maxWidth: "400px", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
+          <div style={{ textAlign: "center", marginBottom: "24px" }}>
+            <h3 style={{ margin: "0 0 8px 0", fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Admin Access Required</h3>
+            <p style={{ fontSize: "0.875rem", color: "#64748b", margin: 0 }}>Please enter the admin password to manage products.</p>
+          </div>
+          <div style={{ marginBottom: "20px" }}>
+            <input 
+              type="password" 
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
+              style={{ 
+                width: "100%", 
+                padding: "12px 16px", 
+                border: "1px solid #e2e8f0", 
+                borderRadius: "10px", 
+                fontSize: "0.875rem",
+                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                transition: "border-color 0.2s"
+              }}
+              placeholder="Enter password"
+            />
+            {passwordError && <p style={{ color: "#ef4444", fontSize: "0.75rem", marginTop: "6px", fontWeight: "500" }}>{passwordError}</p>}
+          </div>
+          <div style={{ display: "flex", gap: "12px" }}>
+            <button 
+              onClick={onClose} 
+              style={{ 
+                flex: 1,
+                padding: "12px", 
+                background: "white", 
+                color: "#475569", 
+                border: "1px solid #e2e8f0", 
+                borderRadius: "10px", 
+                cursor: "pointer",
+                fontWeight: "600",
+                fontSize: "0.875rem",
+                transition: "all 0.2s"
+              }}
+            >
+              Cancel
+            </button>
             <button 
               onClick={() => {
                 if (adminPassword === "AdminSecure@12#") {
@@ -236,7 +264,19 @@ export default function ProductManagerModal({ onClose }: Props) {
                   setPasswordError("Incorrect password!");
                 }
               }}
-              style={{ padding: "8px 16px", background: "#0f172a", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
+              style={{ 
+                flex: 1,
+                padding: "12px", 
+                background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)", 
+                color: "white", 
+                border: "none", 
+                borderRadius: "10px", 
+                cursor: "pointer",
+                fontWeight: "600",
+                fontSize: "0.875rem",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                transition: "all 0.2s"
+              }}
             >
               Access
             </button>
@@ -247,29 +287,74 @@ export default function ProductManagerModal({ onClose }: Props) {
   }
 
   return (
-    <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-      <div style={{ background: "white", padding: "20px", borderRadius: "8px", width: "90%", maxWidth: "1200px", maxHeight: "90vh", overflowY: "auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-          <h2 style={{ margin: 0 }}>Product Catalog Management</h2>
-          <button onClick={onClose} style={{ background: "#ef4444", color: "white", border: "none", padding: "8px 16px", borderRadius: "4px", cursor: "pointer" }}>Close</button>
+    <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+      <div style={{ background: "white", padding: "32px", borderRadius: "16px", width: "90%", maxWidth: "1200px", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+          <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: "700", color: "#0f172a" }}>Product Catalog Management</h2>
+          <button 
+            onClick={onClose} 
+            style={{ 
+              background: "#fee2e2", 
+              color: "#dc2626", 
+              border: "none", 
+              padding: "8px 16px", 
+              borderRadius: "8px", 
+              cursor: "pointer",
+              fontWeight: "600",
+              fontSize: "0.875rem",
+              transition: "all 0.2s"
+            }}
+          >
+            Close
+          </button>
         </div>
 
-        <div style={{ display: "flex", gap: "10px", marginBottom: "20px", borderBottom: "1px solid #e2e8f0" }}>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "24px", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px" }}>
           <button 
             onClick={() => setActiveTab("catalog")}
-            style={{ padding: "10px 20px", background: activeTab === "catalog" ? "#0f172a" : "transparent", color: activeTab === "catalog" ? "white" : "#475569", border: "none", cursor: "pointer", fontWeight: "500" }}
+            style={{ 
+              padding: "10px 20px", 
+              background: activeTab === "catalog" ? "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)" : "transparent", 
+              color: activeTab === "catalog" ? "white" : "#64748b", 
+              border: "none", 
+              borderRadius: "8px",
+              cursor: "pointer", 
+              fontWeight: "600",
+              fontSize: "0.875rem",
+              transition: "all 0.2s"
+            }}
           >
             Catalog
           </button>
           <button 
             onClick={() => setActiveTab("add")}
-            style={{ padding: "10px 20px", background: activeTab === "add" ? "#0f172a" : "transparent", color: activeTab === "add" ? "white" : "#475569", border: "none", cursor: "pointer", fontWeight: "500" }}
+            style={{ 
+              padding: "10px 20px", 
+              background: activeTab === "add" ? "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)" : "transparent", 
+              color: activeTab === "add" ? "white" : "#64748b", 
+              border: "none", 
+              borderRadius: "8px",
+              cursor: "pointer", 
+              fontWeight: "600",
+              fontSize: "0.875rem",
+              transition: "all 0.2s"
+            }}
           >
             Add Product
           </button>
           <button 
             onClick={() => setActiveTab("upload")}
-            style={{ padding: "10px 20px", background: activeTab === "upload" ? "#0f172a" : "transparent", color: activeTab === "upload" ? "white" : "#475569", border: "none", cursor: "pointer", fontWeight: "500" }}
+            style={{ 
+              padding: "10px 20px", 
+              background: activeTab === "upload" ? "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)" : "transparent", 
+              color: activeTab === "upload" ? "white" : "#64748b", 
+              border: "none", 
+              borderRadius: "8px",
+              cursor: "pointer", 
+              fontWeight: "600",
+              fontSize: "0.875rem",
+              transition: "all 0.2s"
+            }}
           >
             Upload Excel
           </button>
@@ -277,18 +362,33 @@ export default function ProductManagerModal({ onClose }: Props) {
 
         {activeTab === "catalog" && (
           <div>
-            <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+            <div style={{ display: "flex", gap: "16px", marginBottom: "20px" }}>
               <input 
                 type="text" 
                 placeholder="Search by name..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", flex: 1 }}
+                style={{ 
+                  padding: "12px 16px", 
+                  border: "1px solid #e2e8f0", 
+                  borderRadius: "10px", 
+                  flex: 1,
+                  fontSize: "0.875rem",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+                }}
               />
               <select 
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
-                style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ 
+                  padding: "12px 16px", 
+                  border: "1px solid #e2e8f0", 
+                  borderRadius: "10px",
+                  background: "white",
+                  fontSize: "0.875rem",
+                  cursor: "pointer",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+                }}
               >
                 <option value="all">All Types</option>
                 <option value="MACHINE">Machines</option>
@@ -297,25 +397,25 @@ export default function ProductManagerModal({ onClose }: Props) {
             </div>
 
             {loading ? (
-              <p>Loading products...</p>
+              <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>Loading products...</div>
             ) : (
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#f8fafc" }}>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>Image</th>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>Name</th>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>Description</th>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>Type</th>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>HSN</th>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>Price</th>
-                    <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #e2e8f0" }}>Actions</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Image</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Name</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Description</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Type</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>HSN</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Price</th>
+                    <th style={{ padding: "14px 16px", textAlign: "left", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredProducts.map(p => (
-                    <tr key={p.id} style={{ borderBottom: "1px solid #e2e8f0" }}>
-                      <td style={{ padding: "10px" }}>
-                        <div style={{ width: "40px", height: "40px", background: "#f1f5f9", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                    <tr key={p.id} style={{ borderBottom: "1px solid #e2e8f0", transition: "background 0.2s" }}>
+                      <td style={{ padding: "14px 16px" }}>
+                        <div style={{ width: "50px", height: "50px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                           {p.imagePath ? (
                             <img 
                               src={p.imagePath.startsWith("/") ? p.imagePath : `/${p.imagePath}`} 
@@ -323,50 +423,84 @@ export default function ProductManagerModal({ onClose }: Props) {
                               style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} 
                             />
                           ) : (
-                            <span style={{ fontSize: "10px", color: "#94a3b8" }}>No Image</span>
+                            <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "500" }}>No Image</span>
                           )}
                         </div>
                       </td>
-                      <td style={{ padding: "10px", display: "flex", alignItems: "center", gap: "5px" }}>
-                        {p.name}
-                        {getMissingFields(p).length > 0 && (
-                          <span 
-                            title={`Incomplete product.\nMissing:\n${getMissingFields(p).map(f => `• ${f}`).join("\n")}\nClick Edit to complete this product.`}
-                            style={{ color: "#ef4444", cursor: "help", fontSize: "16px" }}
-                          >
-                            ❗
-                          </span>
-                        )}
+                      <td style={{ padding: "14px 16px", fontWeight: "600", color: "#1e293b", fontSize: "0.875rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          {p.name}
+                          {getMissingFields(p).length > 0 && (
+                            <span 
+                              title={`Incomplete product.\nMissing:\n${getMissingFields(p).map(f => `• ${f}`).join("\n")}\nClick Edit to complete this product.`}
+                              style={{ color: "#ef4444", cursor: "help", fontSize: "14px" }}
+                            >
+                              ⚠️
+                            </span>
+                          )}
+                        </div>
                       </td>
-                      <td style={{ padding: "10px", fontSize: "12px", color: "#555", maxWidth: "320px", wordBreak: "break-word" }}>
+                      <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#64748b", maxWidth: "320px", wordBreak: "break-word" }}>
                         {(p.description || "").split("\n").join(" ").length > 100 ? (p.description || "").split("\n").join(" ").slice(0, 100) + "..." : (p.description || "").split("\n").join(" ")}
                       </td>
-                      <td style={{ padding: "10px" }}>{p.category}</td>
-                      <td style={{ padding: "10px" }}>{p.hsnCode || "N/A"}</td>
-                      <td style={{ padding: "10px" }}>₹ {p.defaultRate.toLocaleString()}</td>
-                      <td style={{ padding: "10px" }}>
-                        <button 
-                          onClick={() => {
-                            setEditingProduct(p);
-                            setEditFormData({
-                              name: p.name,
-                              description: p.description,
-                              category: p.category,
-                              defaultRate: p.defaultRate,
-                              hsnCode: p.hsnCode || "",
-                              imagePath: p.imagePath || ""
-                            });
-                          }}
-                          style={{ marginRight: "5px", padding: "4px 8px", background: "#3b82f6", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(p.id)}
-                          style={{ padding: "4px 8px", background: "#ef4444", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                        >
-                          Delete
-                        </button>
+                      <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#0f172a" }}>
+                        <span style={{ 
+                          padding: "4px 8px", 
+                          borderRadius: "6px", 
+                          fontSize: "0.75rem", 
+                          fontWeight: "600",
+                          background: p.category === "MACHINE" ? "#e0f2fe" : "#fef3c7",
+                          color: p.category === "MACHINE" ? "#0369a1" : "#b45309"
+                        }}>
+                          {p.category}
+                        </span>
+                      </td>
+                      <td style={{ padding: "14px 16px", color: "#64748b", fontSize: "0.875rem" }}>{p.hsnCode || "N/A"}</td>
+                      <td style={{ padding: "14px 16px", fontWeight: "700", color: "#0f172a", fontSize: "0.875rem" }}>₹ {p.defaultRate.toLocaleString()}</td>
+                      <td style={{ padding: "14px 16px" }}>
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <button 
+                            onClick={() => {
+                              setEditingProduct(p);
+                              setEditFormData({
+                                name: p.name,
+                                description: p.description,
+                                category: p.category,
+                                defaultRate: p.defaultRate,
+                                hsnCode: p.hsnCode || "",
+                                imagePath: p.imagePath || ""
+                              });
+                            }}
+                            style={{ 
+                              padding: "6px 12px", 
+                              background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)", 
+                              color: "white", 
+                              border: "none", 
+                              borderRadius: "6px", 
+                              cursor: "pointer",
+                              fontWeight: "600",
+                              fontSize: "0.75rem",
+                              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(p.id)}
+                            style={{ 
+                              padding: "6px 12px", 
+                              background: "#fee2e2", 
+                              color: "#dc2626", 
+                              border: "none", 
+                              borderRadius: "6px", 
+                              cursor: "pointer",
+                              fontWeight: "600",
+                              fontSize: "0.75rem"
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -379,59 +513,59 @@ export default function ProductManagerModal({ onClose }: Props) {
 
         {activeTab === "add" && (
           <div style={{ maxWidth: "600px" }}>
-            <h3 style={{ marginTop: 0 }}>Add New Product</h3>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Product Name *</label>
+            <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Add New Product</h3>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Name *</label>
               <input 
                 type="text" 
                 value={addFormData.name}
                 onChange={(e) => setAddFormData({ ...addFormData, name: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}
                 placeholder="Enter product name"
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Description *</label>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Description *</label>
               <textarea 
                 value={addFormData.description}
                 onChange={(e) => setAddFormData({ ...addFormData, description: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", minHeight: "100px" }}
+                style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem", minHeight: "100px", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}
                 placeholder="Enter product description"
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Product Type *</label>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Type *</label>
               <select 
                 value={addFormData.category}
                 onChange={(e) => setAddFormData({ ...addFormData, category: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem", background: "white", cursor: "pointer", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}
               >
                 <option value="MACHINE">Machine</option>
                 <option value="SPARE">Spare Part</option>
               </select>
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Unit Price *</label>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Unit Price *</label>
               <input 
                 type="number" 
                 value={addFormData.defaultRate}
                 onChange={(e) => setAddFormData({ ...addFormData, defaultRate: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}
                 placeholder="0.00"
               />
             </div>
-            <div style={{ marginBottom: "20px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>HSN Code</label>
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>HSN Code</label>
               <input 
                 type="text" 
                 value={addFormData.hsnCode}
                 onChange={(e) => setAddFormData({ ...addFormData, hsnCode: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem", boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" }}
                 placeholder="Enter HSN code"
               />
             </div>
-            <div style={{ marginBottom: "20px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Product Image</label>
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Image</label>
               <input 
                 type="file" 
                 accept="image/*" 
@@ -445,17 +579,28 @@ export default function ProductManagerModal({ onClose }: Props) {
                     reader.readAsDataURL(file);
                   }
                 }}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem" }}
               />
               {addFormData.imagePath && (
-                <div style={{ marginTop: "10px", width: "100px", height: "100px", background: "#f1f5f9", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                <div style={{ marginTop: "12px", width: "120px", height: "120px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                   <img src={addFormData.imagePath} alt="Preview" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
                 </div>
               )}
             </div>
             <button 
               onClick={handleCreate}
-              style={{ padding: "10px 20px", background: "#0f172a", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", fontWeight: "500" }}
+              style={{ 
+                padding: "12px 24px", 
+                background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)", 
+                color: "white", 
+                border: "none", 
+                borderRadius: "10px", 
+                cursor: "pointer", 
+                fontWeight: "600",
+                fontSize: "0.875rem",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                transition: "all 0.2s"
+              }}
             >
               Create Product
             </button>
@@ -464,19 +609,31 @@ export default function ProductManagerModal({ onClose }: Props) {
 
         {activeTab === "upload" && (
           <div style={{ maxWidth: "600px" }}>
-            <h3 style={{ marginTop: 0 }}>Upload Excel</h3>
-            <p style={{ fontSize: "14px", color: "#64748b", marginBottom: "15px" }}>
+            <h3 style={{ marginTop: 0, marginBottom: "12px", fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Upload Excel</h3>
+            <p style={{ fontSize: "0.875rem", color: "#64748b", marginBottom: "24px", lineHeight: "1.6" }}>
               Upload an Excel file to bulk import products. The file should have the following columns:
               <br />
-              <strong>Name, Description, Type, Price, HSN</strong>
+              <strong style={{ color: "#0f172a" }}>Name, Description, Type, Price, HSN</strong>
             </p>
-            <div style={{ border: "2px dashed #cbd5e1", padding: "30px", borderRadius: "8px", textAlign: "center", background: "#f8fafc" }}>
+            <div style={{ 
+              border: "2px dashed #cbd5e1", 
+              padding: "40px", 
+              borderRadius: "12px", 
+              textAlign: "center", 
+              background: "#f8fafc",
+              transition: "all 0.2s",
+              cursor: "pointer"
+            }}
+            onMouseOver={(e) => e.currentTarget.style.borderColor = "#4f46e5"}
+            onMouseOut={(e) => e.currentTarget.style.borderColor = "#cbd5e1"}
+            >
               <input 
                 type="file" 
                 accept=".xlsx, .xls" 
                 onChange={handleFileUpload}
-                style={{ display: "block", margin: "0 auto" }}
+                style={{ display: "block", margin: "0 auto", fontSize: "0.875rem", color: "#64748b" }}
               />
+              <p style={{ marginTop: "12px", fontSize: "0.75rem", color: "#94a3b8" }}>Supported formats: .xlsx, .xls</p>
             </div>
           </div>
         )}
@@ -489,7 +646,8 @@ export default function ProductManagerModal({ onClose }: Props) {
           left: 0,
           width: "100%",
           height: "100%",
-          background: "rgba(0,0,0,0.5)",
+          background: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(8px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -497,67 +655,69 @@ export default function ProductManagerModal({ onClose }: Props) {
         }}>
           <div style={{
             background: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            width: "500px",
+            padding: "32px",
+            borderRadius: "16px",
+            width: "100%",
+            maxWidth: "500px",
             maxHeight: "90vh",
-            overflowY: "auto"
+            overflowY: "auto",
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
           }}>
-            <h3 style={{ marginTop: 0 }}>Edit Product</h3>
-            <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Product Name</label>
+            <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Edit Product</h3>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Name</label>
               <input 
                 type="text" 
                 value={editFormData.name}
                 onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "10px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "0.875rem" }}
               />
             </div>
-            <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Description</label>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Description</label>
               <textarea 
                 value={editFormData.description}
                 onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", minHeight: "100px" }}
+                style={{ width: "100%", padding: "10px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "0.875rem", minHeight: "100px" }}
               />
             </div>
-            <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Product Type</label>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Type</label>
               <select 
                 value={editFormData.category}
                 onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "10px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "0.875rem", background: "white", cursor: "pointer" }}
               >
                 <option value="MACHINE">Machine</option>
                 <option value="SPARE">Spare Part</option>
               </select>
             </div>
-            <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Unit Price</label>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Unit Price</label>
               <input 
                 type="number" 
                 value={editFormData.defaultRate}
                 onChange={(e) => setEditFormData({ ...editFormData, defaultRate: parseFloat(e.target.value) })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "10px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "0.875rem" }}
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>HSN Code</label>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>HSN Code</label>
               <input 
                 type="text" 
                 value={editFormData.hsnCode}
                 onChange={(e) => setEditFormData({ ...editFormData, hsnCode: e.target.value })}
-                style={{ width: "100%", padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "10px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "0.875rem" }}
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", fontSize: "14px" }}>Product Image</label>
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Image</label>
               {editFormData.imagePath && (
-                <div style={{ marginBottom: "10px", position: "relative", width: "100px", height: "100px" }}>
+                <div style={{ marginBottom: "12px", position: "relative", width: "100px", height: "100px" }}>
                   <img 
                     src={editFormData.imagePath.startsWith("data:") ? editFormData.imagePath : editFormData.imagePath.startsWith("/") ? editFormData.imagePath : `/${editFormData.imagePath}`} 
                     alt="Preview" 
-                    style={{ width: "100%", height: "100%", objectFit: "contain", border: "1px solid #cbd5e1", borderRadius: "4px" }} 
+                    style={{ width: "100%", height: "100%", objectFit: "contain", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
                   />
                   <button 
                     onClick={() => setEditFormData({ ...editFormData, imagePath: "" })}
@@ -579,19 +739,38 @@ export default function ProductManagerModal({ onClose }: Props) {
                   };
                   reader.readAsDataURL(file);
                 }}
-                style={{ fontSize: "12px" }}
+                style={{ fontSize: "0.875rem" }}
               />
             </div>
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
               <button 
                 onClick={() => setEditingProduct(null)}
-                style={{ padding: "8px 16px", background: "#cbd5e1", color: "#334155", border: "none", borderRadius: "4px", cursor: "pointer" }}
+                style={{ 
+                  padding: "10px 20px", 
+                  background: "white", 
+                  color: "#475569", 
+                  border: "1px solid #e2e8f0", 
+                  borderRadius: "8px", 
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  fontSize: "0.875rem"
+                }}
               >
                 Cancel
               </button>
               <button 
                 onClick={handleSave}
-                style={{ padding: "8px 16px", background: "#0f172a", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
+                style={{ 
+                  padding: "10px 20px", 
+                  background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)", 
+                  color: "white", 
+                  border: "none", 
+                  borderRadius: "8px", 
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  fontSize: "0.875rem",
+                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                }}
               >
                 Save Changes
               </button>

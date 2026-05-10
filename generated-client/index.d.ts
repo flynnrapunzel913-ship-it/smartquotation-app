@@ -3879,18 +3879,13 @@ export namespace Prisma {
     defaultRate: Decimal | null
     unit: string | null
     warranty: string | null
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode: string | null
-=======
-    templateText: string | null
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath: string | null
     imageText: string | null
     sortOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
     databaseId: string | null
-    hsnCode: string | null
     gstRate: Decimal | null
     productCode: string | null
   }
@@ -3904,18 +3899,13 @@ export namespace Prisma {
     defaultRate: Decimal | null
     unit: string | null
     warranty: string | null
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode: string | null
-=======
-    templateText: string | null
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath: string | null
     imageText: string | null
     sortOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
     databaseId: string | null
-    hsnCode: string | null
     gstRate: Decimal | null
     productCode: string | null
   }
@@ -3929,19 +3919,13 @@ export namespace Prisma {
     defaultRate: number
     unit: number
     warranty: number
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode: number
-=======
-    templateText: number
-    templateVariables: number
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath: number
     imageText: number
     sortOrder: number
     createdAt: number
     updatedAt: number
     databaseId: number
-    hsnCode: number
     gstRate: number
     productCode: number
     _all: number
@@ -3969,18 +3953,13 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: true
-=======
-    templateText?: true
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: true
     imageText?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
     databaseId?: true
-    hsnCode?: true
     gstRate?: true
     productCode?: true
   }
@@ -3994,18 +3973,13 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: true
-=======
-    templateText?: true
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: true
     imageText?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
     databaseId?: true
-    hsnCode?: true
     gstRate?: true
     productCode?: true
   }
@@ -4019,19 +3993,13 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: true
-=======
-    templateText?: true
-    templateVariables?: true
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: true
     imageText?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
     databaseId?: true
-    hsnCode?: true
     gstRate?: true
     productCode?: true
     _all?: true
@@ -4132,19 +4100,13 @@ export namespace Prisma {
     defaultRate: Decimal
     unit: string
     warranty: string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode: string | null
-=======
-    templateText: string | null
-    templateVariables: string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath: string | null
     imageText: string | null
     sortOrder: number
     createdAt: Date
     updatedAt: Date
     databaseId: string | null
-    hsnCode: string | null
     gstRate: Decimal | null
     productCode: string | null
     _count: ProductCountAggregateOutputType | null
@@ -4177,19 +4139,13 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: boolean
-=======
-    templateText?: boolean
-    templateVariables?: boolean
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     databaseId?: boolean
-    hsnCode?: boolean
     gstRate?: boolean
     productCode?: boolean
     items?: boolean | Product$itemsArgs<ExtArgs>
@@ -4206,19 +4162,13 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: boolean
-=======
-    templateText?: boolean
-    templateVariables?: boolean
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     databaseId?: boolean
-    hsnCode?: boolean
     gstRate?: boolean
     productCode?: boolean
     database?: boolean | Product$databaseArgs<ExtArgs>
@@ -4233,19 +4183,13 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: boolean
-=======
-    templateText?: boolean
-    templateVariables?: boolean
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     databaseId?: boolean
-    hsnCode?: boolean
     gstRate?: boolean
     productCode?: boolean
     database?: boolean | Product$databaseArgs<ExtArgs>
@@ -4260,28 +4204,18 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: boolean
-=======
-    templateText?: boolean
-    templateVariables?: boolean
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     databaseId?: boolean
-    hsnCode?: boolean
     gstRate?: boolean
     productCode?: boolean
   }
 
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "hsnCode" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
-=======
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "templateText" | "templateVariables" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt" | "databaseId" | "hsnCode" | "gstRate" | "productCode", ExtArgs["result"]["product"]>
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "hsnCode" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt" | "databaseId" | "gstRate" | "productCode", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | Product$itemsArgs<ExtArgs>
     database?: boolean | Product$databaseArgs<ExtArgs>
@@ -4309,19 +4243,13 @@ export namespace Prisma {
       defaultRate: Prisma.Decimal
       unit: string
       warranty: string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
       hsnCode: string | null
-=======
-      templateText: string | null
-      templateVariables: string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
       imagePath: string | null
       imageText: string | null
       sortOrder: number
       createdAt: Date
       updatedAt: Date
       databaseId: string | null
-      hsnCode: string | null
       gstRate: Prisma.Decimal | null
       productCode: string | null
     }, ExtArgs["result"]["product"]>
@@ -4757,19 +4685,13 @@ export namespace Prisma {
     readonly defaultRate: FieldRef<"Product", 'Decimal'>
     readonly unit: FieldRef<"Product", 'String'>
     readonly warranty: FieldRef<"Product", 'String'>
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     readonly hsnCode: FieldRef<"Product", 'String'>
-=======
-    readonly templateText: FieldRef<"Product", 'String'>
-    readonly templateVariables: FieldRef<"Product", 'String[]'>
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     readonly imagePath: FieldRef<"Product", 'String'>
     readonly imageText: FieldRef<"Product", 'String'>
     readonly sortOrder: FieldRef<"Product", 'Int'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
     readonly databaseId: FieldRef<"Product", 'String'>
-    readonly hsnCode: FieldRef<"Product", 'String'>
     readonly gstRate: FieldRef<"Product", 'Decimal'>
     readonly productCode: FieldRef<"Product", 'String'>
   }
@@ -12484,19 +12406,13 @@ export namespace Prisma {
     defaultRate: 'defaultRate',
     unit: 'unit',
     warranty: 'warranty',
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode: 'hsnCode',
-=======
-    templateText: 'templateText',
-    templateVariables: 'templateVariables',
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath: 'imagePath',
     imageText: 'imageText',
     sortOrder: 'sortOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     databaseId: 'databaseId',
-    hsnCode: 'hsnCode',
     gstRate: 'gstRate',
     productCode: 'productCode'
   };
@@ -12940,19 +12856,13 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: StringNullableFilter<"Product"> | string | null
-=======
-    templateText?: StringNullableFilter<"Product"> | string | null
-    templateVariables?: StringNullableListFilter<"Product">
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     databaseId?: StringNullableFilter<"Product"> | string | null
-    hsnCode?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableFilter<"Product"> | string | null
     items?: QuotationItemListRelationFilter
@@ -12968,19 +12878,13 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: SortOrderInput | SortOrder
-=======
-    templateText?: SortOrderInput | SortOrder
-    templateVariables?: SortOrder
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: SortOrderInput | SortOrder
     imageText?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     databaseId?: SortOrderInput | SortOrder
-    hsnCode?: SortOrderInput | SortOrder
     gstRate?: SortOrderInput | SortOrder
     productCode?: SortOrderInput | SortOrder
     items?: QuotationItemOrderByRelationAggregateInput
@@ -12999,19 +12903,13 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: StringNullableFilter<"Product"> | string | null
-=======
-    templateText?: StringNullableFilter<"Product"> | string | null
-    templateVariables?: StringNullableListFilter<"Product">
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     databaseId?: StringNullableFilter<"Product"> | string | null
-    hsnCode?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableFilter<"Product"> | string | null
     items?: QuotationItemListRelationFilter
@@ -13027,19 +12925,13 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: SortOrderInput | SortOrder
-=======
-    templateText?: SortOrderInput | SortOrder
-    templateVariables?: SortOrder
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: SortOrderInput | SortOrder
     imageText?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     databaseId?: SortOrderInput | SortOrder
-    hsnCode?: SortOrderInput | SortOrder
     gstRate?: SortOrderInput | SortOrder
     productCode?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -13061,19 +12953,13 @@ export namespace Prisma {
     defaultRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringWithAggregatesFilter<"Product"> | string
     warranty?: StringWithAggregatesFilter<"Product"> | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
-=======
-    templateText?: StringNullableWithAggregatesFilter<"Product"> | string | null
-    templateVariables?: StringNullableListFilter<"Product">
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: StringNullableWithAggregatesFilter<"Product"> | string | null
     imageText?: StringNullableWithAggregatesFilter<"Product"> | string | null
     sortOrder?: IntWithAggregatesFilter<"Product"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     databaseId?: StringNullableWithAggregatesFilter<"Product"> | string | null
-    hsnCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     gstRate?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
   }
@@ -13866,18 +13752,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: string | null
-=======
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     items?: QuotationItemCreateNestedManyWithoutProductInput
@@ -13893,19 +13773,13 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: string | null
-=======
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     databaseId?: string | null
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     items?: QuotationItemUncheckedCreateNestedManyWithoutProductInput
@@ -13920,18 +13794,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUpdateManyWithoutProductNestedInput
@@ -13947,19 +13815,13 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUncheckedUpdateManyWithoutProductNestedInput
@@ -13974,19 +13836,13 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: string | null
-=======
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     databaseId?: string | null
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
   }
@@ -14000,18 +13856,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -14025,19 +13875,13 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -15001,14 +14845,6 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -15055,19 +14891,13 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: SortOrder
-=======
-    templateText?: SortOrder
-    templateVariables?: SortOrder
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     databaseId?: SortOrder
-    hsnCode?: SortOrder
     gstRate?: SortOrder
     productCode?: SortOrder
   }
@@ -15087,18 +14917,13 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: SortOrder
-=======
-    templateText?: SortOrder
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     databaseId?: SortOrder
-    hsnCode?: SortOrder
     gstRate?: SortOrder
     productCode?: SortOrder
   }
@@ -15112,18 +14937,13 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
     hsnCode?: SortOrder
-=======
-    templateText?: SortOrder
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     databaseId?: SortOrder
-    hsnCode?: SortOrder
     gstRate?: SortOrder
     productCode?: SortOrder
   }
@@ -15793,10 +15613,6 @@ export namespace Prisma {
     deleteMany?: QuotationScalarWhereInput | QuotationScalarWhereInput[]
   }
 
-  export type ProductCreatetemplateVariablesInput = {
-    set: string[]
-  }
-
   export type QuotationItemCreateNestedManyWithoutProductInput = {
     create?: XOR<QuotationItemCreateWithoutProductInput, QuotationItemUncheckedCreateWithoutProductInput> | QuotationItemCreateWithoutProductInput[] | QuotationItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: QuotationItemCreateOrConnectWithoutProductInput | QuotationItemCreateOrConnectWithoutProductInput[]
@@ -15823,11 +15639,6 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type ProductUpdatetemplateVariablesInput = {
-    set?: string[]
-    push?: string | string[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -16703,14 +16514,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     database?: ProductDatabaseCreateNestedOneWithoutProductsInput
@@ -16725,15 +16534,13 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     databaseId?: string | null
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
   }
@@ -16792,47 +16599,8 @@ export namespace Prisma {
     create: XOR<QuotationCreateWithoutItemsInput, QuotationUncheckedCreateWithoutItemsInput>
   }
 
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
-  export type ProductCreateWithoutItemsInput = {
-    id?: string
-    name: string
-    description?: string
-    category?: string
-    sectionCode?: string
-    defaultRate: Decimal | DecimalJsLike | number | string
-    unit?: string
-    warranty?: string
-    hsnCode?: string | null
-    imagePath?: string | null
-    imageText?: string | null
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ProductUncheckedCreateWithoutItemsInput = {
-    id?: string
-    name: string
-    description?: string
-    category?: string
-    sectionCode?: string
-    defaultRate: Decimal | DecimalJsLike | number | string
-    unit?: string
-    warranty?: string
-    hsnCode?: string | null
-    imagePath?: string | null
-    imageText?: string | null
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ProductCreateOrConnectWithoutItemsInput = {
-    where: ProductWhereUniqueInput
-=======
   export type ProductUpsertWithoutItemsInput = {
     update: XOR<ProductUpdateWithoutItemsInput, ProductUncheckedUpdateWithoutItemsInput>
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
     create: XOR<ProductCreateWithoutItemsInput, ProductUncheckedCreateWithoutItemsInput>
     where?: ProductWhereInput
   }
@@ -16851,14 +16619,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     database?: ProductDatabaseUpdateOneWithoutProductsNestedInput
@@ -16873,15 +16639,13 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -16950,14 +16714,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     items?: QuotationItemCreateNestedManyWithoutProductInput
@@ -16972,53 +16734,17 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     items?: QuotationItemUncheckedCreateNestedManyWithoutProductInput
   }
 
-<<<<<<< HEAD:generated/prisma-client/index.d.ts
-  export type ProductUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    sectionCode?: StringFieldUpdateOperationsInput | string
-    defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    unit?: StringFieldUpdateOperationsInput | string
-    warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
-    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
-    imageText?: NullableStringFieldUpdateOperationsInput | string | null
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProductUncheckedUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    sectionCode?: StringFieldUpdateOperationsInput | string
-    defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    unit?: StringFieldUpdateOperationsInput | string
-    warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
-    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
-    imageText?: NullableStringFieldUpdateOperationsInput | string | null
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-=======
   export type ProductCreateOrConnectWithoutDatabaseInput = {
     where: ProductWhereUniqueInput
     create: XOR<ProductCreateWithoutDatabaseInput, ProductUncheckedCreateWithoutDatabaseInput>
@@ -17057,18 +16783,15 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
-    templateText?: StringNullableFilter<"Product"> | string | null
-    templateVariables?: StringNullableListFilter<"Product">
+    hsnCode?: StringNullableFilter<"Product"> | string | null
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     databaseId?: StringNullableFilter<"Product"> | string | null
-    hsnCode?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableFilter<"Product"> | string | null
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index.d.ts
   }
 
   export type QuotationCreateManyCustomerInput = {
@@ -17318,14 +17041,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    templateText?: string | null
-    templateVariables?: ProductCreatetemplateVariablesInput | string[]
+    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
   }
@@ -17339,14 +17060,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUpdateManyWithoutProductNestedInput
@@ -17361,14 +17080,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUncheckedUpdateManyWithoutProductNestedInput
@@ -17383,14 +17100,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    templateText?: NullableStringFieldUpdateOperationsInput | string | null
-    templateVariables?: ProductUpdatetemplateVariablesInput | string[]
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }

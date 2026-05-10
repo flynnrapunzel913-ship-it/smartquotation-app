@@ -111,12 +111,12 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
           </div>
         ) : (
           databases.map((db) => (
-            <div key={db.id} className={`card p-6 flex flex-col justify-between border-2 transition-all ${db.isActive ? "border-blue-500 ring-4 ring-blue-50" : "border-transparent hover:border-slate-200"}`}>
+            <div key={db.id} className={`card p-6 flex flex-col justify-between border-2 transition-all ${db.isActive ? "border-indigo-500 ring-4 ring-indigo-50" : "border-transparent hover:border-slate-200"}`}>
               <div>
                 <div className="flex justify-between items-start mb-4">
                   <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-2xl">📦</div>
                   {db.isActive && (
-                    <span className="badge badge-blue text-[10px] py-1 px-3">Active Database</span>
+                    <span className="badge" style={{ background: "#e0e7ff", color: "#4338ca", fontSize: "10px", padding: "4px 12px", borderRadius: "9999px", fontWeight: "600" }}>Active Database</span>
                   )}
                 </div>
                 
@@ -137,7 +137,7 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
                   <div className="mb-4">
                     <h4 className="text-lg font-bold text-[#1e293b] flex items-center gap-2 group">
                       {db.name}
-                      <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500 text-xs font-medium" onClick={() => startRename(db)}>Rename</button>
+                      <button className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-500 text-xs font-medium" onClick={() => startRename(db)}>Rename</button>
                     </h4>
                     <p className="text-sm text-[#64748b] mt-1">{db._count.products} Products Found</p>
                   </div>
@@ -157,7 +157,7 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
                     View Products
                   </button>
                   <button 
-                    className={`text-xs font-bold py-2.5 rounded-lg transition-all ${db.isActive ? "bg-emerald-50 text-emerald-600 cursor-default" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                    className={`text-xs font-bold py-2.5 rounded-lg transition-all ${db.isActive ? "bg-emerald-50 text-emerald-600 cursor-default" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}
                     onClick={() => toggleActive(db.id, db.isActive)}
                   >
                     {db.isActive ? "✓ Currently Active" : "Set Active"}

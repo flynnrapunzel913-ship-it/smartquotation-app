@@ -1,10 +1,8 @@
-Great! Now that the app is running and conflicts are resolved, you can push the changes to GitHub:
+I have updated the global styles in `globals.css` with a premium design system:
+- **Colors**: Deep Indigo and vibrant gradients.
+- **Typography**: Better spacing and font smoothing.
+- **Effects**: Smooth transitions and glassmorphism.
 
-1. Open your terminal.
-2. Run these commands:
+This will affect the *entire* app and make it look more professional and aesthetic!
 
-git add .
-git commit -m "Resolve merge conflicts and fix generate-docx errors"
-git push
-
-That's it! Your changes will be on GitHub.
+Next, I will update specific components (like the wizard and catalog) to leverage these new styles better.

@@ -82,26 +82,54 @@ export default function ProductPicker({ value, onChange, placeholder, className,
         onChange={handleInputChange}
         onFocus={() => setIsOpen(true)}
         placeholder={placeholder}
-        style={{ width: "100%" }}
+        style={{ 
+          width: "100%",
+          padding: "12px 16px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "10px",
+          fontSize: "0.875rem",
+          boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+          transition: "all 0.2s"
+        }}
+        onFocusCapture={(e) => e.currentTarget.style.borderColor = "#4f46e5"}
+        onBlurCapture={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
       />
       
       {isOpen && (filteredProducts.length > 0 || searchTerm !== "") && (
-        <div className="product-dropdown" style={{ maxHeight: "300px", overflowY: "auto", position: "absolute", zIndex: 10, width: "100%", background: "white", border: "1px solid #ddd", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}>
+        <div className="product-dropdown" style={{ 
+          maxHeight: "300px", 
+          overflowY: "auto", 
+          position: "absolute", 
+          zIndex: 100, 
+          width: "100%", 
+          background: "white", 
+          border: "1px solid #e2e8f0", 
+          borderRadius: "12px",
+          marginTop: "4px",
+          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" 
+        }}>
           {filteredProducts.map((product) => (
             <div
               key={product.id}
               className="product-item"
               onClick={() => handleSelect(product)}
-              style={{ padding: "8px", borderBottom: "1px solid #eee", cursor: "pointer" }}
+              style={{ 
+                padding: "12px 16px", 
+                borderBottom: "1px solid #f1f5f9", 
+                cursor: "pointer",
+                transition: "background 0.2s"
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = "#f8fafc"}
+              onMouseOut={(e) => e.currentTarget.style.background = "white"}
             >
-              <div style={{ fontWeight: "500", fontSize: "14px" }}>{product.name}</div>
-              <div style={{ fontSize: "11px", color: "#64748b" }}>
+              <div style={{ fontWeight: "600", fontSize: "0.875rem", color: "#0f172a" }}>{product.name}</div>
+              <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>
                 {product.code ? `Code: ${product.code} • ` : ""}{product.category} • ₹{Number(product.defaultRate).toLocaleString()}
               </div>
             </div>
           ))}
           {filteredProducts.length === 0 && (
-            <div style={{ padding: "12px", color: "#94a3b8", fontSize: "14px", textAlign: "center" }}>
+            <div style={{ padding: "16px", color: "#94a3b8", fontSize: "0.875rem", textAlign: "center" }}>
               No matching products found.
             </div>
           )}

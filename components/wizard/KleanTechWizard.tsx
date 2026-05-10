@@ -244,38 +244,38 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
         ))}
       </div>
 
-      <div className="wizard-step-content" style={{ padding: "20px", background: "white", borderRadius: "8px", marginTop: "20px" }}>
+      <div className="wizard-step-content" style={{ padding: "32px", background: "white", borderRadius: "12px", marginTop: "24px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)" }}>
         {step === 1 && (
           <div>
-            <h2>Step 1: Quotation Details</h2>
-            <div className="form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 1: Quotation Details</h2>
+            <div className="form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
               <div className="form-group" style={{ gridColumn: "span 2" }}>
                 <label>Date</label>
-                <input type="date" className="form-control" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                <input type="date" className="form-control" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} />
               </div>
               <div className="form-group" style={{ gridColumn: "span 2" }}>
                 <label>Invoice To Company Name</label>
-                <input type="text" className="form-control" value={formData.invoiceToName} onChange={(e) => handleInputChange("invoiceToName", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                <input type="text" className="form-control" value={formData.invoiceToName} onChange={(e) => handleInputChange("invoiceToName", e.target.value)} placeholder="Enter company name" />
               </div>
               <div className="form-group" style={{ gridColumn: "span 2" }}>
                 <label>Invoice To Address</label>
-                <textarea className="form-control" value={formData.invoiceToAddress} onChange={(e) => handleInputChange("invoiceToAddress", e.target.value)} style={{ width: "100%", padding: "8px", minHeight: "80px" }} />
+                <textarea className="form-control" value={formData.invoiceToAddress} onChange={(e) => handleInputChange("invoiceToAddress", e.target.value)} placeholder="Enter full address" style={{ minHeight: "100px" }} />
               </div>
               <div className="form-group">
                 <label>GST Percentage</label>
-                <input type="number" className="form-control" value={formData.gstPercent} onChange={(e) => handleInputChange("gstPercent", parseFloat(e.target.value))} style={{ width: "100%", padding: "8px" }} />
+                <input type="number" className="form-control" value={formData.gstPercent} onChange={(e) => handleInputChange("gstPercent", parseFloat(e.target.value))} />
               </div>
               <div className="form-group">
                 <label>Carrying & Forwarding %</label>
-                <input type="number" className="form-control" value={formData.carryingForwardPercent} onChange={(e) => handleInputChange("carryingForwardPercent", parseFloat(e.target.value))} style={{ width: "100%", padding: "8px" }} />
+                <input type="number" className="form-control" value={formData.carryingForwardPercent} onChange={(e) => handleInputChange("carryingForwardPercent", parseFloat(e.target.value))} />
               </div>
               <div className="form-group">
                 <label>Freight Type</label>
-                <input type="text" className="form-control" value={formData.freightType} onChange={(e) => handleInputChange("freightType", e.target.value)} style={{ width: "100%", padding: "8px" }} />
+                <input type="text" className="form-control" value={formData.freightType} onChange={(e) => handleInputChange("freightType", e.target.value)} />
               </div>
               <div className="form-group">
                 <label>Service Charges (Optional)</label>
-                <input type="number" className="form-control" value={formData.serviceCharges} onChange={(e) => handleInputChange("serviceCharges", parseFloat(e.target.value))} style={{ width: "100%", padding: "8px" }} />
+                <input type="number" className="form-control" value={formData.serviceCharges} onChange={(e) => handleInputChange("serviceCharges", parseFloat(e.target.value))} />
               </div>
             </div>
           </div>
@@ -283,8 +283,8 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
 
         {step === 2 && (
           <div>
-            <h2>Step 2: Add Products</h2>
-            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 2: Add Products</h2>
+            <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
               {/* Left Column - 70% */}
               <div style={{ flex: "0 0 70%", maxWidth: "70%" }}>
                 <CategoryTabs activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
@@ -293,42 +293,42 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
 
               {/* Right Column - 30% */}
               <div style={{ flex: "0 0 30%", maxWidth: "30%", position: "sticky", top: "20px" }}>
-                <div style={{ background: "#f8fafc", padding: "15px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
-                  <h3 style={{ marginTop: 0, fontSize: "16px", fontWeight: "600", borderBottom: "1px solid #e2e8f0", paddingBottom: "10px", marginBottom: "15px" }}>Selected Items</h3>
+                <div style={{ background: "white", padding: "20px", borderRadius: "12px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)" }}>
+                  <h3 style={{ marginTop: 0, fontSize: "1rem", fontWeight: "700", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px", marginBottom: "16px" }}>Selected Items</h3>
                   
                   <div style={{ maxHeight: "400px", overflowY: "auto" }}>
                     {formData.items.length === 0 ? (
-                      <p style={{ textAlign: "center", color: "#94a3b8", padding: "20px 0" }}>No items selected yet.</p>
+                      <p style={{ textAlign: "center", color: "#94a3b8", padding: "20px 0", fontSize: "0.875rem" }}>No items selected yet.</p>
                     ) : (
                       formData.items.map((item, idx) => (
-                        <div key={idx} style={{ display: "flex", gap: "10px", marginBottom: "15px", borderBottom: "1px solid #f1f5f9", paddingBottom: "10px" }}>
-                          <div style={{ width: "40px", height: "40px", background: "#e2e8f0", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                        <div key={idx} style={{ display: "flex", gap: "12px", marginBottom: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
+                          <div style={{ width: "48px", height: "48px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                             {item.imagePath ? (
                               <img src={item.imagePath} alt={item.description} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
                             ) : (
-                              <span style={{ fontSize: "8px", color: "#64748b" }}>No Image</span>
+                              <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "500" }}>No Image</span>
                             )}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontWeight: "500", fontSize: "13px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.description}</div>
-                            <div style={{ fontSize: "11px", color: "#64748b" }}>{item.quantity} x ₹ {item.unitPrice.toLocaleString()}</div>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "5px" }}>
-                              <span style={{ fontWeight: "600", fontSize: "13px" }}>₹ {item.lineTotal.toLocaleString()}</span>
-                              <div style={{ display: "flex", gap: "5px" }}>
+                            <div style={{ fontWeight: "600", fontSize: "0.875rem", color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.description}</div>
+                            <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>{item.quantity} x ₹ {item.unitPrice.toLocaleString()}</div>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
+                              <span style={{ fontWeight: "700", fontSize: "0.875rem", color: "#0f172a" }}>₹ {item.lineTotal.toLocaleString()}</span>
+                              <div style={{ display: "flex", gap: "4px" }}>
                                 <button 
                                   type="button" 
                                   onClick={() => handleUpdateQuantity(idx, Math.max(1, item.quantity - 1))}
-                                  style={{ padding: "1px 5px", background: "#cbd5e1", border: "none", borderRadius: "3px", cursor: "pointer" }}
+                                  style={{ width: "24px", height: "24px", background: "white", border: "1px solid #e2e8f0", borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", color: "#475569", fontWeight: "600" }}
                                 >-</button>
                                 <button 
                                   type="button" 
                                   onClick={() => handleUpdateQuantity(idx, item.quantity + 1)}
-                                  style={{ padding: "1px 5px", background: "#cbd5e1", border: "none", borderRadius: "3px", cursor: "pointer" }}
+                                  style={{ width: "24px", height: "24px", background: "white", border: "1px solid #e2e8f0", borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", color: "#475569", fontWeight: "600" }}
                                 >+</button>
                                 <button 
                                   type="button" 
                                   onClick={() => deleteItem(idx)}
-                                  style={{ padding: "1px 5px", background: "#fee2e2", color: "#ef4444", border: "none", borderRadius: "3px", cursor: "pointer", marginLeft: "5px" }}
+                                  style={{ width: "24px", height: "24px", background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", marginLeft: "4px" }}
                                 >✕</button>
                               </div>
                             </div>
@@ -338,16 +338,16 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
                     )}
                   </div>
 
-                  <div style={{ marginTop: "15px", borderTop: "1px solid #e2e8f0", paddingTop: "10px", fontSize: "14px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
+                  <div style={{ marginTop: "16px", borderTop: "1px solid #e2e8f0", paddingTop: "12px", fontSize: "0.875rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", color: "#64748b" }}>
                       <span>Subtotal:</span>
-                      <span>₹ {subtotal.toFixed(2)}</span>
+                      <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {subtotal.toFixed(2)}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", color: "#64748b" }}>
                       <span>GST ({formData.gstPercent}%):</span>
-                      <span>₹ {gstAmount.toFixed(2)}</span>
+                      <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {gstAmount.toFixed(2)}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: "#0369a1", fontSize: "16px", marginTop: "10px", borderTop: "1px solid #e2e8f0", paddingTop: "10px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "700", color: "#4f46e5", fontSize: "1rem", marginTop: "12px", borderTop: "1px solid #e2e8f0", paddingTop: "12px" }}>
                       <span>Grand Total:</span>
                       <span>₹ {grandTotal.toFixed(2)}</span>
                     </div>
@@ -360,47 +360,66 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
 
         {step === 3 && (
           <div>
-            <h2>Step 3: Terms & Conditions</h2>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 3: Terms & Conditions</h2>
             <div className="form-group">
               <label>Terms & Conditions</label>
-              <textarea className="form-control" value={formData.termsAndConditions} onChange={(e) => handleInputChange("termsAndConditions", e.target.value)} style={{ width: "100%", padding: "8px", minHeight: "150px" }} />
+              <textarea className="form-control" value={formData.termsAndConditions} onChange={(e) => handleInputChange("termsAndConditions", e.target.value)} style={{ minHeight: "150px" }} />
             </div>
-            <div className="form-group" style={{ marginTop: "15px" }}>
+            <div className="form-group" style={{ marginTop: "20px" }}>
               <label>Payment Terms</label>
-              <textarea className="form-control" value={formData.paymentTerms} onChange={(e) => handleInputChange("paymentTerms", e.target.value)} style={{ width: "100%", padding: "8px", minHeight: "80px" }} />
+              <textarea className="form-control" value={formData.paymentTerms} onChange={(e) => handleInputChange("paymentTerms", e.target.value)} style={{ minHeight: "100px" }} />
             </div>
           </div>
         )}
 
         {step === 4 && (
           <div>
-            <h2>Step 4: Preview & Generate</h2>
-            <div style={{ padding: "20px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
-              <h3>Quotation Summary</h3>
-              <p><strong>Subtotal:</strong> ₹ {subtotal.toFixed(2)}</p>
-              <p><strong>Carrying & Forwarding (C&F):</strong> ₹ {carryingForwardCharge.toFixed(2)}</p>
-              <p><strong>Service Charges:</strong> ₹ {formData.serviceCharges.toFixed(2)}</p>
-              <p><strong>Taxable Amount:</strong> ₹ {taxableAmount.toFixed(2)}</p>
-              <p><strong>GST ({formData.gstPercent}%):</strong> ₹ {gstAmount.toFixed(2)}</p>
-              <hr style={{ margin: "10px 0" }} />
-              <p style={{ fontSize: "18px", color: "#0369a1" }}><strong>Grand Total:</strong> ₹ {grandTotal.toFixed(2)}</p>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 4: Preview & Generate</h2>
+            <div style={{ padding: "24px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+              <h3 style={{ marginTop: 0, fontSize: "1rem", fontWeight: "700", color: "#0f172a", marginBottom: "16px" }}>Quotation Summary</h3>
+              <div style={{ display: "grid", gap: "12px", fontSize: "0.875rem", color: "#475569" }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span>Subtotal:</span>
+                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {subtotal.toFixed(2)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span>Carrying & Forwarding (C&F):</span>
+                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {carryingForwardCharge.toFixed(2)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span>Service Charges:</span>
+                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {formData.serviceCharges.toFixed(2)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid #e2e8f0" }}>
+                  <span>Taxable Amount:</span>
+                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {taxableAmount.toFixed(2)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span>GST ({formData.gstPercent}%):</span>
+                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {gstAmount.toFixed(2)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.125rem", fontWeight: "700", color: "#4f46e5", paddingTop: "12px", borderTop: "1px solid #e2e8f0" }}>
+                  <span>Grand Total:</span>
+                  <span>₹ {grandTotal.toFixed(2)}</span>
+                </div>
+              </div>
             </div>
-            <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
-              <button className="btn" style={{ background: "#10b981", color: "white" }} onClick={() => handleSubmit(false)}>Save & Generate</button>
-              <button className="btn btn-outline" onClick={() => setStep(1)}>Edit</button>
+            <div style={{ marginTop: "24px", display: "flex", gap: "12px" }}>
+              <button className="btn btn-primary" style={{ background: "linear-gradient(135deg, #059669 0%, #10b981 100%)" }} onClick={() => handleSubmit(false)}>Save & Generate</button>
+              <button className="btn btn-secondary" onClick={() => setStep(1)}>Edit Details</button>
             </div>
           </div>
         )}
       </div>
 
-      <div className="wizard-footer" style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
+      <div className="wizard-footer" style={{ marginTop: "32px", display: "flex", justifyContent: "space-between" }}>
         {step > 1 && (
-          <button className="btn btn-outline" onClick={() => setStep(step - 1)}>← Previous</button>
+          <button className="btn btn-secondary" onClick={() => setStep(step - 1)}>← Previous</button>
         )}
         {step === 1 && <div></div>}
         
         {step < 4 ? (
-          <button className="btn" style={{ background: "#0f172a", color: "white" }} onClick={() => setStep(step + 1)}>Next Step →</button>
+          <button className="btn btn-primary" onClick={() => setStep(step + 1)}>Next Step →</button>
         ) : (
           <div></div>
         )}

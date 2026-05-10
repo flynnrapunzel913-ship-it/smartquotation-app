@@ -29,27 +29,25 @@ model Customer {
 }
 
 model Product {
-  id                String           @id @default(cuid())
-  name              String
-  description       String           @default("")
-  category          String           @default("General")
-  sectionCode       String           @default("A")
-  defaultRate       Decimal          @db.Decimal(14, 2)
-  unit              String           @default("Nos")
-  warranty          String           @default("")
-  templateText      String?          @default("")
-  templateVariables String[]
-  imagePath         String?
-  imageText         String?
-  sortOrder         Int              @default(0)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  items             QuotationItem[]
-  databaseId        String?
-  database          ProductDatabase? @relation(fields: [databaseId], references: [id])
-  hsnCode           String?
-  gstRate           Decimal?         @db.Decimal(5, 2)
-  productCode       String?
+  id          String           @id @default(cuid())
+  name        String
+  description String           @default("")
+  category    String           @default("General")
+  sectionCode String           @default("A")
+  defaultRate Decimal          @db.Decimal(14, 2)
+  unit        String           @default("Nos")
+  warranty    String           @default("")
+  hsnCode     String?          @default("")
+  imagePath   String?          @db.Text
+  imageText   String?          @db.Text
+  sortOrder   Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  items       QuotationItem[]
+  databaseId  String?
+  database    ProductDatabase? @relation(fields: [databaseId], references: [id])
+  gstRate     Decimal?         @db.Decimal(5, 2)
+  productCode String?
 
   @@index([name])
   @@index([category])

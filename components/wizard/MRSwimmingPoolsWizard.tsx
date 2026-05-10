@@ -597,34 +597,57 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
               {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
               {!isTemplate && <span className="badge custom">Custom</span>}
             </div>
-            <div style={{ display: "flex", gap: "8px" }}>
-              <button className="btn-icon" onClick={() => {
-                updateItem(idx, "isExpanded", !item.isExpanded);
-              }}>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <button 
+                className="btn btn-outline btn-sm" 
+                style={{ padding: "6px 12px", fontSize: "12px" }}
+                onClick={() => updateItem(idx, "isExpanded", !item.isExpanded)}
+              >
                 {item.isExpanded ? "Done Editing" : "Edit Paragraph"}
               </button>
               {item.descriptionOverride && (
-                <button className="btn-icon" onClick={() => resetDescription(idx)}>Reset</button>
+                <button 
+                  className="btn btn-outline btn-sm" 
+                  style={{ padding: "6px 12px", fontSize: "12px", color: "#dc2626" }}
+                  onClick={() => resetDescription(idx)}
+                >
+                  Reset
+                </button>
               )}
-              <button className="btn-icon delete" onClick={() => deleteItem(idx)} title="Delete Item">✕</button>
+              <button 
+                className="btn-icon" 
+                style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "4px", width: "28px", height: "28px", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                onClick={() => deleteItem(idx)} 
+                title="Delete Item"
+              >
+                ✕
+              </button>
             </div>
           </div>
 
-          <div className="product-card-description-preview">
+          <div className="product-card-description-preview" style={{ background: "#f8fafc", padding: "16px", borderRadius: "8px", borderLeft: "4px solid #4f46e5", marginTop: "12px" }}>
             {(item.description || "").split("\n").map((line, i) => (
               <div key={i} style={{
-                color: line.toUpperCase().includes("MAKE :") ? "#1e40af" : "inherit",
-                fontWeight: line.toUpperCase().includes("MAKE :") ? 700 : 400
+                color: line.toUpperCase().includes("MAKE :") ? "#1e40af" : "#475569",
+                fontWeight: line.toUpperCase().includes("MAKE :") ? 700 : 400,
+                fontSize: "14px",
+                lineHeight: "1.6"
               }}>{line}</div>
             ))}
           </div>
 
           {isTemplate && templateVariables.length > 0 && (
-            <div className="product-card-variables">
+            <div className="product-card-variables" style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginTop: "12px", background: "#f8fafc", padding: "12px", borderRadius: "8px" }}>
               {templateVariables.map(v => (
-                <div key={v} className="variable-field">
-                  <label>{v.replace(/([A-Z])/g, ' $1').toLowerCase()}</label>
-                  <input type="text" value={item.variableValues?.[v] || ""} onChange={(e) => updateVariable(idx, v, e.target.value)} />
+                <div key={v} className="variable-field" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <label style={{ fontSize: "11px", fontWeight: "700", color: "#64748b", textTransform: "uppercase" }}>{v.replace(/([A-Z])/g, ' $1').toLowerCase()}</label>
+                  <input 
+                    type="text" 
+                    className="form-control"
+                    style={{ height: "36px", padding: "0 12px", fontSize: "13px", width: "150px" }}
+                    value={item.variableValues?.[v] || ""} 
+                    onChange={(e) => updateVariable(idx, v, e.target.value)} 
+                  />
                 </div>
               ))}
             </div>
@@ -677,17 +700,21 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
   return (
     <div className="wizard-container">
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${(step / 9) * 100}%` }}></div>
+      <div className="progress-bar" style={{ height: "6px", background: "#e2e8f0", borderRadius: "3px", overflow: "hidden", marginBottom: "32px" }}>
+        <div className="progress-fill" style={{ width: `${(step / 9) * 100}%`, height: "100%", background: "linear-gradient(to right, #6366f1, #4f46e5)", transition: "width 0.3s ease" }}></div>
       </div>
 
-      <div className="wizard-header">
+      <div className="wizard-header" style={{ marginBottom: "32px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <h1>{STEPS[step - 1].name}</h1>
-            <p style={{ color: "#64748b" }}>Step {step} of 9</p>
+            <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#0f172a", marginBottom: "4px" }}>{STEPS[step - 1].name}</h1>
+            <p style={{ color: "#64748b", fontSize: "0.875rem" }}>Step {step} of 9</p>
           </div>
-          {lastSaved && <span style={{ fontSize: "11px", color: "#94a3b8" }}>Autosaved {lastSaved.toLocaleTimeString()}</span>}
+          {lastSaved && (
+            <span style={{ fontSize: "0.75rem", color: "#64748b", background: "#f8fafc", padding: "6px 12px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
+              Autosaved {lastSaved.toLocaleTimeString()}
+            </span>
+          )}
         </div>
       </div>
 
@@ -704,15 +731,15 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         </div>
       )}
 
-      <div className="wizard-step-content">
+      <div className="wizard-step-content" style={{ padding: "32px", background: "white", borderRadius: "12px", marginTop: "24px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)" }}>
         {step === 1 && (
           <div className="metrics-grid">
             <div className="form-grid">
-              <div className="form-group"><label>Client Name</label><input type="text" className="form-control" value={formData.customerName} onChange={(e) => handleInputChange("customerName", e.target.value)} /></div>
-              <div className="form-group"><label>Date</label><input type="date" className="form-control" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} /></div>
-              <div className="form-group" style={{ gridColumn: "span 2" }}><label>Site Address</label><textarea className="form-control" value={formData.customerAddress} onChange={(e) => handleInputChange("customerAddress", e.target.value)} /></div>
-              <div className="form-group"><label>Phone Number (Optional)</label><input type="text" className="form-control" value={formData.customerPhone} onChange={(e) => handleInputChange("customerPhone", e.target.value)} /></div>
-              <div className="form-group" style={{ gridColumn: "span 2" }}><label>Quotation Title</label><input type="text" className="form-control" value={formData.title} onChange={(e) => handleInputChange("title", e.target.value)} /></div>
+              <div className="form-group"><label>Client Name</label><input type="text" className="form-control" value={formData.customerName || ""} onChange={(e) => handleInputChange("customerName", e.target.value)} /></div>
+              <div className="form-group"><label>Date</label><input type="date" className="form-control" value={formData.date || ""} onChange={(e) => handleInputChange("date", e.target.value)} /></div>
+              <div className="form-group" style={{ gridColumn: "span 2" }}><label>Site Address</label><textarea className="form-control" value={formData.customerAddress || ""} onChange={(e) => handleInputChange("customerAddress", e.target.value)} /></div>
+              <div className="form-group"><label>Phone Number (Optional)</label><input type="text" className="form-control" value={formData.customerPhone || ""} onChange={(e) => handleInputChange("customerPhone", e.target.value)} /></div>
+              <div className="form-group" style={{ gridColumn: "span 2" }}><label>Quotation Title</label><input type="text" className="form-control" value={formData.title || ""} onChange={(e) => handleInputChange("title", e.target.value)} /></div>
             </div>
           </div>
         )}
@@ -800,7 +827,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             <div className="form-group" style={{ marginTop: "12px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
             
             <div style={{ marginTop: "40px", textAlign: "center" }}>
-              <button className="btn-primary" onClick={nextStep}>Calculate Metrics →</button>
+              <button className="btn btn-primary" onClick={nextStep}>Calculate Metrics →</button>
             </div>
           </div>
         )}
@@ -847,7 +874,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
               })}
             </div>
             <div style={{ marginTop: "40px", textAlign: "center" }}>
-              <button className="btn-primary" onClick={nextStep}>Looks Correct, Continue →</button>
+              <button className="btn btn-primary" onClick={nextStep}>Looks Correct, Continue →</button>
             </div>
           </div>
         )}
@@ -984,14 +1011,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         )}
       </div>
 
-      <div className="sticky-footer">
+      <div className="wizard-footer" style={{ marginTop: "40px", paddingTop: "24px", borderTop: "1px solid #e2e8f0" }}>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          {step > 1 && <button className="btn-secondary" onClick={prevStep}>← Back</button>}
-          {step < 9 && <button className="btn-icon" style={{ border: "1px solid #fecaca", color: "#ef4444" }} onClick={resetPhase} title="Reset this phase to defaults">Reset Phase</button>}
+          {step > 1 && <button className="btn btn-outline" onClick={prevStep}>← Back</button>}
+          {step < 9 && <button className="btn btn-outline" style={{ color: "#ef4444", borderColor: "#fecaca" }} onClick={resetPhase} title="Reset this phase to defaults">Reset Phase</button>}
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
-          {step < 9 && <button className="btn-secondary" disabled={isSubmitting} onClick={() => handleSubmit(true)}>Save Draft</button>}
-          {step < 9 && <button className="btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : "Next Step →"}</button>}
+          {step < 9 && <button className="btn btn-outline" disabled={isSubmitting} onClick={() => handleSubmit(true)}>Save Draft</button>}
+          {step < 9 && <button className="btn btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : "Next Step →"}</button>}
         </div>
       </div>
     </div>

@@ -149,19 +149,13 @@ exports.Prisma.ProductScalarFieldEnum = {
   defaultRate: 'defaultRate',
   unit: 'unit',
   warranty: 'warranty',
-<<<<<<< HEAD:generated/prisma-client/index-browser.js
   hsnCode: 'hsnCode',
-=======
-  templateText: 'templateText',
-  templateVariables: 'templateVariables',
->>>>>>> 32ae0989bc62045230273a6e09c1a054537f4636:generated-client/index-browser.js
   imagePath: 'imagePath',
   imageText: 'imageText',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   databaseId: 'databaseId',
-  hsnCode: 'hsnCode',
   gstRate: 'gstRate',
   productCode: 'productCode'
 };

@@ -114,22 +114,38 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
   const filteredProducts = getFilteredAndSortedProducts();
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      <div style={{ display: "flex", gap: "15px", marginBottom: "15px", alignItems: "center" }}>
-        <div style={{ flex: 1 }}>
+    <div style={{ marginTop: "24px" }}>
+      <div style={{ display: "flex", gap: "16px", marginBottom: "20px", alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ flex: 1, minWidth: "250px" }}>
           <input
             type="text"
             placeholder="Search by name, code or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+            style={{ 
+              width: "100%", 
+              padding: "12px 16px", 
+              borderRadius: "10px", 
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+              fontSize: "0.875rem",
+              transition: "all 0.2s"
+            }}
           />
         </div>
         <div>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            style={{ padding: "10px", borderRadius: "6px", border: "1px solid #cbd5e1", background: "white" }}
+            style={{ 
+              padding: "12px 16px", 
+              borderRadius: "10px", 
+              border: "1px solid #e2e8f0", 
+              background: "white",
+              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+              fontSize: "0.875rem",
+              cursor: "pointer"
+            }}
           >
             <option value="name">Sort by Name</option>
             <option value="price_low">Price (Low to High)</option>
@@ -141,46 +157,59 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
           onClick={handleBulkAdd}
           disabled={checkedProductIds.size === 0}
           style={{
-            padding: "10px 16px",
-            background: checkedProductIds.size === 0 ? "#94a3b8" : "#10b981",
+            padding: "12px 20px",
+            background: checkedProductIds.size === 0 
+              ? "#cbd5e1" 
+              : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
             color: "white",
             border: "none",
-            borderRadius: "6px",
+            borderRadius: "10px",
             cursor: checkedProductIds.size === 0 ? "not-allowed" : "pointer",
-            fontWeight: "500",
-            transition: "background 0.2s"
+            fontWeight: "600",
+            fontSize: "0.875rem",
+            boxShadow: checkedProductIds.size === 0 ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+            transition: "all 0.2s"
           }}
         >
-          Add Selected Products (${checkedProductIds.size})
+          Add Selected Products ({checkedProductIds.size})
         </button>
       </div>
 
-      <div style={{ maxHeight: "500px", overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: "8px" }}>
+      <div style={{ 
+        maxHeight: "500px", 
+        overflowY: "auto", 
+        border: "1px solid #e2e8f0", 
+        borderRadius: "12px",
+        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        background: "white"
+      }}>
         <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
           <thead style={{ background: "#f8fafc", position: "sticky", top: 0, zIndex: 1 }}>
             <tr>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Select</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Image</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Code</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Product Name</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Description</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>HSN</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Unit Price</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Qty</th>
-              <th style={{ padding: "12px", borderBottom: "1px solid #e2e8f0" }}>Action</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Select</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Image</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Code</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Name</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Description</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>HSN</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Unit Price</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Qty</th>
+              <th style={{ padding: "14px 16px", borderBottom: "2px solid #e2e8f0", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Action</th>
             </tr>
           </thead>
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={8} style={{ padding: "20px", textAlign: "center", color: "#64748b" }}>
-                  Loading products...
+                <td colSpan={9} style={{ padding: "32px", textAlign: "center", color: "#64748b", fontSize: "0.875rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                    <span>Loading products...</span>
+                  </div>
                 </td>
               </tr>
             )}
             {error && (
               <tr>
-                <td colSpan={8} style={{ padding: "20px", textAlign: "center", color: "#ef4444" }}>
+                <td colSpan={9} style={{ padding: "32px", textAlign: "center", color: "#ef4444", fontSize: "0.875rem" }}>
                   Error: {error}
                 </td>
               </tr>
@@ -195,19 +224,30 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
                   key={product.id} 
                   style={{ 
                     borderBottom: "1px solid #e2e8f0",
-                    background: isChecked ? "#f0f9ff" : "inherit"
+                    background: isChecked ? "#f0f9ff" : "inherit",
+                    transition: "background 0.2s"
                   }}
                 >
-                  <td style={{ padding: "12px", textAlign: "center" }}>
+                  <td style={{ padding: "14px 16px", textAlign: "center" }}>
                     <input
                       type="checkbox"
                       checked={isChecked}
                       onChange={(e) => handleCheckboxChange(product.id, e.target.checked)}
-                      style={{ width: "18px", height: "18px", cursor: "pointer" }}
+                      style={{ width: "18px", height: "18px", cursor: "pointer", accentColor: "#4f46e5" }}
                     />
                   </td>
-                  <td style={{ padding: "12px" }}>
-                    <div style={{ width: "50px", height: "50px", background: "#f1f5f9", borderRadius: "#4px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  <td style={{ padding: "14px 16px" }}>
+                    <div style={{ 
+                      width: "60px", 
+                      height: "60px", 
+                      background: "#f8fafc", 
+                      borderRadius: "8px", 
+                      border: "1px solid #e2e8f0",
+                      display: "flex", 
+                      alignItems: "center", 
+                      justifyContent: "center", 
+                      overflow: "hidden" 
+                    }}>
                       {product.imagePath ? (
                         <img 
                           src={product.imagePath.startsWith("/") ? product.imagePath : `/${product.imagePath}`} 
@@ -215,34 +255,41 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
                           style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} 
                         />
                       ) : (
-                        <span style={{ fontSize: "10px", color: "#94a3b8" }}>No Image</span>
+                        <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "500" }}>No Image</span>
                       )}
                     </div>
                   </td>
-                  <td style={{ padding: "12px", fontWeight: "500", color: "#475569" }}>{product.code || "N/A"}</td>
-                  <td style={{ padding: "12px", fontWeight: "500" }}>{product.name}</td>
-                  <td style={{ padding: "12px", fontSize: "14px", color: "#64748b" }}>{product.description}</td>
-                  <td style={{ padding: "12px", color: "#64748b" }}>{product.hsnCode || "N/A"}</td>
-                  <td style={{ padding: "12px", fontWeight: "600" }}>₹ {Number(product.defaultRate).toLocaleString()}</td>
-                  <td style={{ padding: "12px" }}>
+                  <td style={{ padding: "14px 16px", fontWeight: "600", color: "#475569", fontSize: "0.875rem" }}>{product.code || "N/A"}</td>
+                  <td style={{ padding: "14px 16px", fontWeight: "600", color: "#1e293b", fontSize: "0.875rem" }}>{product.name}</td>
+                  <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#64748b", maxWidth: "250px" }}>{product.description}</td>
+                  <td style={{ padding: "14px 16px", color: "#64748b", fontSize: "0.875rem" }}>{product.hsnCode || "N/A"}</td>
+                  <td style={{ padding: "14px 16px", fontWeight: "700", color: "#0f172a", fontSize: "0.875rem" }}>₹ {Number(product.defaultRate).toLocaleString()}</td>
+                  <td style={{ padding: "14px 16px" }}>
                     {isChecked ? (
                       <QuantitySelector quantity={qty} onChange={(val) => handleQuantityChange(product.id, val)} />
                     ) : null}
                   </td>
-                  <td style={{ padding: "12px" }}>
+                  <td style={{ padding: "14px 16px" }}>
                     {isChecked ? (
                       <button
                         type="button"
                         onClick={() => onAddProduct(product, qty)}
                         style={{
-                          padding: "6px 12px",
-                          background: isAdded ? "#10b981" : "#0f172a",
+                          padding: "8px 16px",
+                          background: isAdded 
+                            ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" 
+                            : "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)",
                           color: "white",
                           border: "none",
-                          borderRadius: "4px",
+                          borderRadius: "8px",
                           cursor: "pointer",
-                          fontWeight: "500",
-                          width: "80px"
+                          fontWeight: "600",
+                          fontSize: "0.75rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                          width: "90px",
+                          boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.05)",
+                          transition: "all 0.2s"
                         }}
                       >
                         {isAdded ? "Update" : "Add"}
@@ -254,7 +301,7 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
             })}
             {!loading && !error && filteredProducts.length === 0 && (
               <tr>
-                <td colSpan={8} style={{ padding: "20px", textAlign: "center", color: "#94a3b8" }}>
+                <td colSpan={9} style={{ padding: "32px", textAlign: "center", color: "#94a3b8", fontSize: "0.875rem" }}>
                   No products found in this category.
                 </td>
               </tr>

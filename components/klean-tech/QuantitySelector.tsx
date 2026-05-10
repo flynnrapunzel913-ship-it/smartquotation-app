@@ -47,7 +47,15 @@ export default function QuantitySelector({ quantity, onChange }: Props) {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+    <div style={{ 
+      display: "inline-flex", 
+      alignItems: "center", 
+      gap: "4px",
+      border: "1px solid #e2e8f0",
+      borderRadius: "8px",
+      padding: "2px",
+      background: "#f8fafc"
+    }}>
       <button
         type="button"
         onMouseDown={() => startAutoChange(false)}
@@ -61,17 +69,22 @@ export default function QuantitySelector({ quantity, onChange }: Props) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#e2e8f0",
-          border: "none",
-          borderRadius: "4px",
+          background: "white",
+          border: "1px solid #e2e8f0",
+          borderRadius: "6px",
           cursor: "pointer",
-          fontWeight: "bold",
-          userSelect: "none"
+          fontWeight: "600",
+          color: "#475569",
+          userSelect: "none",
+          boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+          transition: "all 0.2s"
         }}
+        onMouseOver={(e) => e.currentTarget.style.borderColor = "#cbd5e1"}
+        onMouseOut={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
       >
         -
       </button>
-      <span style={{ minWidth: "24px", textAlign: "center", fontWeight: "500" }}>{quantity}</span>
+      <span style={{ minWidth: "32px", textAlign: "center", fontWeight: "600", color: "#0f172a", fontSize: "0.875rem" }}>{quantity}</span>
       <button
         type="button"
         onMouseDown={() => startAutoChange(true)}
@@ -85,13 +98,18 @@ export default function QuantitySelector({ quantity, onChange }: Props) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#e2e8f0",
-          border: "none",
-          borderRadius: "4px",
+          background: "white",
+          border: "1px solid #e2e8f0",
+          borderRadius: "6px",
           cursor: "pointer",
-          fontWeight: "bold",
-          userSelect: "none"
+          fontWeight: "600",
+          color: "#475569",
+          userSelect: "none",
+          boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+          transition: "all 0.2s"
         }}
+        onMouseOver={(e) => e.currentTarget.style.borderColor = "#cbd5e1"}
+        onMouseOut={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
       >
         +
       </button>
