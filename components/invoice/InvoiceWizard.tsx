@@ -116,13 +116,6 @@ export default function InvoiceWizard({ initialData }: Props) {
     }));
   };
 
-  const addItem = () => {
-    setFormData((prev) => ({
-      ...prev,
-      items: [...prev.items, { description: "", unitPrice: 0, qty: 1, total: 0 }],
-    }));
-  };
-
   const removeItem = (index: number) => {
     if (formData.items.length === 1) return;
     setFormData((prev) => ({
