@@ -433,11 +433,12 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   const updateItem = (index: number, field: keyof QuotationItemForm, value: any) => {
     setFormData((prev) => {
       const newItems = [...prev.items];
-      newItems[index] = { ...newItems[index], [field]: value };
+      const item = { ...newItems[index], [field]: value };
 
       if (field === "qty" || field === "rate") {
-        newItems[index].amount = Number(newItems[index].qty || 0) * Number(newItems[index].rate || 0);
+        item.amount = Number(item.qty || 0) * Number(item.rate || 0);
       }
+      newItems[index] = item;
       return { ...prev, items: newItems };
     });
     setHasUnsavedChanges(true);
@@ -530,9 +531,22 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
         <div className="product-card-content">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <h4 className="product-card-title">{displaySerial}. {item.category}</h4>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
+              <span style={{ fontWeight: 700, fontSize: "16px", color: "#64748b" }}>{displaySerial}.</span>
+              {!isTemplate ? (
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  style={{ fontWeight: 700, fontSize: "16px", border: "1px dashed #cbd5e1" }}
+                  value={item.category} 
+                  onChange={(e) => updateItem(idx, "category", e.target.value)}
+                  placeholder="Enter Product Name..."
+                />
+              ) : (
+                <h4 className="product-card-title">{item.category}</h4>
+              )}
               {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
+              {!isTemplate && <span className="badge custom">Custom</span>}
             </div>
             <div style={{ display: "flex", gap: "8px" }}>
               <button className="btn-icon" onClick={() => {
@@ -596,8 +610,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             <input type="number" className="form-control" value={item.rate} onChange={(e) => updateItem(idx, "rate", parseFloat(e.target.value))} />
           </div>
           <div className="form-group" style={{ gridColumn: "span 2" }}>
-            <label>Amount</label>
-            <div style={{ fontWeight: 700, fontSize: "16px", color: "#0369a1" }}>₹ {Number(item.amount || 0).toLocaleString("en-IN")}</div>
+            <label>Amount (₹)</label>
+            <input 
+              type="number" 
+              className="form-control" 
+              style={{ fontWeight: 700, color: "#0369a1" }}
+              value={item.amount} 
+              onChange={(e) => updateItem(idx, "amount", parseFloat(e.target.value))} 
+            />
           </div>
         </div>
       </div>
@@ -798,7 +818,9 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             <div key={sIdx}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                 <h3>Items for {formData.sections?.[sIdx - 4].title}</h3>
-                <button className="btn-secondary" onClick={() => {/* Add product logic */ }}>+ Add Product</button>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button className="btn-secondary" onClick={() => addItem(formData.sections?.[sIdx - 4].code || "A")}>+ Add Custom Product</button>
+                </div>
               </div>
               {formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).map((it, i) => {
                 const actualIdx = formData.items.findIndex(orig => orig === it);
@@ -842,7 +864,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h3>Part 2 - Pool Finishes</h3>
-              <button className="btn-secondary" onClick={() => resetPhase()}>Reset Phase</button>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button className="btn-secondary" onClick={() => addItem("Part 2")}>+ Add Custom Product</button>
+                <button className="btn-secondary" onClick={() => resetPhase()}>Reset Phase</button>
+              </div>
             </div>
             {formData.items.filter(it => it.section === "Part 2").map((it, i) => {
               const actualIdx = formData.items.findIndex(orig => orig === it);

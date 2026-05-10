@@ -86,6 +86,7 @@ export async function POST(req: Request) {
             imageUrl: item.imageUrl || null,
             productId: item.productId || null,
             variableValues: item.variableValues || {},
+            isCustom: (item as any).isCustom || false,
           })),
         },
       },
@@ -118,6 +119,7 @@ export async function POST(req: Request) {
             imageUrl: item.imageUrl || null,
             productId: item.productId || null,
             variableValues: item.variableValues || {},
+            isCustom: (item as any).isCustom || false,
           })),
         },
       }

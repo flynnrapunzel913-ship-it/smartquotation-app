@@ -391,6 +391,12 @@ textarea.form-control {
   color: #92400e;
 }
 
+.badge.custom {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
 .metric-body {
   display: flex;
   gap: 8px;
