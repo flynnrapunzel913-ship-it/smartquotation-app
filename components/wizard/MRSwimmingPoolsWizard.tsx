@@ -205,6 +205,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             },
             items: data.items.map((it: any) => ({
               ...it,
+              title: it.title || it.category || "",
               variableValues: it.variableValues || {},
             })),
             sections: (data.sections && data.sections.length > 0) ? data.sections : DEFAULT_SECTIONS,
@@ -407,8 +408,9 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       section,
       serialNo: formData.items.filter((i) => i.section === section).length + 1,
       category: "General",
-      description: "",
-      warranty: "",
+      title: "New Custom Product",
+      description: "Enter product description",
+      warranty: "0",
       qty: 1,
       unit: "Nos",
       rate: 0,
@@ -417,8 +419,18 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       variableValues: {},
       isCustom: true,
     };
+    const newIndex = formData.items.length;
     setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
     setHasUnsavedChanges(true);
+
+    // Scroll and focus
+    setTimeout(() => {
+      const el = document.getElementById(`item-title-${newIndex}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus();
+      }
+    }, 150);
   };
 
   const deleteItem = (index: number) => {
@@ -443,6 +455,27 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       return { ...prev, items: newItems };
     });
     setHasUnsavedChanges(true);
+  };
+
+  const handleImageUpload = async (idx: number, file: File | undefined) => {
+    if (!file) return;
+    const formDataObj = new FormData();
+    formDataObj.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formDataObj,
+      });
+      const data = await res.json();
+      if (data.url) {
+        updateItem(idx, "imageUrl", data.url);
+      } else {
+        alert("Upload failed: " + data.error);
+      }
+    } catch (e) {
+      alert("Upload failed");
+    }
   };
 
   const updateVariable = (idx: number, v: string, val: string) => {
@@ -528,25 +561,39 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     return (
       <div key={idx} className="product-card">
         <div className="product-card-image">
-          {item.imageUrl ? <img src={item.imageUrl} alt="product" /> : <div style={{ color: "#94a3b8", fontSize: "12px" }}>No Image</div>}
+          {item.imageUrl ? (
+            <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={item.imageUrl} alt="product" />
+              <button className="remove-img-btn" onClick={() => updateItem(idx, "imageUrl", null)}>✕</button>
+            </div>
+          ) : (
+            <div className="image-upload-placeholder">
+              <span style={{ fontSize: '10px' }}>No Image</span>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={(e) => handleImageUpload(idx, e.target.files?.[0])}
+                style={{ display: 'none' }}
+                id={`upload-${idx}`}
+              />
+              <label htmlFor={`upload-${idx}`} className="upload-btn" style={{ fontSize: '10px', padding: '2px 8px' }}>Upload</label>
+            </div>
+          )}
         </div>
 
         <div className="product-card-content">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
               <span style={{ fontWeight: 700, fontSize: "16px", color: "#64748b" }}>{displaySerial}.</span>
-              {!isTemplate ? (
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  style={{ fontWeight: 700, fontSize: "16px", border: "1px dashed #cbd5e1" }}
-                  value={item.category} 
-                  onChange={(e) => updateItem(idx, "category", e.target.value)}
-                  placeholder="Enter Product Name..."
-                />
-              ) : (
-                <h4 className="product-card-title">{item.category}</h4>
-              )}
+              <input 
+                type="text" 
+                id={`item-title-${idx}`}
+                className="form-control" 
+                style={{ fontWeight: 700, fontSize: "16px", border: isTemplate ? "none" : "1px dashed #cbd5e1", padding: isTemplate ? "0" : "8px", background: isTemplate ? "transparent" : "white" }}
+                value={item.title || item.category || ""} 
+                onChange={(e) => updateItem(idx, "title", e.target.value)}
+                placeholder="Enter Product Title..."
+              />
               {item.descriptionOverride && <span className="badge manual">Manual Paragraph</span>}
               {!isTemplate && <span className="badge custom">Custom</span>}
             </div>
@@ -831,6 +878,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                         section: formData.sections?.[sIdx - 4].code || "A",
                         serialNo: formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).length + 1,
                         category: product.category || "General",
+                        title: product.name,
                         templateText: product.templateText || product.description,
                         description: renderTemplate(product.templateText || product.description, initialVars),
                         warranty: product.warranty || "",
@@ -878,6 +926,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                       section: "Part 2",
                       serialNo: formData.items.filter(it => it.section === "Part 2").length + 1,
                       category: product.category || "General",
+                      title: product.name,
                       templateText: product.templateText || product.description,
                       description: renderTemplate(product.templateText || product.description, initialVars),
                       warranty: product.warranty || "",

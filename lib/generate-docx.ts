@@ -590,8 +590,8 @@ export async function quotationToDocxBuffer(
       children: [
         columnHeader("SL No.", 5),
         columnHeader("Description", 40),
-        columnHeader("Image*", 12),
-        columnHeader("Warranty**", 10),
+        columnHeader("Image", 12),
+        columnHeader("Warranty", 10),
         columnHeader("Qty", 5, AlignmentType.RIGHT),
         columnHeader("Unit", 6),
         columnHeader("Rate", 10, AlignmentType.RIGHT),
@@ -601,9 +601,8 @@ export async function quotationToDocxBuffer(
 
     const dataRows = rows.map(
       (it: (typeof quote.items)[number], index: number) => {
-        const descriptionLines = it.description.split("\n");
-        const titleText = descriptionLines[0];
-        const restLines = descriptionLines.slice(1);
+        const titleText = (it as any).title || it.description.split("\n")[0];
+        const restLines = (it as any).title ? it.description.split("\n") : it.description.split("\n").slice(1);
         
         const descriptionCellChildren: Paragraph[] = [
           new Paragraph({

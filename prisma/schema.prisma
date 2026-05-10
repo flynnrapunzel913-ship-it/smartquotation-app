@@ -109,6 +109,7 @@ model QuotationItem {
   imageText      String?
   productId      String?
   variableValues Json      @default("{}")
+  title          String    @default("")
   isCustom       Boolean   @default(false)
   product        Product?  @relation(fields: [productId], references: [id])
   quotation      Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)

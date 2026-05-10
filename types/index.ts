@@ -49,6 +49,7 @@ export type QuotationItemForm = {
   descriptionOverride?: boolean;
   templateText?: string;
   isCustom?: boolean;
+  title?: string;
 };
 
 export type QuotationSection = {

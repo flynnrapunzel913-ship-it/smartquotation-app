@@ -315,8 +315,8 @@ export function buildQuotationHtml(
           <tr>
             <th style="width: 5%;">SL No.</th>
             <th style="width: 40%;">Description</th>
-            <th style="width: 12%;">Image*</th>
-            <th style="width: 10%;">Warranty**</th>
+            <th style="width: 12%;">Image</th>
+            <th style="width: 10%;">Warranty</th>
             <th style="width: 5%;">Qty</th>
             <th style="width: 6%;">Unit</th>
             <th style="width: 10%;">Rate</th>
@@ -326,9 +326,8 @@ export function buildQuotationHtml(
         <tbody>
           ${rows
             .map((it: (typeof quote.items)[number], index: number) => {
-              const descriptionLines = it.description.split("\n");
-              const title = descriptionLines[0];
-              const rest = descriptionLines.slice(1).join("\n");
+              const title = (it as any).title || it.description.split("\n")[0];
+              const rest = (it as any).title ? it.description : it.description.split("\n").slice(1).join("\n");
               
               // Highlight MAKE : lines
               const formattedBody = rest.split("\n").map(line => {
