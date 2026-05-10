@@ -807,6 +807,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
               <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
                 <ProductSelect
                   placeholder="Search and add a product to this section..."
+                  companyType="MR_SWIMMING_POOLS"
                   onChange={(product) => {
                     if (product) {
                       const initialVars: Record<string, string> = {};
@@ -850,6 +851,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
               <ProductSelect
                 placeholder="Search and add a product to Part 2..."
+                companyType="MR_SWIMMING_POOLS"
                 onChange={(product) => {
                   if (product) {
                     const initialVars: Record<string, string> = {};

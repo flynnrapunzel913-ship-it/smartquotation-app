@@ -116,6 +116,26 @@ model QuotationItem {
   @@index([productId])
 }
 
+model ProductCatalog {
+  id             String      @id @default(cuid())
+  companyType    CompanyType
+  category       String
+  code           String?
+  name           String
+  description    String
+  specifications Json?       @default("{}")
+  unitPrice      Decimal     @db.Decimal(14, 2)
+  unit           String?     @default("Nos")
+  source         String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([companyType])
+  @@index([category])
+  @@index([name])
+  @@index([code])
+}
+
 enum UserRole {
   ADMIN
   USER
@@ -124,24 +144,4 @@ enum UserRole {
 enum CompanyType {
   MR_SWIMMING_POOLS
   KLEAN_TECH_SYSTEMS
-}
-
-model ProductCatalog {
-  id             String         @id @default(cuid())
-  companyType    CompanyType
-  category       String
-  code           String?
-  name           String
-  description    String         @db.Text
-  specifications Json?          @default("{}")
-  unitPrice      Decimal        @db.Decimal(14, 2)
-  unit           String?        @default("Nos")
-  source         String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
-  @@index([companyType])
-  @@index([category])
-  @@index([name])
-  @@index([code])
 }
