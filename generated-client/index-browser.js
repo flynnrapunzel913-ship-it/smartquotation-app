@@ -158,7 +158,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   updatedAt: 'updatedAt',
   databaseId: 'databaseId',
   hsnCode: 'hsnCode',
-  gstRate: 'gstRate'
+  gstRate: 'gstRate',
+  productCode: 'productCode'
 };
 
 exports.Prisma.CompanySettingsScalarFieldEnum = {

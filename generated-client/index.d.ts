@@ -3888,6 +3888,7 @@ export namespace Prisma {
     databaseId: string | null
     hsnCode: string | null
     gstRate: Decimal | null
+    productCode: string | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -3908,6 +3909,7 @@ export namespace Prisma {
     databaseId: string | null
     hsnCode: string | null
     gstRate: Decimal | null
+    productCode: string | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -3929,6 +3931,7 @@ export namespace Prisma {
     databaseId: number
     hsnCode: number
     gstRate: number
+    productCode: number
     _all: number
   }
 
@@ -3963,6 +3966,7 @@ export namespace Prisma {
     databaseId?: true
     hsnCode?: true
     gstRate?: true
+    productCode?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -3983,6 +3987,7 @@ export namespace Prisma {
     databaseId?: true
     hsnCode?: true
     gstRate?: true
+    productCode?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -4004,6 +4009,7 @@ export namespace Prisma {
     databaseId?: true
     hsnCode?: true
     gstRate?: true
+    productCode?: true
     _all?: true
   }
 
@@ -4112,6 +4118,7 @@ export namespace Prisma {
     databaseId: string | null
     hsnCode: string | null
     gstRate: Decimal | null
+    productCode: string | null
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -4152,6 +4159,7 @@ export namespace Prisma {
     databaseId?: boolean
     hsnCode?: boolean
     gstRate?: boolean
+    productCode?: boolean
     items?: boolean | Product$itemsArgs<ExtArgs>
     database?: boolean | Product$databaseArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
@@ -4176,6 +4184,7 @@ export namespace Prisma {
     databaseId?: boolean
     hsnCode?: boolean
     gstRate?: boolean
+    productCode?: boolean
     database?: boolean | Product$databaseArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4198,6 +4207,7 @@ export namespace Prisma {
     databaseId?: boolean
     hsnCode?: boolean
     gstRate?: boolean
+    productCode?: boolean
     database?: boolean | Product$databaseArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4220,9 +4230,10 @@ export namespace Prisma {
     databaseId?: boolean
     hsnCode?: boolean
     gstRate?: boolean
+    productCode?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "templateText" | "templateVariables" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt" | "databaseId" | "hsnCode" | "gstRate", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "templateText" | "templateVariables" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt" | "databaseId" | "hsnCode" | "gstRate" | "productCode", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | Product$itemsArgs<ExtArgs>
     database?: boolean | Product$databaseArgs<ExtArgs>
@@ -4260,6 +4271,7 @@ export namespace Prisma {
       databaseId: string | null
       hsnCode: string | null
       gstRate: Prisma.Decimal | null
+      productCode: string | null
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -4703,6 +4715,7 @@ export namespace Prisma {
     readonly databaseId: FieldRef<"Product", 'String'>
     readonly hsnCode: FieldRef<"Product", 'String'>
     readonly gstRate: FieldRef<"Product", 'Decimal'>
+    readonly productCode: FieldRef<"Product", 'String'>
   }
     
 
@@ -12424,7 +12437,8 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     databaseId: 'databaseId',
     hsnCode: 'hsnCode',
-    gstRate: 'gstRate'
+    gstRate: 'gstRate',
+    productCode: 'productCode'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -12876,6 +12890,7 @@ export namespace Prisma {
     databaseId?: StringNullableFilter<"Product"> | string | null
     hsnCode?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    productCode?: StringNullableFilter<"Product"> | string | null
     items?: QuotationItemListRelationFilter
     database?: XOR<ProductDatabaseNullableScalarRelationFilter, ProductDatabaseWhereInput> | null
   }
@@ -12899,6 +12914,7 @@ export namespace Prisma {
     databaseId?: SortOrderInput | SortOrder
     hsnCode?: SortOrderInput | SortOrder
     gstRate?: SortOrderInput | SortOrder
+    productCode?: SortOrderInput | SortOrder
     items?: QuotationItemOrderByRelationAggregateInput
     database?: ProductDatabaseOrderByWithRelationInput
   }
@@ -12925,6 +12941,7 @@ export namespace Prisma {
     databaseId?: StringNullableFilter<"Product"> | string | null
     hsnCode?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    productCode?: StringNullableFilter<"Product"> | string | null
     items?: QuotationItemListRelationFilter
     database?: XOR<ProductDatabaseNullableScalarRelationFilter, ProductDatabaseWhereInput> | null
   }, "id">
@@ -12948,6 +12965,7 @@ export namespace Prisma {
     databaseId?: SortOrderInput | SortOrder
     hsnCode?: SortOrderInput | SortOrder
     gstRate?: SortOrderInput | SortOrder
+    productCode?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -12977,6 +12995,7 @@ export namespace Prisma {
     databaseId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     hsnCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     gstRate?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    productCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
   }
 
   export type CompanySettingsWhereInput = {
@@ -13776,6 +13795,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
     items?: QuotationItemCreateNestedManyWithoutProductInput
     database?: ProductDatabaseCreateNestedOneWithoutProductsInput
   }
@@ -13799,6 +13819,7 @@ export namespace Prisma {
     databaseId?: string | null
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
     items?: QuotationItemUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -13820,6 +13841,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUpdateManyWithoutProductNestedInput
     database?: ProductDatabaseUpdateOneWithoutProductsNestedInput
   }
@@ -13843,6 +13865,7 @@ export namespace Prisma {
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -13865,6 +13888,7 @@ export namespace Prisma {
     databaseId?: string | null
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -13885,6 +13909,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -13906,6 +13931,7 @@ export namespace Prisma {
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanySettingsCreateInput = {
@@ -14931,6 +14957,7 @@ export namespace Prisma {
     databaseId?: SortOrder
     hsnCode?: SortOrder
     gstRate?: SortOrder
+    productCode?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -14957,6 +14984,7 @@ export namespace Prisma {
     databaseId?: SortOrder
     hsnCode?: SortOrder
     gstRate?: SortOrder
+    productCode?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -14977,6 +15005,7 @@ export namespace Prisma {
     databaseId?: SortOrder
     hsnCode?: SortOrder
     gstRate?: SortOrder
+    productCode?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -16563,6 +16592,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
     database?: ProductDatabaseCreateNestedOneWithoutProductsInput
   }
 
@@ -16585,6 +16615,7 @@ export namespace Prisma {
     databaseId?: string | null
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
   }
 
   export type ProductCreateOrConnectWithoutItemsInput = {
@@ -16670,6 +16701,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
     database?: ProductDatabaseUpdateOneWithoutProductsNestedInput
   }
 
@@ -16692,6 +16724,7 @@ export namespace Prisma {
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QuotationUpsertWithoutItemsInput = {
@@ -16767,6 +16800,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
     items?: QuotationItemCreateNestedManyWithoutProductInput
   }
 
@@ -16788,6 +16822,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
     items?: QuotationItemUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -16839,6 +16874,7 @@ export namespace Prisma {
     databaseId?: StringNullableFilter<"Product"> | string | null
     hsnCode?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    productCode?: StringNullableFilter<"Product"> | string | null
   }
 
   export type QuotationCreateManyCustomerInput = {
@@ -17097,6 +17133,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
+    productCode?: string | null
   }
 
   export type ProductUpdateWithoutDatabaseInput = {
@@ -17117,6 +17154,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUpdateManyWithoutProductNestedInput
   }
 
@@ -17138,6 +17176,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -17159,6 +17198,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

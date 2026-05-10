@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 interface Product {
+  productCode?: string;
   name: string;
   description: string;
   unit: string;
@@ -46,41 +47,54 @@ export default function DatabaseProductsTable({ products: initialProducts, datab
     }
   };
 
-  if (isLoading) return <p className="text-center" style={{ padding: "20px" }}>Loading products...</p>;
+  if (isLoading) return <p className="text-center py-20 text-[#94a3b8] animate-pulse">Loading products...</p>;
 
   return (
-    <div className="overflow-auto border border-[#f1f5f9] rounded-xl">
-      <table className="w-full text-left border-collapse">
-        <thead className="bg-[#f8fafc] text-[#64748b] text-[10px] uppercase tracking-widest sticky top-0 z-10">
+    <div className="overflow-hidden border border-[#f1f5f9] rounded-xl shadow-sm">
+      <table className="w-full text-left border-collapse table-fixed">
+        <thead className="bg-[#f8fafc] text-[#64748b] text-[10px] uppercase tracking-widest sticky top-0 z-10 border-b border-[#f1f5f9]">
           <tr>
-            <th className="px-4 py-3 font-bold">Product Name</th>
-            <th className="px-4 py-3 font-bold">Details</th>
-            <th className="px-4 py-3 font-bold text-center">Unit</th>
-            <th className="px-4 py-3 font-bold text-right">Price</th>
-            <th className="px-4 py-3 font-bold text-center">HSN</th>
-            <th className="px-4 py-3 font-bold text-center">GST</th>
-            {onRemove && <th className="px-4 py-3"></th>}
+            <th className="px-4 py-3 font-bold w-[12%]">Code</th>
+            <th className="px-4 py-3 font-bold w-[25%]">Product Name</th>
+            <th className="px-4 py-3 font-bold w-[23%]">Details</th>
+            <th className="px-4 py-3 font-bold text-center w-[8%]">Unit</th>
+            <th className="px-4 py-3 font-bold text-right w-[12%]">Rate</th>
+            <th className="px-4 py-3 font-bold text-center w-[10%]">HSN</th>
+            <th className="px-4 py-3 font-bold text-center w-[10%]">GST</th>
+            {onRemove && <th className="px-4 py-3 w-[5%]"></th>}
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#f1f5f9]">
+        <tbody className="divide-y divide-[#f1f5f9] bg-white">
           {products.length === 0 ? (
-            <tr><td colSpan={onRemove ? 7 : 6} className="text-center py-20 text-[#94a3b8]">No products detected.</td></tr>
+            <tr><td colSpan={onRemove ? 8 : 7} className="text-center py-24 text-[#94a3b8]">No products detected in this database.</td></tr>
           ) : (
             products.map((p, idx) => (
-              <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                <td className="px-4 py-3.5">
-                  <div className="font-semibold text-[#1e293b] text-sm">{p.name}</div>
+              <tr key={idx} className="hover:bg-slate-50/80 transition-colors group">
+                <td className="px-4 py-3.5 text-[11px] font-mono font-bold text-blue-600 truncate">
+                  {p.productCode || "—"}
                 </td>
                 <td className="px-4 py-3.5">
-                  <div className="text-xs text-[#64748b] line-clamp-2">{p.description}</div>
+                  <div className="font-bold text-[#1e293b] text-sm leading-tight">{p.name}</div>
+                </td>
+                <td className="px-4 py-3.5">
+                  <div className="text-xs text-[#64748b] line-clamp-2 italic">{p.description || "No details provided"}</div>
                 </td>
                 <td className="px-4 py-3.5 text-center text-xs font-medium text-[#475569]">{p.unit}</td>
-                <td className="px-4 py-3.5 text-right font-bold text-[#0ea5e9] text-sm">₹{Number(p.defaultRate).toLocaleString()}</td>
-                <td className="px-4 py-3.5 text-center text-[10px] font-mono text-[#94a3b8]">{p.hsnCode || "—"}</td>
-                <td className="px-4 py-3.5 text-center text-[10px] font-bold text-emerald-600 bg-emerald-50 rounded-lg">{p.gstRate}%</td>
+                <td className="px-4 py-3.5 text-right font-black text-slate-900 text-sm">₹{Number(p.defaultRate).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                <td className="px-4 py-3.5 text-center text-[10px] font-bold text-slate-400">{p.hsnCode || "—"}</td>
+                <td className="px-4 py-3.5 text-center">
+                   <span className="inline-block px-2 py-1 rounded-md text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100">
+                     {p.gstRate}%
+                   </span>
+                </td>
                 {onRemove && (
                   <td className="px-4 py-3.5 text-center">
-                    <button className="w-8 h-8 rounded-full hover:bg-red-50 text-red-400 hover:text-red-600 transition-all" onClick={() => onRemove(idx)}>×</button>
+                    <button 
+                      className="w-7 h-7 rounded-full flex items-center justify-center bg-slate-50 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all opacity-0 group-hover:opacity-100" 
+                      onClick={() => onRemove(idx)}
+                    >
+                      ×
+                    </button>
                   </td>
                 )}
               </tr>

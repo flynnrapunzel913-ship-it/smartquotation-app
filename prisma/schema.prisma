@@ -49,6 +49,7 @@ model Product {
   database          ProductDatabase? @relation(fields: [databaseId], references: [id])
   hsnCode           String?
   gstRate           Decimal?         @db.Decimal(5, 2)
+  productCode       String?
 
   @@index([name])
   @@index([category])

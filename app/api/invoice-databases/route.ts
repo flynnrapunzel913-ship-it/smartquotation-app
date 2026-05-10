@@ -44,6 +44,7 @@ export async function POST(req: Request) {
           create: products.map((p: any) => ({
             name: p.name,
             description: p.description,
+            productCode: p.productCode,
             defaultRate: p.defaultRate,
             unit: p.unit,
             category: "Database",

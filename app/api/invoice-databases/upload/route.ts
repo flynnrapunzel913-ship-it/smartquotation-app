@@ -40,20 +40,23 @@ export async function POST(req: Request) {
           const findCol = (patterns: string[]) => 
             columns.find(col => patterns.some(p => col.toLowerCase().includes(p.toLowerCase())));
 
+          const codeCol = findCol(["code", "id", "ref", "sl", "no"]);
           const nameCol = findCol(["product", "item", "description", "material", "name"]);
-          const rateCol = findCol(["rate", "price", "unit price", "amount"]);
-          const unitCol = findCol(["unit", "uom"]);
-          const hsnCol = findCol(["hsn", "hsn code", "code"]);
-          const gstCol = findCol(["gst", "tax", "gst %"]);
+          const descCol = findCol(["details", "full description", "specs"]);
+          const rateCol = findCol(["rate", "price", "unit price", "amount", "mrp"]);
+          const unitCol = findCol(["unit", "uom", "per"]);
+          const hsnCol = findCol(["hsn", "hsn code", "sac"]);
+          const gstCol = findCol(["gst", "tax", "gst %", "igst"]);
 
           if (!nameCol) {
-            errorMessage = "Could not detect a product name or description column.";
+            errorMessage = "Could not detect a product name column (e.g., 'Product', 'Item', 'Name').";
           } else if (!rateCol) {
-            errorMessage = "Could not detect a rate or price column.";
+            errorMessage = "Could not detect a rate or price column (e.g., 'Rate', 'Price', 'MRP').";
           } else {
             products = rawData.map((row: any) => ({
+              productCode: codeCol ? String(row[codeCol] || "").trim() : "",
               name: String(row[nameCol] || "").trim(),
-              description: nameCol.toLowerCase().includes("desc") ? "" : String(row["Description"] || row["Details"] || "").trim(),
+              description: descCol ? String(row[descCol] || "").trim() : (nameCol.toLowerCase().includes("desc") ? "" : String(row["Description"] || row["Details"] || "").trim()),
               unit: String(row[unitCol || ""] || "Nos").trim(),
               defaultRate: parseFloat(String(row[rateCol] || "0").replace(/[^\d.-]/g, "")) || 0,
               hsnCode: hsnCol ? String(row[hsnCol] || "").trim() : "",
@@ -73,25 +76,26 @@ export async function POST(req: Request) {
         } else {
           const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
           
-          // Improved PDF regex parsing for price lists
           lines.forEach(line => {
-            // Regex to find a pattern like: [Product Name] [Optional HSN] [Price/Rate] [Unit]
-            // Example: "LED UNDERWATER LIGHT 12V/10W 12500 Nos"
-            const rateMatch = line.match(/(.*?)\s+(\d{3,})\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each)/i);
+            // Regex to find a pattern like: [Optional Code] [Product Name] [Optional HSN] [Price/Rate] [Unit]
+            // Example: "A101 LED UNDERWATER LIGHT 12V/10W 8402 12500 Nos"
+            // Example: "BUTTERFLY VALVE 110MM 5692 Nos"
+            const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
             if (rateMatch) {
               products.push({
-                name: rateMatch[1].trim(),
+                productCode: rateMatch[1] || "",
+                name: rateMatch[2].trim(),
                 description: "",
-                unit: rateMatch[3],
-                defaultRate: parseFloat(rateMatch[2]),
-                hsnCode: "",
+                unit: rateMatch[5],
+                defaultRate: parseFloat(rateMatch[4]),
+                hsnCode: rateMatch[3] || "",
                 gstRate: 18,
               });
             }
           });
 
           if (products.length === 0) {
-            errorMessage = "Could not identify any product-rate patterns in the PDF text.";
+            errorMessage = "Could not identify any product-rate patterns in the PDF text. Please ensure the PDF is a text-based document and not a scanned image.";
           }
         }
       } else if (fileExtension === "docx") {
@@ -102,14 +106,15 @@ export async function POST(req: Request) {
         } else {
           const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
           lines.forEach(line => {
-            const rateMatch = line.match(/(.*?)\s+(\d{3,})\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each)/i);
+            const rateMatch = line.match(/^(?:([A-Z0-9-]{3,})\s+)?(.*?)\s+(?:(\d{4,8})\s+)?(\d+(?:\.\d+)?)\s+(Nos|Set|Box|Pkt|Mtr|Kg|Unit|Each|Ltr|Pc)/i);
             if (rateMatch) {
               products.push({
-                name: rateMatch[1].trim(),
+                productCode: rateMatch[1] || "",
+                name: rateMatch[2].trim(),
                 description: "",
-                unit: rateMatch[3],
-                defaultRate: parseFloat(rateMatch[2]),
-                hsnCode: "",
+                unit: rateMatch[5],
+                defaultRate: parseFloat(rateMatch[4]),
+                hsnCode: rateMatch[3] || "",
                 gstRate: 18,
               });
             }
@@ -120,7 +125,7 @@ export async function POST(req: Request) {
           }
         }
       } else {
-        errorMessage = `Unsupported file format: .${fileExtension}`;
+        errorMessage = `Unsupported file format: .${fileExtension}. Please upload XLSX, XLS, CSV, PDF, or DOCX.`;
       }
     } catch (parseError: any) {
       console.error("Internal parsing error:", parseError);
@@ -132,9 +137,12 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ 
-      products, 
+      success: true,
+      databaseName: file.name.split(".")[0],
       fileName: file.name,
-      count: products.length 
+      productsCount: products.length,
+      columns: ["Product Code", "Product Name", "Description", "Unit", "Rate", "HSN Code", "GST %"],
+      products: products
     });
   } catch (error) {
     console.error("Critical upload error:", error);
