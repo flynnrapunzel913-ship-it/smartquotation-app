@@ -57,7 +57,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-left: 20px; /* Separation from logo */
+      padding-left: 20px;
     }
     .contact-grid {
       display: grid;
@@ -65,40 +65,40 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       column-gap: 48px;
       row-gap: 6px;
       color: #0E5EA8;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       margin-bottom: 6px;
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
-      font-size: 10.5px;
+      font-size: 11.5px;
       font-weight: 600;
       margin-bottom: 2px;
       width: 100%;
-      max-width: 450px; /* Prevent over-stretching */
+      max-width: 480px;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
-      font-size: 9.5px;
+      font-size: 10.5px;
       font-weight: 600;
-      margin-bottom: 3px;
+      margin-bottom: 8px; /* Gap before GST */
       width: 100%;
     }
     .gst-tier {
       text-align: center;
       color: #111111;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 4px;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 2px; /* Gap before Divider */
       width: 100%;
     }
     .blue-divider {
       height: 2px;
       background-color: #0E5EA8;
       width: 100%;
-      margin-top: 6px;
+      margin-top: 2px;
       margin-bottom: 8px;
       clear: both;
     }

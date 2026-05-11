@@ -63,28 +63,28 @@ export default function InvoicePreview({ data, totals }: Props) {
 
         {/* Right: Content Column (Shifted Right) */}
         <div className="header-content-right" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", paddingLeft: "20px" }}>
-          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: "48px", rowGap: "6px", color: "#0E5EA8", fontSize: "12px", fontWeight: 700, marginBottom: "6px" }}>
+          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: "48px", rowGap: "6px", color: "#0E5EA8", fontSize: "13px", fontWeight: 700, marginBottom: "6px" }}>
             <div>☎ +91 9538840277</div>
             <div>✉ mracademyhubli@gmail.com</div>
             <div>☎ +91 9845326115</div>
             <div>🌐 www.mrswimmingacademy.com</div>
           </div>
 
-          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginBottom: "2px", width: "100%", maxWidth: "450px" }}>
+          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "11.5px", fontWeight: 600, marginBottom: "2px", width: "100%", maxWidth: "480px" }}>
             Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
           </div>
 
-          <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "3px", width: "100%" }}>
+          <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginBottom: "8px", width: "100%" }}>
             Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
           </div>
 
-          <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "12px", fontWeight: 700, marginBottom: "4px", width: "100%" }}>
+          <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "14px", fontWeight: 800, marginBottom: "2px", width: "100%" }}>
             GSTNo:29ABMFM0120E1ZL
           </div>
         </div>
       </div>
 
-      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "6px", marginBottom: "8px", clear: "both" }}></div>
+      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "2px", marginBottom: "8px", clear: "both" }}></div>
 
       <div className="invoice-title" style={{ margin: "2mm 0", fontSize: "18px", textDecoration: "underline", fontWeight: 800, textAlign: "center", textTransform: "uppercase", color: "#1F2937" }}>Tax Invoice No: {data.invoiceNumber || "___"}</div>
 
