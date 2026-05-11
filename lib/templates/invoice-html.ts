@@ -22,13 +22,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
   <style>
     @page {
       size: A4;
-      margin: 20px 25px;
+      margin: 20px 32px;
     }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      color: #000;
+      color: #1F2937;
       background: #fff;
     }
     .invoice-paper {
@@ -41,37 +41,46 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 12px;
       line-height: 1.3;
     }
-    .invoice-header {
+    .invoice-header-main {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
     .invoice-logo {
-      height: 32mm;
+      width: 150px;
+      height: auto;
     }
-    .invoice-company-info {
-      text-align: right;
-      font-size: 13px;
-      line-height: 1.5;
+    .blue-divider {
+      border-top: 1px solid #0E5EA8;
+      margin: 8px 0;
+    }
+    .invoice-header-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #0E5EA8;
+      font-weight: 600;
     }
     .invoice-title {
       text-align: center;
       font-weight: 800;
-      font-size: 20px;
+      font-size: 18px;
       text-decoration: underline;
       margin: 2mm 0;
       text-transform: uppercase;
+      color: #1F2937;
     }
     .invoice-meta {
       display: flex;
       justify-content: space-between;
       margin-bottom: 4mm;
-      font-size: 13px;
+      font-size: 11px;
     }
     .invoice-to h4 {
       margin: 0 0 1mm 0;
-      font-size: 14px;
+      font-size: 12px;
     }
     .invoice-details {
       text-align: right;
@@ -85,12 +94,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .invoice-table th, .invoice-table td {
       border: 1px solid #000;
       padding: 5px;
-      font-size: 12px;
+      font-size: 11px;
     }
     .invoice-table th {
-      background: #eee;
+      background: #f8fafc;
       text-transform: uppercase;
       font-weight: 700;
+      color: #1e293b;
     }
     .invoice-totals-section {
       display: flex;
@@ -103,7 +113,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .totals-table td {
       border: 1px solid #000;
       padding: 4px 8px;
-      font-size: 12px;
+      font-size: 11px;
     }
     .totals-table td:first-child {
       font-weight: 700;
@@ -114,25 +124,25 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .amount-words-section {
       margin-top: 3mm;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
     }
     .bank-details-section {
       margin-top: 5mm;
-      font-size: 11px;
+      font-size: 10px;
     }
     .bank-details-section h4 {
       text-decoration: underline;
       margin-bottom: 1.5mm;
     }
     .signature-section {
-      margin-top: 10mm;
+      margin-top: 8mm;
       margin-bottom: 5mm;
       text-align: right;
     }
     .signature-line {
       margin-top: 10mm;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12px;
     }
     .footer-banner {
       position: absolute;
@@ -140,80 +150,62 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       left: 0;
       width: 100%;
       height: 12mm;
-      background: #0369a1;
+      background: #0E5EA8;
       clip-path: polygon(0 50%, 100% 0, 100% 100%, 0% 100%);
       z-index: -1;
     }
     /* Single Page Mode Adjustments */
-    .single-page .invoice-header { margin-bottom: 1mm; }
-    .single-page .invoice-title { margin: 1mm 0; font-size: 18px; }
-    .single-page .invoice-company-info { font-size: 11px; }
-    .single-page .invoice-info-grid { margin-bottom: 2mm; font-size: 11px; }
-    .single-page .invoice-table th, .single-page .invoice-table td { padding: 3px 5px; font-size: 11px; }
-    .single-page .totals-table td { padding: 3px 6px; font-size: 11px; }
+    .single-page .invoice-header-main { margin-bottom: 1mm; }
+    .single-page .invoice-title { margin: 1mm 0; font-size: 16px; }
+    .single-page .invoice-table th, .single-page .invoice-table td { padding: 3px 5px; font-size: 10px; }
+    .single-page .totals-table td { padding: 3px 6px; font-size: 10px; }
     .single-page .signature-section { margin-top: 3mm; }
     .single-page .custom-section { margin-bottom: 2mm; }
-    .single-page .custom-section h4 { font-size: 11px; margin-bottom: 1mm; }
-    .single-page .custom-section p { font-size: 10px; }
-    .single-page .amount-in-words { margin-bottom: 2mm; font-size: 11px; }
-    .single-page .bank-details { font-size: 10px; margin-top: 1.5mm; }
+    .single-page .amount-in-words { margin-bottom: 2mm; font-size: 10px; }
     .single-page .invoice-paper { padding-bottom: 10mm; }
   </style>
 </head>
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
-    <div class="invoice-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-      <!-- Left: Logo -->
-      <div style="width: 22%;">
-        <img src="${logoSrc}" alt="Logo" class="invoice-logo" style="width: 100%; height: auto; max-height: 120px; object-fit: contain;" />
+    <div class="invoice-header-main">
+      <!-- 1. LEFT COLUMN (25%) -->
+      <div style="width: 25%;">
+        <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- Center: Contact & Address -->
-      <div style="width: 48%; color: #1e3a5f; font-family: Arial, sans-serif; display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #cbd5e1; border-right: 1px solid #cbd5e1; padding: 0 15px;">
-        <div style="display: flex; flex-direction: column; gap: 2px;">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <div style="background: #0369a1; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-            </div>
-            <span style="font-size: 11px; font-weight: 600;">+91 9538840277, +91 9845326115</span>
-          </div>
+      <!-- 2. CENTER COLUMN (45%) -->
+      <div style="width: 45%; color: #1F2937; font-family: Arial, sans-serif; border-left: 1px solid #e2e8f0; padding-left: 20px;">
+        <div style="font-size: 11px; font-weight: 700; margin-bottom: 8px;">
+          Phone: +91 9538840277, +91 9845326115
         </div>
-        <div style="font-size: 10px; line-height: 1.4; color: #1e3a5f;">
-          <strong style="font-weight: 700; font-size: 11px; display: block; margin-bottom: 2px;">Regd. Office:</strong>
+        <div style="font-size: 10px; font-weight: 700; margin-bottom: 2px;">Regd. Office:</div>
+        <div style="font-size: 10px; font-weight: 500; line-height: 1.45; color: #1F2937;">
           #91, Sri Mallikarjuna,<br />
           Naveen Park, Kusugal Road,<br />
           Keshwapur, Hubballi – 580023
         </div>
       </div>
 
-      <!-- Right: Email & Website -->
-      <div style="width: 25%; color: #1e3a5f; font-family: Arial, sans-serif; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; text-align: right;">
-        <div style="display: flex; align-items: center; gap: 6px; justify-content: flex-end;">
-          <span style="font-size: 11px; font-weight: 600;">mracademyhubli@gmail.com</span>
-          <div style="background: #0369a1; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px; justify-content: flex-end;">
-          <span style="font-size: 11px; font-weight: 600;">www.mrswimmingacademy.com</span>
-          <div style="background: #0369a1; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-          </div>
-        </div>
+      <!-- 3. RIGHT COLUMN (30%) -->
+      <div style="width: 30%; color: #1F2937; font-family: Arial, sans-serif; text-align: right;">
+        <div style="font-size: 10px; font-weight: 600; margin-bottom: 4px;">mracademyhubli@gmail.com</div>
+        <div style="font-size: 10px; font-weight: 600;">www.mrswimmingacademy.com</div>
       </div>
     </div>
 
-    <!-- Bottom Header Row: Branches & GST -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px solid #0369a1; padding-top: 4px; margin-bottom: 8px;">
+    <div class="blue-divider"></div>
+
+    <div class="invoice-header-bottom">
       <div style="width: 25%;"></div>
-      <div style="width: 50%; text-align: center; font-size: 11px; font-weight: 600; color: #0369a1;">
+      <div style="width: 50%; text-align: center; font-size: 10px; font-weight: 600;">
         Branches: Bengaluru &bull; Mysuru &bull; Kalaburagi
       </div>
-      <div style="width: 25%; text-align: right; font-weight: 800; font-size: 14px; color: #000;">
-        GSTNo: 29ABMFM0120E1ZL
+      <div style="width: 25%; text-align: right; font-size: 10px; font-weight: 700;">
+        GSTNo: <span style="font-size: 11px;">29ABMFM0120E1ZL</span>
       </div>
     </div>
-    <div style="border-top: 2px solid #0369a1; margin-top: 2px; margin-bottom: 10px;"></div>
+
+    <div class="blue-divider"></div>
 
     <div class="invoice-title">Tax Invoice No: ${data.invoiceNumber}</div>
 
