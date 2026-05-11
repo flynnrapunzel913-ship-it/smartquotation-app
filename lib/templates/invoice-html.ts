@@ -46,6 +46,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 6px;
+      width: 100%;
     }
     .invoice-logo {
       width: 190px;
@@ -67,6 +68,8 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-weight: 600;
       margin-top: 6px;
       margin-bottom: 2px;
+      width: 100%;
+      clear: both;
     }
     .branches-tier {
       text-align: center;

@@ -55,7 +55,7 @@ interface Props {
 export default function InvoicePreview({ data, totals }: Props) {
   return (
     <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "12px 24px" }}>
-      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px", width: "100%" }}>
         {/* Left: Logo (28%) */}
         <div style={{ width: "28%" }}>
           <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "190px", height: "auto" }} />
@@ -72,7 +72,7 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       </div>
 
-      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, marginTop: "6px", marginBottom: "2px" }}>
+      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, marginTop: "6px", marginBottom: "2px", width: "100%", clear: "both" }}>
         Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
       </div>
 
