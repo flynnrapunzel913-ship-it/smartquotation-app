@@ -22,7 +22,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
   <style>
     @page {
       size: A4;
-      margin: 16px 24px;
+      margin: 12px 24px;
     }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -48,20 +48,21 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       margin-bottom: 6px;
     }
     .invoice-logo {
-      width: 185px;
+      width: 190px;
       height: auto;
     }
     .contact-blue {
       color: #0E5EA8;
       font-size: 10px;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.3;
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 9.5px;
       font-weight: 600;
+      margin-top: 0;
       margin-bottom: 2px;
     }
     .branches-tier {
@@ -189,13 +190,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
     <div class="header-top">
-      <!-- Left: Logo (28%) -->
-      <div style="width: 28%;">
+      <!-- Left: Logo (30%) -->
+      <div style="width: 30%;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- Center-Left: Phones (32%) -->
-      <div class="contact-blue" style="width: 32%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; padding-left: 10px;">
+      <!-- Center-Left: Phones (30%) -->
+      <div class="contact-blue" style="width: 30%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>☎</span> +91 9538840277
         </div>

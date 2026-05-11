@@ -54,15 +54,15 @@ interface Props {
 
 export default function InvoicePreview({ data, totals }: Props) {
   return (
-    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "16px 24px" }}>
+    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "12px 24px" }}>
       <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-        {/* Left: Logo (28%) */}
-        <div style={{ width: "28%" }}>
-          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "185px", height: "auto" }} />
+        {/* Left: Logo (30%) */}
+        <div style={{ width: "30%" }}>
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "190px", height: "auto" }} />
         </div>
 
-        {/* Center-Left: Phones (32%) */}
-        <div className="contact-blue" style={{ width: "32%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.35, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start", paddingLeft: "10px" }}>
+        {/* Center-Left: Phones (30%) */}
+        <div className="contact-blue" style={{ width: "30%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.3, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <span>☎</span> +91 9538840277
           </div>
@@ -72,7 +72,7 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
 
         {/* Right: Online (40%) */}
-        <div className="contact-blue" style={{ width: "40%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.35, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end", textAlign: "right" }}>
+        <div className="contact-blue" style={{ width: "40%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.3, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end", textAlign: "right" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <span>✉</span> mracademyhubli@gmail.com
           </div>
@@ -82,7 +82,7 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       </div>
 
-      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "2px" }}>
+      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginTop: "0", marginBottom: "2px" }}>
         Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
       </div>
 
