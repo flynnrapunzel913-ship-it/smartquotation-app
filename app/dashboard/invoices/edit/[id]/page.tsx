@@ -26,6 +26,7 @@ export default function EditInvoicePage() {
             customerCityPin: lines[3] || "",
             cgstRate: Number(data.cgstPercent),
             sgstRate: Number(data.sgstPercent),
+            pdfMode: data.pdfMode || "STANDARD",
           });
           setLoading(false);
         });

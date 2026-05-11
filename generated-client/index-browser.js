@@ -254,6 +254,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   sectionHeadings: 'sectionHeadings',
   customSections: 'customSections',
   isDraft: 'isDraft',
+  pdfMode: 'pdfMode',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

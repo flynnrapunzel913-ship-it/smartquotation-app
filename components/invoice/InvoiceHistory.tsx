@@ -10,6 +10,7 @@ interface Invoice {
   invoiceDate: string;
   customerName: string;
   grandTotal: number;
+  roundOff: number;
   isDraft: boolean;
 }
 
@@ -35,10 +36,10 @@ export default function InvoiceHistory() {
     }
   };
 
-  const handleDelete = async (invoiceNumber: string) => {
+  const handleDelete = async (id: string, invoiceNumber: string) => {
     if (!confirm(`Are you sure you want to delete invoice ${invoiceNumber}?`)) return;
     try {
-      const response = await fetch(`/api/invoices/${invoiceNumber}`, { method: "DELETE" });
+      const response = await fetch(`/api/invoices/${id}`, { method: "DELETE" });
       if (response.ok) fetchInvoices();
     } catch (error) {
       console.error("Error deleting invoice:", error);
@@ -86,6 +87,7 @@ export default function InvoiceHistory() {
               <th style={{ padding: "14px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Invoice No</th>
               <th style={{ padding: "14px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Customer Name</th>
               <th style={{ padding: "14px 16px", textAlign: "left", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Date</th>
+              <th style={{ padding: "14px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Round Off</th>
               <th style={{ padding: "14px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Grand Total</th>
               <th style={{ padding: "14px 16px", textAlign: "center", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Status</th>
               <th style={{ padding: "14px 16px", textAlign: "right", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Actions</th>
@@ -110,6 +112,7 @@ export default function InvoiceHistory() {
                   <td style={{ padding: "14px 16px", fontWeight: "700", color: "#1e293b", fontSize: "0.875rem" }}>{inv.invoiceNumber}</td>
                   <td style={{ padding: "14px 16px", color: "#475569", fontSize: "0.875rem" }}>{inv.customerName}</td>
                   <td style={{ padding: "14px 16px", color: "#64748b", fontSize: "0.875rem" }}>{new Date(inv.invoiceDate).toLocaleDateString("en-IN")}</td>
+                  <td style={{ padding: "14px 16px", textAlign: "right", color: "#64748b", fontSize: "0.875rem" }}>{Number(inv.roundOff || 0).toFixed(2)}</td>
                   <td style={{ padding: "14px 16px", textAlign: "right", fontWeight: "700", color: "#4f46e5", fontSize: "0.875rem" }}>{formatCurrencyINR(inv.grandTotal)}</td>
                   <td style={{ padding: "14px 16px", textAlign: "center" }}>
                     <span style={{ 
@@ -125,10 +128,10 @@ export default function InvoiceHistory() {
                   </td>
                   <td style={{ padding: "14px 16px", textAlign: "right" }}>
                     <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
-                      <Link href={`/dashboard/invoices/preview/${inv.invoiceNumber}`} style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#475569", textDecoration: "none" }}>View</Link>
-                      <Link href={`/dashboard/invoices/edit/${inv.invoiceNumber}`} style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#475569", textDecoration: "none" }}>Edit</Link>
-                      <a href={`/api/invoices/${inv.invoiceNumber}/pdf`} target="_blank" style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#16a34a", textDecoration: "none" }}>PDF</a>
-                      <button style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#dc2626", cursor: "pointer" }} onClick={() => handleDelete(inv.invoiceNumber)}>✕</button>
+                      <Link href={`/dashboard/invoices/preview/${inv.id}`} style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#475569", textDecoration: "none" }}>View</Link>
+                      <Link href={`/dashboard/invoices/edit/${inv.id}`} style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#475569", textDecoration: "none" }}>Edit</Link>
+                      <a href={`/api/invoices/${inv.id}/pdf`} target="_blank" style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#16a34a", textDecoration: "none" }}>PDF</a>
+                      <button style={{ padding: "4px 8px", background: "white", border: "1px solid #e2e8f0", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "600", color: "#dc2626", cursor: "pointer" }} onClick={() => handleDelete(inv.id, inv.invoiceNumber)}>✕</button>
                     </div>
                   </td>
                 </tr>

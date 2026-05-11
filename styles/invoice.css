@@ -141,6 +141,7 @@
   margin: 0 auto;
   background: white;
   padding: 40px;
+  padding-bottom: 80px;
   color: #000;
   font-family: 'Inter', sans-serif;
   line-height: 1.4;
@@ -156,18 +157,18 @@
 }
 
 .invoice-logo {
-  height: 80px;
+  height: 120px;
 }
 
 .invoice-company-info {
   text-align: right;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .invoice-title {
   text-align: center;
   font-weight: 800;
-  font-size: 20px;
+  font-size: 24px;
   text-decoration: underline;
   margin: 20px 0;
   text-transform: uppercase;
@@ -248,6 +249,7 @@
 
 .signature-section {
   margin-top: 50px;
+  margin-bottom: 20px;
   text-align: right;
 }
 
@@ -345,3 +347,21 @@
   from { transform: translateY(-4px); }
   to { transform: translateY(0); }
 }
+
+/* Single Page Mode Optimizations for Web Preview */
+.invoice-paper.single-page {
+  padding: 20px 40px;
+  padding-bottom: 40px;
+}
+.invoice-paper.single-page .invoice-header { margin-bottom: 10px; }
+.invoice-paper.single-page .invoice-title { margin: 10px 0; font-size: 20px; }
+.invoice-paper.single-page .invoice-company-info { font-size: 12px; }
+.invoice-paper.single-page .invoice-meta { margin-bottom: 15px; font-size: 13px; }
+.invoice-paper.single-page .invoice-table th, 
+.invoice-paper.single-page .invoice-table td { padding: 6px 10px; font-size: 12px; }
+.invoice-paper.single-page .totals-table td { padding: 4px 10px; font-size: 12px; }
+.invoice-paper.single-page .signature-section { margin-top: 20px; }
+.invoice-paper.single-page .custom-section { margin-top: 10px !important; }
+.invoice-paper.single-page .bank-details-section { font-size: 12px; margin-top: 15px; }
+.invoice-paper.single-page .signature-section div { font-size: 13px; }
+.invoice-paper.single-page .signature-section .signature-line { font-size: 13px; }

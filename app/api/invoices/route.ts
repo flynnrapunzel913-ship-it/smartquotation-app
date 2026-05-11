@@ -32,6 +32,7 @@ export async function POST(req: Request) {
       bankDetails,
       sectionHeadings,
       customSections,
+      pdfMode,
       isDraft,
     } = data;
 
@@ -40,54 +41,60 @@ export async function POST(req: Request) {
       .join("\n");
 
     const invoice = await prisma.invoice.upsert({
-      where: { invoiceNumber },
+      where: { invoiceNumber: invoiceNumber.toString() },
       update: {
         invoiceDate: new Date(invoiceDate),
-        customerName,
-        customerAddress: fullAddress,
-        customerGST,
-        customerMobile,
-        items,
-        subTotal,
-        cgstPercent: cgstRate,
-        sgstPercent: sgstRate,
-        cgstAmount,
-        sgstAmount,
-        roundOff,
-        grandTotal,
-        amountInWords,
-        bankDetails,
-        sectionHeadings,
-        customSections,
-        isDraft,
+        customerName: customerName || "",
+        customerAddress: fullAddress || "",
+        customerGST: customerGST || "",
+        customerMobile: customerMobile || "",
+        items: items || [],
+        subTotal: Number(subTotal || 0),
+        cgstPercent: Number(cgstRate || 9),
+        sgstPercent: Number(sgstRate || 9),
+        cgstAmount: Number(cgstAmount || 0),
+        sgstAmount: Number(sgstAmount || 0),
+        roundOff: Number(roundOff || 0),
+        grandTotal: Number(grandTotal || 0),
+        amountInWords: amountInWords || "",
+        bankDetails: bankDetails || {},
+        sectionHeadings: sectionHeadings || {},
+        customSections: customSections || [],
+        // pdfMode: pdfMode || "STANDARD",
+        isDraft: !!isDraft,
       },
       create: {
-        invoiceNumber,
+        invoiceNumber: invoiceNumber.toString(),
         invoiceDate: new Date(invoiceDate),
-        customerName,
-        customerAddress: fullAddress,
-        customerGST,
-        customerMobile,
-        items,
-        subTotal,
-        cgstPercent: cgstRate,
-        sgstPercent: sgstRate,
-        cgstAmount,
-        sgstAmount,
-        roundOff,
-        grandTotal,
-        amountInWords,
-        bankDetails,
-        sectionHeadings,
-        customSections,
-        isDraft,
+        customerName: customerName || "",
+        customerAddress: fullAddress || "",
+        customerGST: customerGST || "",
+        customerMobile: customerMobile || "",
+        items: items || [],
+        subTotal: Number(subTotal || 0),
+        cgstPercent: Number(cgstRate || 9),
+        sgstPercent: Number(sgstRate || 9),
+        cgstAmount: Number(cgstAmount || 0),
+        sgstAmount: Number(sgstAmount || 0),
+        roundOff: Number(roundOff || 0),
+        grandTotal: Number(grandTotal || 0),
+        amountInWords: amountInWords || "",
+        bankDetails: bankDetails || {},
+        sectionHeadings: sectionHeadings || {},
+        customSections: customSections || [],
+        // pdfMode: pdfMode || "STANDARD",
+        isDraft: !!isDraft,
       },
     });
 
     return NextResponse.json(invoice);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating/updating invoice:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      details: error.message,
+      prismaError: error.code
+    }, { status: 500 });
   }
 }
 

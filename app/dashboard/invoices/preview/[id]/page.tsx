@@ -71,10 +71,10 @@ export default function InvoicePreviewPage() {
             cgstRate: invoice.cgstPercent,
             sgstRate: invoice.sgstPercent,
             items: invoice.items as any,
-            customerAddress1: invoice.customerAddress.split('\n')[0] || "",
-            customerAddress2: invoice.customerAddress.split('\n')[1] || "",
-            customerAddress3: invoice.customerAddress.split('\n')[2] || "",
-            customerCityPin: invoice.customerAddress.split('\n')[3] || "",
+            customerAddress1: (invoice.customerAddress || "").split('\n')[0] || "",
+            customerAddress2: (invoice.customerAddress || "").split('\n')[1] || "",
+            customerAddress3: (invoice.customerAddress || "").split('\n')[2] || "",
+            customerCityPin: (invoice.customerAddress || "").split('\n')[3] || "",
           }} 
           totals={totals} 
         />

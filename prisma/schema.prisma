@@ -175,6 +175,7 @@ model Invoice {
   sectionHeadings Json?    // { step1, step2, step3, step4, step5 }
   customSections  Json?    // Array of { title, content }
   isDraft         Boolean  @default(false)
+  pdfMode         String   @default("STANDARD") // "STANDARD" or "SINGLE_PAGE"
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

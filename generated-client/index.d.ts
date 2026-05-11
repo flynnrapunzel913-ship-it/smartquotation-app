@@ -10131,6 +10131,7 @@ export namespace Prisma {
     grandTotal: Decimal | null
     amountInWords: string | null
     isDraft: boolean | null
+    pdfMode: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10152,6 +10153,7 @@ export namespace Prisma {
     grandTotal: Decimal | null
     amountInWords: string | null
     isDraft: boolean | null
+    pdfMode: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10177,6 +10179,7 @@ export namespace Prisma {
     sectionHeadings: number
     customSections: number
     isDraft: number
+    pdfMode: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10220,6 +10223,7 @@ export namespace Prisma {
     grandTotal?: true
     amountInWords?: true
     isDraft?: true
+    pdfMode?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10241,6 +10245,7 @@ export namespace Prisma {
     grandTotal?: true
     amountInWords?: true
     isDraft?: true
+    pdfMode?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10266,6 +10271,7 @@ export namespace Prisma {
     sectionHeadings?: true
     customSections?: true
     isDraft?: true
+    pdfMode?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10378,6 +10384,7 @@ export namespace Prisma {
     sectionHeadings: JsonValue | null
     customSections: JsonValue | null
     isDraft: boolean
+    pdfMode: string
     createdAt: Date
     updatedAt: Date
     _count: InvoiceCountAggregateOutputType | null
@@ -10422,6 +10429,7 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
+    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["invoice"]>
@@ -10447,6 +10455,7 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
+    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["invoice"]>
@@ -10472,6 +10481,7 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
+    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["invoice"]>
@@ -10497,11 +10507,12 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
+    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "invoiceDate" | "customerName" | "customerAddress" | "customerGST" | "customerMobile" | "items" | "subTotal" | "cgstPercent" | "sgstPercent" | "cgstAmount" | "sgstAmount" | "roundOff" | "grandTotal" | "amountInWords" | "bankDetails" | "sectionHeadings" | "customSections" | "isDraft" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "invoiceDate" | "customerName" | "customerAddress" | "customerGST" | "customerMobile" | "items" | "subTotal" | "cgstPercent" | "sgstPercent" | "cgstAmount" | "sgstAmount" | "roundOff" | "grandTotal" | "amountInWords" | "bankDetails" | "sectionHeadings" | "customSections" | "isDraft" | "pdfMode" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
 
   export type $InvoicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Invoice"
@@ -10527,6 +10538,7 @@ export namespace Prisma {
       sectionHeadings: Prisma.JsonValue | null
       customSections: Prisma.JsonValue | null
       isDraft: boolean
+      pdfMode: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["invoice"]>
@@ -10972,6 +10984,7 @@ export namespace Prisma {
     readonly sectionHeadings: FieldRef<"Invoice", 'Json'>
     readonly customSections: FieldRef<"Invoice", 'Json'>
     readonly isDraft: FieldRef<"Invoice", 'Boolean'>
+    readonly pdfMode: FieldRef<"Invoice", 'String'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
   }
@@ -13698,6 +13711,7 @@ export namespace Prisma {
     sectionHeadings: 'sectionHeadings',
     customSections: 'customSections',
     isDraft: 'isDraft',
+    pdfMode: 'pdfMode',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14608,6 +14622,7 @@ export namespace Prisma {
     sectionHeadings?: JsonNullableFilter<"Invoice">
     customSections?: JsonNullableFilter<"Invoice">
     isDraft?: BoolFilter<"Invoice"> | boolean
+    pdfMode?: StringFilter<"Invoice"> | string
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
   }
@@ -14633,6 +14648,7 @@ export namespace Prisma {
     sectionHeadings?: SortOrderInput | SortOrder
     customSections?: SortOrderInput | SortOrder
     isDraft?: SortOrder
+    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14661,6 +14677,7 @@ export namespace Prisma {
     sectionHeadings?: JsonNullableFilter<"Invoice">
     customSections?: JsonNullableFilter<"Invoice">
     isDraft?: BoolFilter<"Invoice"> | boolean
+    pdfMode?: StringFilter<"Invoice"> | string
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
   }, "id" | "invoiceNumber">
@@ -14686,6 +14703,7 @@ export namespace Prisma {
     sectionHeadings?: SortOrderInput | SortOrder
     customSections?: SortOrderInput | SortOrder
     isDraft?: SortOrder
+    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
@@ -14719,6 +14737,7 @@ export namespace Prisma {
     sectionHeadings?: JsonNullableWithAggregatesFilter<"Invoice">
     customSections?: JsonNullableWithAggregatesFilter<"Invoice">
     isDraft?: BoolWithAggregatesFilter<"Invoice"> | boolean
+    pdfMode?: StringWithAggregatesFilter<"Invoice"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   }
@@ -15680,6 +15699,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: boolean
+    pdfMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15705,6 +15725,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: boolean
+    pdfMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15730,6 +15751,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
+    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15755,6 +15777,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
+    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15780,6 +15803,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: boolean
+    pdfMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15805,6 +15829,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
+    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15830,6 +15855,7 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
+    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16791,6 +16817,7 @@ export namespace Prisma {
     sectionHeadings?: SortOrder
     customSections?: SortOrder
     isDraft?: SortOrder
+    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16822,6 +16849,7 @@ export namespace Prisma {
     grandTotal?: SortOrder
     amountInWords?: SortOrder
     isDraft?: SortOrder
+    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16843,6 +16871,7 @@ export namespace Prisma {
     grandTotal?: SortOrder
     amountInWords?: SortOrder
     isDraft?: SortOrder
+    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }

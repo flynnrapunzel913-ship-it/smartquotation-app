@@ -7,7 +7,6 @@ import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
 import "@/styles/wizard.css";
 import "@/styles/invoice.css";
 import InvoicePreview from "./InvoicePreview";
-import AddProductFromDatabaseModal from "./AddProductFromDatabaseModal";
 import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
 
 interface InvoiceItem {
@@ -47,6 +46,7 @@ interface InvoiceForm {
   bankDetails: BankDetails;
   sectionHeadings: Record<string, string>;
   customSections: CustomSection[];
+  pdfMode: string;
 }
 
 const DEFAULT_BANK_DETAILS: BankDetails = {
@@ -89,6 +89,7 @@ export default function InvoiceWizard({ initialData }: Props) {
     bankDetails: DEFAULT_BANK_DETAILS,
     sectionHeadings: DEFAULT_SECTION_HEADINGS,
     customSections: [],
+    pdfMode: "STANDARD",
   });
 
   const [totals, setTotals] = useState({
@@ -101,11 +102,17 @@ export default function InvoiceWizard({ initialData }: Props) {
 
   const [databaseId, setDatabaseId] = useState<string>("");
   const [databaseName, setDatabaseName] = useState<string>("");
-  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [showDatabaseModal, setShowDatabaseModal] = useState(false);
+  const [showDropdown, setShowDropdown] = useState<number | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
+  const [savedInvoiceNumber, setSavedInvoiceNumber] = useState<string | null>(null);
 
   useEffect(() => {
     fetchActiveDatabase();
+    fetchProducts();
   }, []);
 
   const fetchActiveDatabase = async () => {
@@ -119,6 +126,19 @@ export default function InvoiceWizard({ initialData }: Props) {
       }
     } catch (error) {
       console.error("Error fetching active database:", error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    setIsLoadingProducts(true);
+    try {
+      const response = await fetch("/api/products");
+      const data = await response.json();
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setIsLoadingProducts(false);
     }
   };
 
@@ -137,6 +157,20 @@ export default function InvoiceWizard({ initialData }: Props) {
       amountInWords: convertToWordsINR(grandTotal),
     });
   }, [formData.items, formData.cgstRate, formData.sgstRate, formData.roundOff]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showDropdown !== null) {
+        const target = event.target as HTMLElement;
+        if (!target.closest(".description-cell")) {
+          setShowDropdown(null);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -250,22 +284,7 @@ export default function InvoiceWizard({ initialData }: Props) {
     );
   };
 
-  const handleAddProductFromDatabase = (product: any) => {
-    const unitPrice = Number(product.defaultRate || 0);
-    setFormData((prev) => ({
-      ...prev,
-      items: [
-        ...prev.items,
-        {
-          description: product.name + (product.description ? `\n${product.description}` : ""),
-          unitPrice,
-          qty: 1,
-          total: unitPrice,
-        },
-      ],
-    }));
-    setShowAddProductModal(false);
-  };
+
 
   const addItem = () => {
     setFormData((prev) => ({
@@ -295,9 +314,13 @@ export default function InvoiceWizard({ initialData }: Props) {
       });
       
       if (response.ok) {
-        router.push("/dashboard/invoices");
+        const savedData = await response.json();
+        setSavedInvoiceId(savedData.id);
+        setSavedInvoiceNumber(savedData.invoiceNumber);
+        setIsSaved(true);
       } else {
-        alert("Failed to save invoice");
+        const errData = await response.json();
+        alert(`Failed to save invoice: ${errData.details || errData.error || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Error saving invoice:", error);
@@ -432,25 +455,8 @@ export default function InvoiceWizard({ initialData }: Props) {
 
         {step === 2 && (
           <div className="step-fade-in">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+            <div style={{ marginBottom: "16px" }}>
               <SectionHeader stepKey="step2" defaultTitle="Step 2: Invoice Items" />
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                {databaseId ? (
-                  <div className="database-badge" style={{ padding: "6px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "6px", fontSize: "14px", color: "#0369a1" }}>
-                    Active Database: <strong>{databaseName}</strong>
-                    <Link 
-                      href="/dashboard/invoices" 
-                      style={{ marginLeft: "8px", color: "#0ea5e9", textDecoration: "underline", fontSize: "12px" }}
-                    >
-                      Change in Workspace
-                    </Link>
-                  </div>
-                ) : (
-                  <div style={{ fontSize: "13px", color: "#64748b" }}>
-                    No active database. <Link href="/dashboard/invoices" style={{ color: "#0ea5e9", textDecoration: "underline" }}>Set one here</Link>
-                  </div>
-                )}
-              </div>
             </div>
 
             <table className="items-table" style={{ width: "100%", borderCollapse: "collapse", marginTop: "16px" }}>
@@ -468,15 +474,56 @@ export default function InvoiceWizard({ initialData }: Props) {
                 {formData.items.map((item, index) => (
                   <tr key={index} style={{ borderBottom: "1px solid #f1f5f9" }}>
                     <td style={{ padding: "12px", textAlign: "center", color: "#64748b", fontSize: "0.875rem", fontWeight: "500" }}>{index + 1}</td>
-                    <td style={{ padding: "12px" }}>
+                    <td style={{ padding: "12px", position: "relative" }} className="description-cell">
                       <textarea
                         value={item.description}
                         onChange={(e) => handleItemChange(index, "description", e.target.value)}
+                        onFocus={() => setShowDropdown(index)}
                         className="form-control"
                         rows={2}
                         placeholder="Description"
                         style={{ minHeight: "60px" }}
                       />
+                      {showDropdown === index && (
+                        <div className="product-dropdown" style={{ width: "100%", top: "100%", left: 0 }}>
+                          <div className="product-section-header" style={{ display: "flex", justifyContent: "space-between" }}>
+                            <span>Products from Database</span>
+                            {isLoadingProducts && <span className="spinner-small" style={{ width: "12px", height: "12px", border: "2px solid #f3f3f3", borderTop: "2px solid #0ea5e9", borderRadius: "50%", animation: "spin 1s linear infinite" }}></span>}
+                          </div>
+                          {products.length === 0 && !isLoadingProducts && (
+                            <div style={{ padding: "12px", textAlign: "center", color: "#64748b", fontSize: "12px" }}>No products in database.</div>
+                          )}
+                          {products
+                            .filter(p => 
+                              p.name.toLowerCase().includes(item.description.toLowerCase()) || 
+                              (p.description && p.description.toLowerCase().includes(item.description.toLowerCase()))
+                            )
+                            .slice(0, 50)
+                            .map((p) => (
+                            <div 
+                              key={p.id} 
+                              className="product-item"
+                              onClick={() => {
+                                handleItemChange(index, "description", p.name + (p.description ? `\n${p.description}` : ""));
+                                handleItemChange(index, "unitPrice", p.defaultRate);
+                                setShowDropdown(null);
+                              }}
+                            >
+                              <div style={{ fontWeight: 600, color: "#0f172a" }}>{p.name}</div>
+                              {p.description && <div style={{ fontSize: "11px", color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{p.description}</div>}
+                              <div style={{ fontSize: "11px", color: "#0ea5e9", marginTop: "4px" }}>Rate: {formatCurrencyINR(p.defaultRate)}</div>
+                            </div>
+                          ))}
+                          {products.filter(p => 
+                              p.name.toLowerCase().includes(item.description.toLowerCase()) || 
+                              (p.description && p.description.toLowerCase().includes(item.description.toLowerCase()))
+                            ).length > 50 && (
+                            <div style={{ padding: "8px 16px", background: "#f8fafc", fontSize: "10px", color: "#94a3b8", textAlign: "center", borderTop: "1px solid #f1f5f9" }}>
+                              Showing top 50 results. Keep typing to refine...
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td style={{ padding: "12px" }}>
                       <input
@@ -511,14 +558,7 @@ export default function InvoiceWizard({ initialData }: Props) {
               </tbody>
             </table>
             <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>
-              <button 
-                className="btn btn-primary" 
-                onClick={() => setShowAddProductModal(true)}
-                disabled={!databaseId}
-                title={!databaseId ? "Select an active database in the workspace first" : ""}
-              >
-                + Add from Database
-              </button>
+
               <button className="btn btn-outline" onClick={addItem}>
                 + Add Blank Row
               </button>
@@ -551,7 +591,24 @@ export default function InvoiceWizard({ initialData }: Props) {
                 />
               </div>
               <div className="form-group">
-                <label>Round Off</label>
+                <label style={{ display: "flex", justifyContent: "space-between" }}>
+                  Round Off
+                  <button 
+                    className="btn-text" 
+                    onClick={() => {
+                      const subTotal = formData.items.reduce((sum, item) => sum + item.total, 0);
+                      const cgstAmount = (subTotal * formData.cgstRate) / 100;
+                      const sgstAmount = (subTotal * formData.sgstRate) / 100;
+                      const totalBeforeRound = subTotal + cgstAmount + sgstAmount;
+                      const roundedTotal = Math.round(totalBeforeRound);
+                      const calculatedRoundOff = Number((roundedTotal - totalBeforeRound).toFixed(2));
+                      setFormData(prev => ({ ...prev, roundOff: calculatedRoundOff }));
+                    }}
+                    style={{ fontSize: "11px", color: "#4f46e5" }}
+                  >
+                    Auto Round
+                  </button>
+                </label>
                 <input
                   type="number"
                   name="roundOff"
@@ -691,48 +748,130 @@ export default function InvoiceWizard({ initialData }: Props) {
           </div>
         )}
 
-        {step === 5 && (
+        {step === 5 && !isSaved && (
           <div className="step-fade-in">
-            <SectionHeader stepKey="step5" defaultTitle="Step 5: Review & Generate" />
-            <p>Please review the details before generating the invoice.</p>
-            <div style={{ marginTop: "20px", border: "1px solid #e2e8f0", padding: "24px", background: "#f8fafc", borderRadius: "12px", overflow: "auto", maxHeight: "800px", boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)" }}>
-              <InvoicePreview data={formData} totals={totals} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <SectionHeader stepKey="step5" defaultTitle="Step 5: Review & Generate" />
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "white", padding: "8px 16px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                <span style={{ fontSize: "14px", fontWeight: "600", color: "#64748b" }}>PDF Layout:</span>
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <button 
+                    className={`btn-sm ${formData.pdfMode === "STANDARD" ? "btn-primary" : "btn-outline"}`}
+                    onClick={() => setFormData(prev => ({ ...prev, pdfMode: "STANDARD" }))}
+                    style={{ fontSize: "12px", padding: "6px 12px" }}
+                  >
+                    Standard
+                  </button>
+                  <button 
+                    className={`btn-sm ${formData.pdfMode === "SINGLE_PAGE" ? "btn-primary" : "btn-outline"}`}
+                    onClick={() => setFormData(prev => ({ ...prev, pdfMode: "SINGLE_PAGE" }))}
+                    style={{ fontSize: "12px", padding: "6px 12px" }}
+                  >
+                    1 Page
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p style={{ marginBottom: "20px" }}>Please review the details before generating the invoice.</p>
+            <div style={{ 
+              marginTop: "20px", 
+              border: "1px solid #e2e8f0", 
+              padding: "40px", 
+              background: "#f8fafc", 
+              borderRadius: "12px", 
+              overflow: "auto", 
+              maxHeight: "800px", 
+              boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)" 
+            }}>
+              <InvoicePreview 
+                data={{
+                  ...formData,
+                  cgstRate: formData.cgstRate,
+                  sgstRate: formData.sgstRate,
+                  customerAddress1: (formData.customerAddress1 || ""),
+                  customerAddress2: (formData.customerAddress2 || ""),
+                  customerAddress3: (formData.customerAddress3 || ""),
+                  customerCityPin: (formData.customerCityPin || ""),
+                }} 
+                totals={totals} 
+              />
+            </div>
+          </div>
+        )}
+
+        {isSaved && (
+          <div className="step-fade-in" style={{ textAlign: "center", padding: "40px 20px" }}>
+            <div style={{ fontSize: "64px", marginBottom: "24px" }}>✅</div>
+            <h2 style={{ fontSize: "2rem", fontWeight: "800", color: "#1e293b", marginBottom: "12px" }}>Invoice Created Successfully!</h2>
+            <p style={{ fontSize: "1.125rem", color: "#64748b", marginBottom: "40px" }}>
+              Invoice <strong>{savedInvoiceNumber}</strong> has been saved to your records.
+            </p>
+            
+            <div style={{ display: "flex", justifyContent: "center", gap: "16px", marginBottom: "40px" }}>
+              <a 
+                href={`/api/invoices/${savedInvoiceId}/pdf`} 
+                target="_blank"
+                className="btn btn-primary"
+                style={{ padding: "14px 28px", fontSize: "1rem", display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                📄 Download PDF
+              </a>
+              <a 
+                href={`/api/invoices/${savedInvoiceId}/word`} 
+                target="_blank"
+                className="btn btn-outline"
+                style={{ padding: "14px 28px", fontSize: "1rem", display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                📝 Download Word
+              </a>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center", gap: "12px" }}>
+              <button 
+                className="btn btn-text" 
+                onClick={() => router.push("/dashboard/invoices")}
+                style={{ color: "#64748b" }}
+              >
+                Go to History
+              </button>
+              <button 
+                className="btn btn-outline" 
+                onClick={() => window.location.reload()}
+              >
+                Create Another Invoice
+              </button>
             </div>
           </div>
         )}
       </div>
 
-      <div className="wizard-footer">
-        <button
-          className="btn btn-outline"
-          onClick={() => (step === 1 ? router.back() : setStep(step - 1))}
-        >
-          {step === 1 ? "Cancel" : "Previous"}
-        </button>
-        <div style={{ display: "flex", gap: "12px" }}>
-          {step === 5 ? (
-            <>
-              <button className="btn btn-outline" onClick={() => handleSave(true)}>
-                Save Draft
+      {!isSaved && (
+        <div className="wizard-footer">
+          <button
+            className="btn btn-outline"
+            onClick={() => (step === 1 ? router.back() : setStep(step - 1))}
+          >
+            {step === 1 ? "Cancel" : "Previous"}
+          </button>
+          <div style={{ display: "flex", gap: "12px" }}>
+            {step === 5 ? (
+              <>
+                <button className="btn btn-outline" onClick={() => handleSave(true)}>
+                  Save Draft
+                </button>
+                <button className="btn btn-primary" onClick={() => handleSave(false)}>
+                  Finalize & Save
+                </button>
+              </>
+            ) : (
+              <button className="btn btn-primary" onClick={() => setStep(step + 1)}>
+                Next
               </button>
-              <button className="btn btn-primary" onClick={() => handleSave(false)}>
-                Finalize & Save
-              </button>
-            </>
-          ) : (
-            <button className="btn btn-primary" onClick={() => setStep(step + 1)}>
-              Next
-            </button>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
-      <AddProductFromDatabaseModal
-        isOpen={showAddProductModal}
-        databaseId={databaseId}
-        onSelect={handleAddProductFromDatabase}
-        onClose={() => setShowAddProductModal(false)}
-      />
     </div>
   );
 }

@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { htmlToPdfBuffer } from "@/lib/generate-pdf";
 import { generateInvoiceHtml } from "@/lib/templates/invoice-html";
+import fs from "fs";
+import path from "path";
 
 export async function GET(
   req: Request,
@@ -22,7 +24,17 @@ export async function GET(
       return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
     }
 
-    const html = generateInvoiceHtml(invoice);
+    let logoBase64 = "";
+    try {
+      const logoPath = path.join(process.cwd(), "public", "templates", "mr-swimming-pools", "logo.png");
+      if (fs.existsSync(logoPath)) {
+        logoBase64 = fs.readFileSync(logoPath, { encoding: "base64" });
+      }
+    } catch (e) {
+      console.error("Error reading logo for PDF:", e);
+    }
+
+    const html = generateInvoiceHtml(invoice, logoBase64);
     const pdfBuffer = await htmlToPdfBuffer(html);
 
     return new NextResponse(pdfBuffer, {
