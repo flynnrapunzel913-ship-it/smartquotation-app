@@ -54,48 +54,49 @@ interface Props {
 
 export default function InvoicePreview({ data, totals }: Props) {
   return (
-    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "20px 32px" }}>
-      <div className="invoice-header-main" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-        {/* 1. LEFT COLUMN (25%) */}
+    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "20px 30px" }}>
+      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+        {/* Left: Logo */}
         <div style={{ width: "25%" }}>
           <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "150px", height: "auto" }} />
         </div>
 
-        {/* 2. CENTER COLUMN (45%) */}
-        <div style={{ width: "45%", color: "#1F2937", fontFamily: "Arial, sans-serif", borderLeft: "1px solid #e2e8f0", paddingLeft: "20px" }}>
-          <div style={{ fontSize: "11px", fontWeight: 700, marginBottom: "8px" }}>
-            Phone: +91 9538840277, +91 9845326115
+        {/* Center-Left: Phones */}
+        <div className="contact-blue" style={{ width: "35%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.4, display: "flex", flexDirection: "column", gap: "2px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <span>☎</span> +91 9538840277
           </div>
-          <div style={{ fontSize: "10px", fontWeight: 700, marginBottom: "2px" }}>Regd. Office:</div>
-          <div style={{ fontSize: "10px", fontWeight: 500, lineHeight: 1.45, color: "#1F2937" }}>
-            #91, Sri Mallikarjuna,<br />
-            Naveen Park, Kusugal Road,<br />
-            Keshwapur, Hubballi – 580023
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <span>☎</span> +91 9845326115
           </div>
         </div>
 
-        {/* 3. RIGHT COLUMN (30%) */}
-        <div style={{ width: "30%", color: "#1F2937", fontFamily: "Arial, sans-serif", textAlign: "right" }}>
-          <div style={{ fontSize: "10px", fontWeight: 600, marginBottom: "4px" }}>mracademyhubli@gmail.com</div>
-          <div style={{ fontSize: "10px", fontWeight: 600 }}>www.mrswimmingacademy.com</div>
+        {/* Right: Online */}
+        <div className="contact-blue" style={{ width: "40%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.4, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end", textAlign: "right" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <span>✉</span> mracademyhubli@gmail.com
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <span>🌐</span> www.mrswimmingacademy.com
+          </div>
         </div>
       </div>
 
-      <div style={{ borderTop: "1px solid #0E5EA8", margin: "8px 0" }}></div>
-
-      <div className="invoice-header-bottom" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "10px", fontWeight: 600, color: "#0E5EA8" }}>
-        <div style={{ width: "25%" }}></div>
-        <div style={{ width: "50%", textAlign: "center" }}>
-          Branches: Bengaluru &bull; Mysuru &bull; Kalaburagi
-        </div>
-        <div style={{ width: "25%", textAlign: "right", fontWeight: 700 }}>
-          GSTNo: <span style={{ fontSize: "11px" }}>29ABMFM0120E1ZL</span>
-        </div>
+      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "4px" }}>
+        📍 Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
       </div>
 
-      <div style={{ borderTop: "1px solid #0E5EA8", margin: "8px 0" }}></div>
+      <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9px", fontWeight: 600, marginBottom: "6px" }}>
+        Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
+      </div>
 
-      <div className="invoice-title" style={{ margin: "2mm 0", fontSize: "18px", textDecoration: "underline", fontWeight: 800, textAlign: "center", textTransform: "uppercase" }}>Tax Invoice No: {data.invoiceNumber || "___"}</div>
+      <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "15px", fontWeight: 700, marginBottom: "6px" }}>
+        GSTNo: 29ABMFM0120E1ZL
+      </div>
+
+      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "6px", marginBottom: "10px" }}></div>
+
+      <div className="invoice-title" style={{ margin: "2mm 0", fontSize: "18px", textDecoration: "underline", fontWeight: 800, textAlign: "center", textTransform: "uppercase", color: "#1F2937" }}>Tax Invoice No: {data.invoiceNumber || "___"}</div>
 
       <div className="invoice-meta" style={{ marginBottom: "4mm", fontSize: "11px", display: "flex", justifyContent: "space-between" }}>
         <div className="invoice-to">

@@ -8,8 +8,9 @@ import path from "path";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const session = await getSession();
   if (!session.isLoggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -17,7 +18,7 @@ export async function GET(
 
   try {
     const invoice = await prisma.invoice.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!invoice) {

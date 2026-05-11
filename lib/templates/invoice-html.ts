@@ -22,7 +22,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
   <style>
     @page {
       size: A4;
-      margin: 20px 32px;
+      margin: 20px 30px;
     }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -41,27 +41,49 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 12px;
       line-height: 1.3;
     }
-    .invoice-header-main {
+    .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .invoice-logo {
       width: 150px;
       height: auto;
     }
-    .blue-divider {
-      border-top: 1px solid #0E5EA8;
-      margin: 8px 0;
-    }
-    .invoice-header-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
+    .contact-blue {
       color: #0E5EA8;
+      font-size: 10px;
       font-weight: 600;
+      line-height: 1.4;
+    }
+    .address-tier {
+      text-align: center;
+      color: #0E5EA8;
+      font-size: 9.5px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .branches-tier {
+      text-align: center;
+      color: #0E5EA8;
+      font-size: 9px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .gst-tier {
+      text-align: center;
+      color: #111111;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .blue-divider {
+      height: 2px;
+      background-color: #0E5EA8;
+      width: 100%;
+      margin-top: 6px;
+      margin-bottom: 10px;
     }
     .invoice-title {
       text-align: center;
@@ -155,7 +177,6 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       z-index: -1;
     }
     /* Single Page Mode Adjustments */
-    .single-page .invoice-header-main { margin-bottom: 1mm; }
     .single-page .invoice-title { margin: 1mm 0; font-size: 16px; }
     .single-page .invoice-table th, .single-page .invoice-table td { padding: 3px 5px; font-size: 10px; }
     .single-page .totals-table td { padding: 3px 6px; font-size: 10px; }
@@ -167,42 +188,43 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 </head>
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
-    <div class="invoice-header-main">
-      <!-- 1. LEFT COLUMN (25%) -->
+    <div class="header-top">
+      <!-- Left: Logo -->
       <div style="width: 25%;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- 2. CENTER COLUMN (45%) -->
-      <div style="width: 45%; color: #1F2937; font-family: Arial, sans-serif; border-left: 1px solid #e2e8f0; padding-left: 20px;">
-        <div style="font-size: 11px; font-weight: 700; margin-bottom: 8px;">
-          Phone: +91 9538840277, +91 9845326115
+      <!-- Center-Left: Phones -->
+      <div class="contact-blue" style="width: 35%; display: flex; flex-direction: column; gap: 2px;">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>☎</span> +91 9538840277
         </div>
-        <div style="font-size: 10px; font-weight: 700; margin-bottom: 2px;">Regd. Office:</div>
-        <div style="font-size: 10px; font-weight: 500; line-height: 1.45; color: #1F2937;">
-          #91, Sri Mallikarjuna,<br />
-          Naveen Park, Kusugal Road,<br />
-          Keshwapur, Hubballi – 580023
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>☎</span> +91 9845326115
         </div>
       </div>
 
-      <!-- 3. RIGHT COLUMN (30%) -->
-      <div style="width: 30%; color: #1F2937; font-family: Arial, sans-serif; text-align: right;">
-        <div style="font-size: 10px; font-weight: 600; margin-bottom: 4px;">mracademyhubli@gmail.com</div>
-        <div style="font-size: 10px; font-weight: 600;">www.mrswimmingacademy.com</div>
+      <!-- Right: Online -->
+      <div class="contact-blue" style="width: 40%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>✉</span> mracademyhubli@gmail.com
+        </div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>🌐</span> www.mrswimmingacademy.com
+        </div>
       </div>
     </div>
 
-    <div class="blue-divider"></div>
+    <div class="address-tier">
+      📍 Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+    </div>
 
-    <div class="invoice-header-bottom">
-      <div style="width: 25%;"></div>
-      <div style="width: 50%; text-align: center; font-size: 10px; font-weight: 600;">
-        Branches: Bengaluru &bull; Mysuru &bull; Kalaburagi
-      </div>
-      <div style="width: 25%; text-align: right; font-size: 10px; font-weight: 700;">
-        GSTNo: <span style="font-size: 11px;">29ABMFM0120E1ZL</span>
-      </div>
+    <div class="branches-tier">
+      Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
+    </div>
+
+    <div class="gst-tier">
+      GSTNo: 29ABMFM0120E1ZL
     </div>
 
     <div class="blue-divider"></div>
