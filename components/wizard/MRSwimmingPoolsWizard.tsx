@@ -7,6 +7,7 @@ import ProductSelect from "@/components/ProductSelect";
 import { calculatePoolMetrics, renderTemplate, extractTemplateVariables } from "@/lib/utils";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
+import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 
 const DEFAULT_TERMS = `1. Single phase connection up to the plant room is in your scope of work.
 2. Back wash line after the plant room and water supply to balance tank is in your scope.
@@ -978,34 +979,91 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         {step === 9 && (
           <div style={{ textAlign: "center", padding: "40px" }}>
             {isSubmitting ? (
-              <>
-                <div className="spinner" style={{ margin: "0 auto 24px" }}></div>
-                <h2>Saving Quotation...</h2>
-                <p style={{ color: "#64748b" }}>Please wait while we finalize your documents.</p>
-              </>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                <Loader2 size={40} className="animate-spin text-blue-600" />
+                <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0F172A" }}>Saving Quotation...</h2>
+                <p style={{ color: "#64748b", fontSize: "14px" }}>Please wait while we finalize your documents.</p>
+              </div>
             ) : !quoteId ? (
-              <>
-                <div style={{ fontSize: "64px", color: "#ef4444", marginBottom: "20px" }}>⚠</div>
-                <h2>Save Failed</h2>
-                <p style={{ color: "#64748b", marginBottom: "40px" }}>We couldn't save your quotation. Please check your connection and try again.</p>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                <AlertTriangle size={40} className="text-red-500" />
+                <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0F172A" }}>Save Failed</h2>
+                <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "20px" }}>We couldn't save your quotation. Please check your connection and try again.</p>
                 <button className="btn-primary" onClick={() => handleSubmit(true)}>Try Saving Again</button>
-              </>
+              </div>
             ) : (
-              <>
-                <div style={{ fontSize: "64px", color: "#10b981", marginBottom: "20px" }}>✓</div>
-                <h2 style={{ marginBottom: "12px" }}>Quotation Ready</h2>
-                <p style={{ color: "#64748b", marginBottom: "40px" }}>Your quotation has been structured and calculated. Preview the results below.</p>
-
-                <div style={{ display: "flex", gap: "16px", justifyContent: "center", marginBottom: "48px" }}>
-                  <button className="btn-primary" style={{ background: "#6366f1" }} onClick={() => window.open(`/api/quotations/${quoteId}/pdf?disposition=inline`, "_blank")}>Preview PDF</button>
-                  <button className="btn-primary" style={{ background: "#2563eb" }} onClick={() => window.open(`/api/quotations/${quoteId}/docx`, "_blank")}>Download Word</button>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
+                <div style={{ 
+                  width: "80px", 
+                  height: "80px", 
+                  borderRadius: "50%", 
+                  background: "rgba(34, 197, 94, 0.1)", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  color: "#10b981"
+                }}>
+                  <CheckCircle2 size={40} />
+                </div>
+                
+                <div>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", color: "#0F172A", marginBottom: "8px" }}>Quotation Ready!</h2>
+                  <p style={{ color: "#64748b", fontSize: "14px" }}>Your quotation has been successfully generated and is ready for use.</p>
                 </div>
 
-                <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: "40px" }}>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "1fr 1fr", 
+                  gap: "16px", 
+                  width: "100%", 
+                  maxWidth: "400px",
+                  marginTop: "12px"
+                }}>
+                  <button 
+                    className="btn-primary" 
+                    style={{ 
+                      background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)", 
+                      border: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      height: "48px"
+                    }} 
+                    onClick={() => window.open(`/api/quotations/${quoteId}/pdf?disposition=inline`, "_blank")}
+                  >
+                    Preview PDF
+                  </button>
+                  <button 
+                    className="btn-primary" 
+                    style={{ 
+                      background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)", 
+                      border: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      height: "48px"
+                    }} 
+                    onClick={() => window.open(`/api/quotations/${quoteId}/docx`, "_blank")}
+                  >
+                    Download Word
+                  </button>
+                </div>
+
+                <div style={{ 
+                  borderTop: "1px solid #f1f5f9", 
+                  paddingTop: "24px", 
+                  width: "100%", 
+                  maxWidth: "400px",
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "12px"
+                }}>
                   <button className="btn-secondary" onClick={() => setStep(1)}>Edit Details</button>
-                  <button className="btn-secondary" style={{ marginLeft: "12px" }} onClick={() => router.push("/history")}>Back to History</button>
+                  <button className="btn-secondary" onClick={() => router.push("/history")}>Back to History</button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         )}

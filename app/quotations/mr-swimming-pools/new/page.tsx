@@ -20,6 +20,9 @@ function WizardWrapper() {
 export default function MRSwimmingPoolsPage() {
   return (
     <div className="cards-page" style={{ padding: "40px 20px" }}>
+      <h1 style={{ fontSize: "28px", fontWeight: "700", color: "#0F172A", marginBottom: "24px", textAlign: "center" }}>
+        MR Swimming pools and Spa quotation
+      </h1>
       <Suspense fallback={<div>Loading wizard...</div>}>
         <WizardWrapper />
       </Suspense>

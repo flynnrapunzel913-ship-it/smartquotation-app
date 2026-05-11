@@ -48,7 +48,7 @@ export default function CatalogAdminPage() {
             style={{ width: "200px" }}
           >
             <option value="MR_SWIMMING_POOLS">MR Swimming Pools</option>
-            <option value="KLEAN_TECH_SYSTEMS">Klean Tech Systems Quotation</option>
+            <option value="KLEAN_TECH_SYSTEMS">Klean Tech Systems</option>
           </select>
           <button className="btn-primary" onClick={fetchCatalog}>Refresh</button>
         </div>

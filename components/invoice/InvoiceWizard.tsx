@@ -16,6 +16,7 @@ const InvoicePreview = dynamic(() => import("./InvoicePreview"), {
   ssr: false
 });
 import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
+import { InvoiceItemRow } from "./InvoiceItemRow";
 
 interface InvoiceItem {
   description: string;
@@ -116,13 +117,10 @@ export default function InvoiceWizard({ initialData }: Props) {
 
   useEffect(() => {
     fetchActiveDatabase();
+    fetchProducts();
   }, []);
 
-  useEffect(() => {
-    if (step >= 2 && products.length === 0 && !isLoadingProducts) {
-      fetchProducts();
-    }
-  }, [step, products.length, isLoadingProducts]);
+
 
   const fetchActiveDatabase = async () => {
     try {
@@ -146,11 +144,24 @@ export default function InvoiceWizard({ initialData }: Props) {
       // Handle both array and object responses for backward compatibility
       const productsArray = Array.isArray(data) ? data : (data.products || []);
       setProducts(productsArray);
-    } catch (error) {
-      console.error("Error fetching products:", error);
     } finally {
       setIsLoadingProducts(false);
     }
+  };
+
+  const selectProduct = (index: number, product: any) => {
+    const newItems = [...formData.items];
+    newItems[index] = {
+      ...newItems[index],
+      description: (product.name || product.description || "").trim(),
+      unitPrice: Number(product.defaultRate || 0),
+      hsn: product.hsnCode || "",
+      gstRate: Number(product.gstRate || 0),
+      unit: product.unit || "Nos",
+      total: Number(product.defaultRate || 0) * newItems[index].qty
+    };
+    setFormData((prev) => ({ ...prev, items: newItems }));
+    setShowDropdown(null);
   };
 
   const totals = React.useMemo(() => {
@@ -339,6 +350,23 @@ export default function InvoiceWizard({ initialData }: Props) {
     }
   };
 
+  if (isLoadingProducts && step === 1 && products.length === 0) {
+    return (
+      <div className="wizard-container">
+        <div style={{ padding: "100px", textAlign: "center" }}>
+          <div className="skeleton-line" style={{ height: "40px", width: "300px", margin: "0 auto 40px", background: "#f1f5f9", borderRadius: "12px" }}></div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", maxWidth: "800px", margin: "0 auto" }}>
+            <div className="skeleton-line" style={{ height: "80px", background: "#f1f5f9", borderRadius: "12px" }}></div>
+            <div className="skeleton-line" style={{ height: "80px", background: "#f1f5f9", borderRadius: "12px" }}></div>
+            <div className="skeleton-line" style={{ height: "80px", background: "#f1f5f9", borderRadius: "12px" }}></div>
+            <div className="skeleton-line" style={{ height: "80px", background: "#f1f5f9", borderRadius: "12px" }}></div>
+          </div>
+          <p style={{ marginTop: "32px", color: "#94a3b8", fontWeight: "500" }}>Preparing your invoice workspace...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="wizard-container">
       <div className="wizard-header">
@@ -482,99 +510,27 @@ export default function InvoiceWizard({ initialData }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {formData.items.map((item, index) => (
-                  <tr key={index} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                    <td style={{ padding: "12px", textAlign: "center", color: "#64748b", fontSize: "0.875rem", fontWeight: "500" }}>{index + 1}</td>
-                    <td style={{ padding: "12px", position: "relative" }} className="description-cell">
-                      <textarea
-                        value={item.description}
-                        onChange={(e) => handleItemChange(index, "description", e.target.value)}
-                        onFocus={() => setShowDropdown(index)}
-                        className="form-control"
-                        rows={2}
-                        placeholder="Description"
-                        style={{ minHeight: "60px" }}
-                      />
-                      {showDropdown === index && (
-                        <div className="product-dropdown" style={{ width: "100%", top: "100%", left: 0 }}>
-                          <div className="product-section-header" style={{ display: "flex", justifyContent: "space-between" }}>
-                            <span>Products from Database</span>
-                            {isLoadingProducts && <span className="spinner-small" style={{ width: "12px", height: "12px", border: "2px solid #f3f3f3", borderTop: "2px solid #0ea5e9", borderRadius: "50%", animation: "spin 1s linear infinite" }}></span>}
-                          </div>
-                          {products.length === 0 && !isLoadingProducts && (
-                            <div style={{ padding: "12px", textAlign: "center", color: "#64748b", fontSize: "12px" }}>No products in database.</div>
-                          )}
-                          {products
-                            .filter(p => 
-                              (p.name && p.name.toLowerCase().includes(item.description.toLowerCase())) || 
-                              (p.description && p.description.toLowerCase().includes(item.description.toLowerCase()))
-                            )
-                            .slice(0, 50)
-                            .map((p) => (
-                            <div 
-                              key={p.id} 
-                              className="product-item"
-                              onClick={() => {
-                                const newItems = [...formData.items];
-                                newItems[index] = {
-                                  ...newItems[index],
-                                  description: (p.name || p.description || "").trim(),
-                                  unitPrice: Number(p.defaultRate || 0),
-                                  hsn: p.hsnCode || "",
-                                  gstRate: Number(p.gstRate || 0),
-                                  unit: p.unit || "Nos",
-                                  total: Number(p.defaultRate || 0) * newItems[index].qty
-                                };
-                                setFormData((prev) => ({ ...prev, items: newItems }));
-                                setShowDropdown(null);
-                              }}
-                            >
-                              <div style={{ fontWeight: 600, color: "#0f172a" }}>{p.name || p.description || "Untitled Product"}</div>
-                              {p.name && p.description && <div style={{ fontSize: "11px", color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{p.description}</div>}
-                              <div style={{ fontSize: "11px", color: "#0ea5e9", marginTop: "4px" }}>Rate: {formatCurrencyINR(p.defaultRate)} | Unit: {p.unit || "Nos"}</div>
-                            </div>
-                          ))}
-                          {products.filter(p => 
-                              p.name.toLowerCase().includes(item.description.toLowerCase()) || 
-                              (p.description && p.description.toLowerCase().includes(item.description.toLowerCase()))
-                            ).length > 50 && (
-                            <div style={{ padding: "8px 16px", background: "#f8fafc", fontSize: "10px", color: "#94a3b8", textAlign: "center", borderTop: "1px solid #f1f5f9" }}>
-                              Showing top 50 results. Keep typing to refine...
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ padding: "12px" }}>
-                      <input
-                        type="number"
-                        value={item.unitPrice}
-                        onChange={(e) => handleItemChange(index, "unitPrice", e.target.value)}
-                        className="form-control"
-                        style={{ textAlign: "right" }}
-                      />
-                    </td>
-                    <td style={{ padding: "12px" }}>
-                      <input
-                        type="number"
-                        value={item.qty}
-                        onChange={(e) => handleItemChange(index, "qty", e.target.value)}
-                        className="form-control"
-                        style={{ textAlign: "center" }}
-                      />
-                    </td>
-                    <td style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#0f172a", fontSize: "0.875rem" }}>{formatCurrencyINR(item.total)}</td>
-                    <td style={{ padding: "12px", textAlign: "center" }}>
-                      <button 
-                        className="btn-icon" 
-                        style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "4px", width: "28px", height: "28px", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-                        onClick={() => removeItem(index)}
-                      >
-                        ✕
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {formData.items.map((item, index) => {
+                  const filteredProducts = products.filter(p => 
+                    (p.name && p.name.toLowerCase().includes(item.description.toLowerCase())) ||
+                    (p.description && p.description.toLowerCase().includes(item.description.toLowerCase())) ||
+                    (p.hsnCode && p.hsnCode.includes(item.description))
+                  ).slice(0, 5);
+
+                  return (
+                    <InvoiceItemRow
+                      key={index}
+                      index={index}
+                      item={item}
+                      handleItemChange={handleItemChange}
+                      removeItem={removeItem}
+                      showDropdown={showDropdown === index}
+                      setShowDropdown={setShowDropdown}
+                      filteredProducts={filteredProducts}
+                      selectProduct={selectProduct}
+                    />
+                  );
+                })}
               </tbody>
             </table>
             <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>

@@ -1,13 +1,38 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { QuotationTypeCard } from "@/components/QuotationTypeCard";
-import "@/styles/cards.css";
+import RecentActivity from "@/components/RecentActivity";
+import { Sparkles, LayoutGrid } from "lucide-react";
+import { motion } from "framer-motion";
+import { AnimatedText } from "@/components/ui/animated-underline-text-one";
 
 export default function QuotationTypesPage() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    // Aggressively hide the Next.js dev indicator
+    const hideDevOverlay = () => {
+      const selectors = ['nextjs-portal', '[data-nextjs-toast]', '#nextjs-dev-overlay', '.nextjs-static-indicator-container'];
+      selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+          if (el instanceof HTMLElement) {
+            el.style.display = 'none';
+            el.style.visibility = 'hidden';
+            el.style.opacity = '0';
+          }
+        });
+      });
+    };
+
+    hideDevOverlay();
+    const interval = setInterval(hideDevOverlay, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     router.prefetch("/history");
     router.prefetch("/dashboard/invoices");
@@ -15,46 +40,149 @@ export default function QuotationTypesPage() {
     router.prefetch("/quotations/klean-tech/new");
   }, [router]);
 
+  if (!mounted) return null;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
   return (
-    <div className="cards-page">
-      <div className="container">
-        <div className="cards-header">
-          <div>
-            <h1>Welcome, admin</h1>
-            <p>Select a quotation module to begin</p>
-          </div>
-          <div style={{ display: "flex", gap: "12px" }}>
-            <Link href="/history" prefetch={true} className="btn btn-primary" style={{ textDecoration: "none" }}>
-              Quotation History
-            </Link>
-            <Link href="/dashboard/invoices" prefetch={true} className="btn btn-outline" style={{ textDecoration: "none" }}>
-              Invoice History
-            </Link>
-          </div>
-        </div>
+    <div className="min-h-screen" style={{ 
+      position: "relative", 
+      overflowX: "hidden",
+      backgroundImage: "url('/background.png')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed"
+    }}>
 
-        <div className="cards-grid">
-          <QuotationTypeCard
-            theme="mr"
-            title="MR SWIMMING POOLS & SPA CONSTRUCTION COMPANY"
-            description="Swimming pool construction, maintenance, and equipment quotation builder."
-            href="/quotations/mr-swimming-pools/new"
-          />
+      <div style={{
+        maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "24px 2rem",
+        position: "relative",
+        zIndex: 1,
+        width: "100%"
+      }}>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          style={{ display: "flex", flexDirection: "column", gap: "32px" }}
+        >
+          {/* Centered Hero Section */}
+          <motion.div
+            variants={itemVariants}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingTop: "12px",
+              paddingBottom: "48px",
+              textAlign: "center",
+              width: "100%"
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", width: "100%" }}>
+              {/* Premium Icon Card Centered */}
+              <div style={{
+                width: "80px",
+                height: "80px",
+                borderRadius: "24px",
+                background: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 15px 45px -15px rgba(0,0,0,0.18)",
+                border: "1px solid #f1f5f9"
+              }}>
+                <Sparkles size={40} className="text-blue-600" />
+              </div>
 
-          <QuotationTypeCard
-            theme="klean"
-            title="KLEAN TECH SYSTEMS"
-            description="Water treatment systems, RO plants, and industrial filters quotation module."
-            href="/quotations/klean-tech/new"
-          />
+              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                <AnimatedText
+                  text="Good morning, Admin"
+                  textClassName="text-6xl font-black tracking-tighter bg-gradient-to-r from-[#0F172A] via-[#2563EB] to-[#14B8A6] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer"
+                  underlineClassName="text-blue-500/40"
+                  underlineDuration={1.8}
+                  style={{ textAlign: "center" }}
+                />
+              </div>
+            </div>
+          </motion.div>
 
-          <QuotationTypeCard
-            theme="mr-invoice"
-            title="MR SWIMMING POOLS & SPA INVOICE"
-            description="Generate professional GST tax invoices"
-            href="/dashboard/invoices"
-          />
-        </div>
+          {/* Module Cards Row */}
+          <motion.div
+            variants={itemVariants}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "1.5rem",
+              marginBottom: "60px",
+              width: "100%"
+            }}
+          >
+            <QuotationTypeCard
+              theme="mr"
+              title="MR Quotation"
+              description="Complete pool construction quotation builder."
+              href="/quotations/mr-swimming-pools/new"
+              logoUrl="/templates/mr-swimming-pools/logo.png"
+            />
+            <QuotationTypeCard
+              theme="klean"
+              title="Klean Tech Systems"
+              description="Water treatment systems and industrial quotes."
+              href="/quotations/klean-tech/new"
+              logoUrl="/templates/klean-tech/roots-logo.png"
+            />
+            <QuotationTypeCard
+              theme="mr-invoice"
+              title="MR Tax Invoice"
+              description="GST-ready professional tax invoices."
+              href="/dashboard/invoices"
+              logoUrl="/templates/mr-swimming-pools/logo.png"
+            />
+          </motion.div>
+
+          {/* Recent Activity Section */}
+          <motion.div
+            variants={itemVariants}
+            style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%" }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <LayoutGrid size={24} className="text-slate-400" />
+                <h2 style={{ fontSize: "24px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.01em" }}>Recent Activity</h2>
+              </div>
+              <button style={{
+                padding: "8px 20px",
+                fontSize: "14px",
+                fontWeight: "600",
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+                background: "white",
+                cursor: "pointer"
+              }}>
+                View All Activity
+              </button>
+            </div>
+
+            <RecentActivity />
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

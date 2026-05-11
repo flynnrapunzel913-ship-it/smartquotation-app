@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   },
   // Add serverExternalPackages if needed for puppeteer or docx
   serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
+  devIndicators: {
+    appIsrStatus: false,
+    buildActivity: false,
+  },
 };
 
 export default nextConfig;
