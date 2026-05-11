@@ -2,7 +2,11 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import MRSwimmingPoolsWizard from "@/components/wizard/MRSwimmingPoolsWizard";
+import dynamic from "next/dynamic";
+const MRSwimmingPoolsWizard = dynamic(() => import("@/components/wizard/MRSwimmingPoolsWizard"), {
+  loading: () => <div style={{ padding: "100px", textAlign: "center", color: "#64748b", fontSize: "1.25rem", fontWeight: "600" }}>Initializing Quotation Wizard...</div>,
+  ssr: false
+});
 import "@/styles/cards.css";
 
 function WizardWrapper() {

@@ -115,6 +115,15 @@ export async function GET(req: Request) {
           { customerName: { contains: search, mode: "insensitive" } },
         ]
       } : {},
+      select: {
+        id: true,
+        invoiceNumber: true,
+        invoiceDate: true,
+        customerName: true,
+        grandTotal: true,
+        roundOff: true,
+        isDraft: true,
+      },
       orderBy: { invoiceDate: "desc" },
     });
 

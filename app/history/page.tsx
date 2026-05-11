@@ -74,7 +74,32 @@ export default function HistoryPage() {
 
         <div className="quotation-table-card">
           {loading ? (
-            <div style={{ padding: "40px", textAlign: "center" }}>Loading quotations...</div>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>Quote #</th>
+                  <th>Title</th>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(5)].map((_, i) => (
+                  <tr key={i}>
+                    <td><div className="skeleton" style={{ height: "16px", width: "80px", borderRadius: "4px" }}></div></td>
+                    <td><div className="skeleton" style={{ height: "16px", width: "150px", borderRadius: "4px" }}></div></td>
+                    <td><div className="skeleton" style={{ height: "16px", width: "100px", borderRadius: "4px" }}></div></td>
+                    <td><div className="skeleton" style={{ height: "16px", width: "120px", borderRadius: "4px" }}></div></td>
+                    <td><div className="skeleton" style={{ height: "16px", width: "80px", borderRadius: "4px" }}></div></td>
+                    <td><div className="skeleton" style={{ height: "16px", width: "60px", borderRadius: "4px" }}></div></td>
+                    <td><div className="skeleton" style={{ height: "16px", width: "180px", borderRadius: "4px" }}></div></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : quotations.length === 0 ? (
             <div style={{ padding: "40px", textAlign: "center" }}>No quotations found.</div>
           ) : (

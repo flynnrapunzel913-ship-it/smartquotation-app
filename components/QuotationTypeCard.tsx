@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Props {
   title: string;
@@ -12,19 +12,17 @@ interface Props {
 }
 
 export function QuotationTypeCard({ title, description, href, theme, disabled }: Props) {
-  const router = useRouter();
-
-  const handleClick = () => {
-    if (!disabled) {
-      router.push(href);
-    }
-  };
-
   return (
-    <div 
+    <Link 
+      href={disabled ? "#" : href}
+      prefetch={true}
       className={`module-card module-card-${theme}`} 
-      onClick={handleClick}
-      style={{ opacity: disabled ? 0.7 : 1, cursor: disabled ? "default" : "pointer" }}
+      style={{ 
+        opacity: disabled ? 0.7 : 1, 
+        cursor: disabled ? "default" : "pointer",
+        textDecoration: "none",
+        display: "block"
+      }}
     >
       <div className="module-card-title">{title}</div>
       <div className="module-card-desc">{description}</div>
@@ -36,6 +34,6 @@ export function QuotationTypeCard({ title, description, href, theme, disabled }:
           {disabled ? "Coming Soon" : (theme === "mr-invoice" ? "Create Invoice" : "Create Quotation")}
         </button>
       </div>
-    </div>
+    </Link>
   );
 }

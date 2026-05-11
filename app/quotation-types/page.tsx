@@ -1,13 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { QuotationTypeCard } from "@/components/QuotationTypeCard";
 import "@/styles/cards.css";
 
 export default function QuotationTypesPage() {
   const router = useRouter();
-
+  useEffect(() => {
+    router.prefetch("/history");
+    router.prefetch("/dashboard/invoices");
+    router.prefetch("/quotations/mr-swimming-pools/new");
+    router.prefetch("/quotations/klean-tech/new");
+  }, [router]);
 
   return (
     <div className="cards-page">

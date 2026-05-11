@@ -15,6 +15,14 @@ export async function GET(req: Request) {
     if (companyType) {
       const catalogProducts = await prisma.productCatalog.findMany({
         where: { companyType: companyType as any },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          category: true,
+          unitPrice: true,
+          unit: true,
+        },
         orderBy: [{ category: "asc" }, { name: "asc" }]
       });
       // Map to the format expected by the frontend

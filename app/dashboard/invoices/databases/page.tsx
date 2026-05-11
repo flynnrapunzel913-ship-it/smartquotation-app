@@ -2,7 +2,11 @@
 
 import React from "react";
 import Link from "next/link";
-import InvoiceCatalogManager from "@/components/invoice/InvoiceCatalogManager";
+import dynamic from "next/dynamic";
+const InvoiceCatalogManager = dynamic(() => import("@/components/invoice/InvoiceCatalogManager"), {
+  loading: () => <div className="p-12 text-center text-slate-400 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">Loading Product Catalog...</div>,
+  ssr: false
+});
 import "@/styles/invoice.css";
 
 export default function DatabasesPage() {

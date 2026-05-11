@@ -36,8 +36,23 @@ export async function listQuotations(filters: {
 
   return prisma.quotation.findMany({
     where,
+    select: {
+      id: true,
+      quoteNumber: true,
+      title: true,
+      date: true,
+      grandTotal: true,
+      isDraft: true,
+      createdAt: true,
+      quotationType: true, // If it exists, otherwise it might be in projectSpecifications
+      customer: {
+        select: {
+          name: true
+        }
+      },
+      projectSpecifications: true, // Still needed to check quotationType if not a separate field
+    },
     orderBy: { createdAt: "desc" },
-    include: { customer: true },
   });
 }
 

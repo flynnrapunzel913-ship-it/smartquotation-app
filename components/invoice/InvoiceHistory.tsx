@@ -95,9 +95,17 @@ export default function InvoiceHistory() {
           </thead>
           <tbody>
             {isLoading ? (
-              <tr>
-                <td colSpan={6} style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>Loading history...</td>
-              </tr>
+              [...Array(5)].map((_, i) => (
+                <tr key={i} style={{ borderBottom: "1px solid #e2e8f0" }}>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "80px", borderRadius: "4px" }}></div></td>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "160px", borderRadius: "4px" }}></div></td>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "100px", borderRadius: "4px" }}></div></td>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "60px", borderRadius: "4px", marginLeft: "auto" }}></div></td>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "100px", borderRadius: "4px", marginLeft: "auto" }}></div></td>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "60px", borderRadius: "4px", margin: "0 auto" }}></div></td>
+                  <td style={{ padding: "14px 16px" }}><div className="skeleton" style={{ height: "16px", width: "120px", borderRadius: "4px", marginLeft: "auto" }}></div></td>
+                </tr>
+              ))
             ) : filteredInvoices.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ padding: "40px", textAlign: "center" }}>

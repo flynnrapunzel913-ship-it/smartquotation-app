@@ -6,7 +6,15 @@ import Link from "next/link";
 import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
 import "@/styles/wizard.css";
 import "@/styles/invoice.css";
-import InvoicePreview from "./InvoicePreview";
+import dynamic from "next/dynamic";
+const InvoicePreview = dynamic(() => import("./InvoicePreview"), {
+  loading: () => (
+    <div style={{ padding: "40px", textAlign: "center", background: "#f8fafc", borderRadius: "16px", border: "2px dashed #e2e8f0", color: "#64748b" }}>
+      Loading Invoice Preview...
+    </div>
+  ),
+  ssr: false
+});
 import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
 
 interface InvoiceItem {
@@ -115,8 +123,13 @@ export default function InvoiceWizard({ initialData }: Props) {
 
   useEffect(() => {
     fetchActiveDatabase();
-    fetchProducts();
   }, []);
+
+  useEffect(() => {
+    if (step >= 2 && products.length === 0 && !isLoadingProducts) {
+      fetchProducts();
+    }
+  }, [step, products.length, isLoadingProducts]);
 
   const fetchActiveDatabase = async () => {
     try {
