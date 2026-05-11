@@ -55,19 +55,23 @@ interface Props {
 export default function InvoicePreview({ data, totals }: Props) {
   return (
     <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "12px 24px" }}>
-      <div className="header-container" style={{ position: "relative", width: "100%", minHeight: "110px" }}>
-        <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ position: "absolute", left: 0, top: 0, width: "190px", height: "auto" }} />
-        
-        <div className="central-stack" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: "48px", rowGap: "6px", color: "#0E5EA8", fontSize: "12px", fontWeight: 700, marginLeft: "190px", marginBottom: "6px" }}>
+      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", marginBottom: "6px" }}>
+        {/* Left: Logo (190px) */}
+        <div style={{ width: "190px" }}>
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "190px", height: "auto" }} />
+        </div>
+
+        {/* Right: Content Column (Shifted Right) */}
+        <div className="header-content-right" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", paddingLeft: "20px" }}>
+          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: "48px", rowGap: "6px", color: "#0E5EA8", fontSize: "12px", fontWeight: 700, marginBottom: "6px" }}>
             <div>☎ +91 9538840277</div>
             <div>✉ mracademyhubli@gmail.com</div>
             <div>☎ +91 9845326115</div>
             <div>🌐 www.mrswimmingacademy.com</div>
           </div>
 
-          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginBottom: "2px", width: "100%" }}>
-            Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginBottom: "2px", width: "100%", maxWidth: "450px" }}>
+            Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
           </div>
 
           <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "3px", width: "100%" }}>
@@ -80,7 +84,7 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       </div>
 
-      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "4px", marginBottom: "8px" }}></div>
+      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "6px", marginBottom: "8px", clear: "both" }}></div>
 
       <div className="invoice-title" style={{ margin: "2mm 0", fontSize: "18px", textDecoration: "underline", fontWeight: 800, textAlign: "center", textTransform: "uppercase", color: "#1F2937" }}>Tax Invoice No: {data.invoiceNumber || "___"}</div>
 

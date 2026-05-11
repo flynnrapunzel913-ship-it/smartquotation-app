@@ -41,23 +41,23 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 12px;
       line-height: 1.3;
     }
-    .header-container {
-      position: relative;
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       width: 100%;
-      min-height: 110px;
+      margin-bottom: 6px;
     }
     .invoice-logo {
-      position: absolute;
-      left: 0;
-      top: 0;
       width: 190px;
       height: auto;
     }
-    .central-stack {
-      width: 100%;
+    .header-content-right {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding-left: 20px; /* Separation from logo */
     }
     .contact-grid {
       display: grid;
@@ -67,7 +67,6 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #0E5EA8;
       font-size: 12px;
       font-weight: 700;
-      margin-left: 190px; /* Offset by logo width to avoid overlap if needed, or keep centered */
       margin-bottom: 6px;
     }
     .address-tier {
@@ -77,6 +76,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-weight: 600;
       margin-bottom: 2px;
       width: 100%;
+      max-width: 450px; /* Prevent over-stretching */
     }
     .branches-tier {
       text-align: center;
@@ -98,8 +98,9 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       height: 2px;
       background-color: #0E5EA8;
       width: 100%;
-      margin-top: 4px;
+      margin-top: 6px;
       margin-bottom: 8px;
+      clear: both;
     }
     .invoice-title {
       text-align: center;
@@ -210,11 +211,14 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 </head>
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
-    <div class="header-container">
-      <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
-      
-      <div class="central-stack">
-        <!-- Grid offset to the right of logo, but stacked tiers are centered on page -->
+    <div class="header-top">
+      <!-- Left: Logo (190px) -->
+      <div style="width: 190px;">
+        <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
+      </div>
+
+      <!-- Right: Content Column (Shifted Right) -->
+      <div class="header-content-right">
         <div class="contact-grid">
           <div>☎ +91 9538840277</div>
           <div>✉ mracademyhubli@gmail.com</div>
@@ -223,7 +227,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
         </div>
 
         <div class="address-tier">
-          Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+          Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
         </div>
 
         <div class="branches-tier">
