@@ -56,30 +56,30 @@ export default function InvoicePreview({ data, totals }: Props) {
   return (
     <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "12px 24px" }}>
       <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "6px" }}>
-        {/* Left: Logo (190px) */}
-        <div style={{ width: "190px" }}>
-          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "190px", height: "auto" }} />
+        {/* Left: Logo (195px) */}
+        <div style={{ width: "195px" }}>
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "195px", height: "auto" }} />
         </div>
 
         {/* Right: Content Column (Shifted Right) */}
         <div className="header-content-right" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", paddingLeft: "20px" }}>
-          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: "48px", rowGap: "6px", color: "#0E5EA8", fontSize: "13px", fontWeight: 700, marginBottom: "6px" }}>
+          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "auto auto", columnGap: "48px", rowGap: "6px", color: "#0E5EA8", fontSize: "13px", fontWeight: 700, marginBottom: "10px" }}>
             <div>☎ +91 9538840277</div>
             <div>✉ mracademyhubli@gmail.com</div>
             <div>☎ +91 9845326115</div>
             <div>🌐 www.mrswimmingacademy.com</div>
           </div>
 
-          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "11.5px", fontWeight: 600, marginTop: "4px", marginBottom: "2px", width: "100%", lineHeight: "1.35" }}>
-            Regd. Office: #191, Sri Mallikarjuna, Naveen Park,<br />
-            Kusugal Road, Keshwapur, Hubballi - 580 023
+          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "11.5px", fontWeight: 600, marginBottom: "4px", width: "100%", lineHeight: "1.4" }}>
+            Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road,<br />
+            Keshwapur, Hubballi - 580 023
           </div>
 
-          <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginTop: "2px", marginBottom: "6px", width: "100%" }}>
+          <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginBottom: "10px", width: "100%" }}>
             Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
           </div>
 
-          <div className="gst-tier" style={{ textAlign: "right", color: "#111111", fontSize: "14px", fontWeight: 800, marginBottom: "2px", width: "100%" }}>
+          <div className="gst-tier" style={{ textAlign: "right", color: "#111111", fontSize: "14px", fontWeight: 800, marginBottom: "4px", width: "100%" }}>
             GSTNo:29ABMFM0120E1ZL
           </div>
         </div>

@@ -49,7 +49,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       margin-bottom: 6px;
     }
     .invoice-logo {
-      width: 190px;
+      width: 195px;
       height: auto;
     }
     .header-content-right {
@@ -67,25 +67,23 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #0E5EA8;
       font-size: 13px;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 10px; /* Increased gap */
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 11.5px;
       font-weight: 600;
-      margin-top: 4px;
-      margin-bottom: 2px;
+      margin-bottom: 4px; /* Increased gap */
       width: 100%;
-      line-height: 1.35;
+      line-height: 1.4;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 10.5px;
       font-weight: 600;
-      margin-top: 2px;
-      margin-bottom: 6px;
+      margin-bottom: 10px; /* Increased gap before GST */
       width: 100%;
     }
     .gst-tier {
@@ -93,7 +91,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #111111;
       font-size: 14px;
       font-weight: 800;
-      margin-bottom: 2px;
+      margin-bottom: 4px; /* Gap before Divider */
       width: 100%;
     }
     .blue-divider {
@@ -214,8 +212,8 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
     <div class="header-top">
-      <!-- Left: Logo (190px) -->
-      <div style="width: 190px;">
+      <!-- Left: Logo (195px) -->
+      <div style="width: 195px;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
@@ -229,8 +227,8 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
         </div>
 
         <div class="address-tier">
-          Regd. Office: #191, Sri Mallikarjuna, Naveen Park,<br />
-          Kusugal Road, Keshwapur, Hubballi - 580 023
+          Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road,<br />
+          Keshwapur, Hubballi - 580 023
         </div>
 
         <div class="branches-tier">
