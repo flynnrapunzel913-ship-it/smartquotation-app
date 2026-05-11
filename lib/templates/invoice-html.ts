@@ -41,42 +41,50 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 12px;
       line-height: 1.3;
     }
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
+    .header-container {
+      position: relative;
       width: 100%;
+      min-height: 110px;
     }
     .invoice-logo {
+      position: absolute;
+      left: 0;
+      top: 0;
       width: 190px;
       height: auto;
     }
+    .central-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: auto auto;
       column-gap: 48px;
       row-gap: 6px;
       color: #0E5EA8;
       font-size: 12px;
       font-weight: 700;
+      margin-left: 190px; /* Offset by logo width to avoid overlap if needed, or keep centered */
+      margin-bottom: 6px;
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 10.5px;
       font-weight: 600;
-      margin-top: 6px;
       margin-bottom: 2px;
       width: 100%;
-      clear: both;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 9.5px;
       font-weight: 600;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
+      width: 100%;
     }
     .gst-tier {
       text-align: center;
@@ -84,6 +92,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 12px;
       font-weight: 700;
       margin-bottom: 4px;
+      width: 100%;
     }
     .blue-divider {
       height: 2px;
@@ -201,33 +210,30 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 </head>
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
-    <div class="header-top">
-      <!-- Left: Logo (28%) -->
-      <div style="width: 28%;">
-        <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
-      </div>
-
-      <!-- Right: Contact Grid (72%) -->
-      <div style="width: 72%;">
+    <div class="header-container">
+      <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
+      
+      <div class="central-stack">
+        <!-- Grid offset to the right of logo, but stacked tiers are centered on page -->
         <div class="contact-grid">
           <div>☎ +91 9538840277</div>
           <div>✉ mracademyhubli@gmail.com</div>
           <div>☎ +91 9845326115</div>
           <div>🌐 www.mrswimmingacademy.com</div>
         </div>
+
+        <div class="address-tier">
+          Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+        </div>
+
+        <div class="branches-tier">
+          Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
+        </div>
+
+        <div class="gst-tier">
+          GSTNo:29ABMFM0120E1ZL
+        </div>
       </div>
-    </div>
-
-    <div class="address-tier">
-      Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
-    </div>
-
-    <div class="branches-tier">
-      Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
-    </div>
-
-    <div class="gst-tier">
-      GSTNo:29ABMFM0120E1ZL
     </div>
 
     <div class="blue-divider"></div>
