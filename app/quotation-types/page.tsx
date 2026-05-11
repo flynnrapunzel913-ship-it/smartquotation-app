@@ -7,6 +7,7 @@ import RecentActivity from "@/components/RecentActivity";
 import { Sparkles, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnimatedText } from "@/components/ui/animated-underline-text-one";
+import TimeBasedGreeting from "@/components/dashboard/TimeBasedGreeting";
 
 export default function QuotationTypesPage() {
   const router = useRouter();
@@ -79,7 +80,7 @@ export default function QuotationTypesPage() {
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          style={{ display: "flex", flexDirection: "column", gap: "32px" }}
+          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
           {/* Centered Hero Section */}
           <motion.div
@@ -89,38 +90,13 @@ export default function QuotationTypesPage() {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              paddingTop: "12px",
-              paddingBottom: "48px",
+              paddingTop: "0px",
+              paddingBottom: "16px",
               textAlign: "center",
               width: "100%"
             }}
           >
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", width: "100%" }}>
-              {/* Premium Icon Card Centered */}
-              <div style={{
-                width: "80px",
-                height: "80px",
-                borderRadius: "24px",
-                background: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 15px 45px -15px rgba(0,0,0,0.18)",
-                border: "1px solid #f1f5f9"
-              }}>
-                <Sparkles size={40} className="text-blue-600" />
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                <AnimatedText
-                  text="Good morning, Admin"
-                  textClassName="text-6xl font-black tracking-tighter bg-gradient-to-r from-[#0F172A] via-[#2563EB] to-[#14B8A6] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer"
-                  underlineClassName="text-blue-500/40"
-                  underlineDuration={1.8}
-                  style={{ textAlign: "center" }}
-                />
-              </div>
-            </div>
+            <TimeBasedGreeting />
           </motion.div>
 
           {/* Module Cards Row */}
@@ -130,7 +106,7 @@ export default function QuotationTypesPage() {
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: "1.5rem",
-              marginBottom: "60px",
+              marginBottom: "32px",
               width: "100%"
             }}
           >
