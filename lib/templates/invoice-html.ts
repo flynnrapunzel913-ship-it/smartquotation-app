@@ -22,7 +22,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
   <style>
     @page {
       size: A4;
-      margin: 20px 30px;
+      margin: 16px 24px;
     }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -45,12 +45,11 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .invoice-logo {
-      width: 150px;
+      width: 185px;
       height: auto;
-      margin-top: 6px;
     }
     .contact-blue {
       color: #0E5EA8;
@@ -70,7 +69,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #0E5EA8;
       font-size: 9px;
       font-weight: 600;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .gst-tier {
       text-align: center;
@@ -190,13 +189,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
     <div class="header-top">
-      <!-- Left: Logo -->
-      <div style="width: 25%;">
+      <!-- Left: Logo (28%) -->
+      <div style="width: 28%;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- Center-Left: Phones -->
-      <div class="contact-blue" style="width: 35%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start;">
+      <!-- Center-Left: Phones (32%) -->
+      <div class="contact-blue" style="width: 32%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; padding-left: 10px;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>☎</span> +91 9538840277
         </div>
@@ -205,7 +204,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
         </div>
       </div>
 
-      <!-- Right: Online -->
+      <!-- Right: Online (40%) -->
       <div class="contact-blue" style="width: 40%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>✉</span> mracademyhubli@gmail.com
