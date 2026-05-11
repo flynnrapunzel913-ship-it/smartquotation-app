@@ -45,45 +45,46 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .invoice-logo {
       width: 150px;
       height: auto;
+      margin-top: 6px;
     }
     .contact-blue {
       color: #0E5EA8;
       font-size: 10px;
       font-weight: 600;
-      line-height: 1.4;
+      line-height: 1.35;
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 9.5px;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 9px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 3px;
     }
     .gst-tier {
       text-align: center;
       color: #111111;
-      font-size: 15px;
+      font-size: 11px;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .blue-divider {
       height: 2px;
       background-color: #0E5EA8;
       width: 100%;
-      margin-top: 6px;
-      margin-bottom: 10px;
+      margin-top: 4px;
+      margin-bottom: 8px;
     }
     .invoice-title {
       text-align: center;
@@ -195,7 +196,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       </div>
 
       <!-- Center-Left: Phones -->
-      <div class="contact-blue" style="width: 35%; display: flex; flex-direction: column; gap: 2px;">
+      <div class="contact-blue" style="width: 35%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>☎</span> +91 9538840277
         </div>
@@ -216,7 +217,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     </div>
 
     <div class="address-tier">
-      📍 Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+      Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
     </div>
 
     <div class="branches-tier">
@@ -224,7 +225,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     </div>
 
     <div class="gst-tier">
-      GSTNo: 29ABMFM0120E1ZL
+      GSTNo:29ABMFM0120E1ZL
     </div>
 
     <div class="blue-divider"></div>

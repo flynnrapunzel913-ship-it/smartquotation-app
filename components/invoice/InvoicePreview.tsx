@@ -55,14 +55,14 @@ interface Props {
 export default function InvoicePreview({ data, totals }: Props) {
   return (
     <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "20px 30px" }}>
-      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
         {/* Left: Logo */}
         <div style={{ width: "25%" }}>
-          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "150px", height: "auto" }} />
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "150px", height: "auto", marginTop: "6px" }} />
         </div>
 
         {/* Center-Left: Phones */}
-        <div className="contact-blue" style={{ width: "35%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.4, display: "flex", flexDirection: "column", gap: "2px" }}>
+        <div className="contact-blue" style={{ width: "35%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.35, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <span>☎</span> +91 9538840277
           </div>
@@ -72,7 +72,7 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
 
         {/* Right: Online */}
-        <div className="contact-blue" style={{ width: "40%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.4, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end", textAlign: "right" }}>
+        <div className="contact-blue" style={{ width: "40%", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.35, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end", textAlign: "right" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <span>✉</span> mracademyhubli@gmail.com
           </div>
@@ -82,19 +82,19 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       </div>
 
-      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "4px" }}>
-        📍 Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "2px" }}>
+        Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
       </div>
 
-      <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9px", fontWeight: 600, marginBottom: "6px" }}>
+      <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9px", fontWeight: 600, marginBottom: "3px" }}>
         Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
       </div>
 
-      <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "15px", fontWeight: 700, marginBottom: "6px" }}>
-        GSTNo: 29ABMFM0120E1ZL
+      <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "11px", fontWeight: 700, marginBottom: "4px" }}>
+        GSTNo:29ABMFM0120E1ZL
       </div>
 
-      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "6px", marginBottom: "10px" }}></div>
+      <div className="blue-divider" style={{ height: "2px", backgroundColor: "#0E5EA8", width: "100%", marginTop: "4px", marginBottom: "8px" }}></div>
 
       <div className="invoice-title" style={{ margin: "2mm 0", fontSize: "18px", textDecoration: "underline", fontWeight: 800, textAlign: "center", textTransform: "uppercase", color: "#1F2937" }}>Tax Invoice No: {data.invoiceNumber || "___"}</div>
 
