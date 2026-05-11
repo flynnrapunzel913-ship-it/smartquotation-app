@@ -44,31 +44,34 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .header-top {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 6px;
-      column-gap: 16px;
     }
     .invoice-logo {
-      width: 200px;
+      width: 190px;
       height: auto;
     }
-    .contact-blue {
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 40px;
+      row-gap: 6px;
       color: #0E5EA8;
       font-size: 12px;
       font-weight: 700;
-      line-height: 1.35;
     }
-    .address-block {
+    .address-tier {
+      text-align: center;
       color: #0E5EA8;
       font-size: 10px;
       font-weight: 600;
-      line-height: 1.35;
       margin-top: 6px;
+      margin-bottom: 2px;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
       margin-bottom: 2px;
     }
@@ -190,37 +193,24 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
     <div class="header-top">
-      <!-- Left: Logo (30%) -->
-      <div style="width: 30%;">
+      <!-- Left: Logo (28%) -->
+      <div style="width: 28%;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- Center: Phones + Address (40%) -->
-      <div style="width: 40%; display: flex; flex-direction: column; align-items: flex-start;">
-        <div class="contact-blue">
-          <div style="display: flex; align-items: center; gap: 4px;">
-            <span>☎</span> +91 9538840277
-          </div>
-          <div style="display: flex; align-items: center; gap: 4px;">
-            <span>☎</span> +91 9845326115
-          </div>
-        </div>
-        <div class="address-block">
-          Regd. Office: #91, Sri Mallikarjuna,<br />
-          Naveen Park, Kusugal Road,<br />
-          Keshwapur, Hubballi - 580 023
+      <!-- Right: Contact Grid (72%) -->
+      <div style="width: 72%;">
+        <div class="contact-grid">
+          <div>☎ +91 9538840277</div>
+          <div>✉ mracademyhubli@gmail.com</div>
+          <div>☎ +91 9845326115</div>
+          <div>🌐 www.mrswimmingacademy.com</div>
         </div>
       </div>
+    </div>
 
-      <!-- Right: Online (30%) -->
-      <div class="contact-blue" style="width: 30%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <span>✉</span> mracademyhubli@gmail.com
-        </div>
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <span>🌐</span> www.mrswimmingacademy.com
-        </div>
-      </div>
+    <div class="address-tier">
+      Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
     </div>
 
     <div class="branches-tier">

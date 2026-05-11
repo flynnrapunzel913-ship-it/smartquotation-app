@@ -55,41 +55,28 @@ interface Props {
 export default function InvoicePreview({ data, totals }: Props) {
   return (
     <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "12px 24px" }}>
-      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px", columnGap: "16px" }}>
-        {/* Left: Logo (30%) */}
-        <div style={{ width: "30%" }}>
-          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "200px", height: "auto" }} />
+      <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+        {/* Left: Logo (28%) */}
+        <div style={{ width: "28%" }}>
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "190px", height: "auto" }} />
         </div>
 
-        {/* Center: Phones + Address (40%) */}
-        <div style={{ width: "40%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-          <div className="contact-blue" style={{ color: "#0E5EA8", fontSize: "12px", fontWeight: 700, lineHeight: 1.35 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <span>☎</span> +91 9538840277
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <span>☎</span> +91 9845326115
-            </div>
-          </div>
-          <div className="address-block" style={{ color: "#0E5EA8", fontSize: "10px", fontWeight: 600, lineHeight: 1.35, marginTop: "6px" }}>
-            Regd. Office: #91, Sri Mallikarjuna,<br />
-            Naveen Park, Kusugal Road,<br />
-            Keshwapur, Hubballi - 580 023
-          </div>
-        </div>
-
-        {/* Right: Online (30%) */}
-        <div className="contact-blue" style={{ width: "30%", color: "#0E5EA8", fontSize: "12px", fontWeight: 700, lineHeight: 1.35, display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end", textAlign: "right" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <span>✉</span> mracademyhubli@gmail.com
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <span>🌐</span> www.mrswimmingacademy.com
+        {/* Right: Contact Grid (72%) */}
+        <div style={{ width: "72%" }}>
+          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: "40px", rowGap: "6px", color: "#0E5EA8", fontSize: "12px", fontWeight: 700 }}>
+            <div>☎ +91 9538840277</div>
+            <div>✉ mracademyhubli@gmail.com</div>
+            <div>☎ +91 9845326115</div>
+            <div>🌐 www.mrswimmingacademy.com</div>
           </div>
         </div>
       </div>
 
-      <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, marginBottom: "2px" }}>
+      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10px", fontWeight: 600, marginTop: "6px", marginBottom: "2px" }}>
+        Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+      </div>
+
+      <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9px", fontWeight: 600, marginBottom: "2px" }}>
         Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
       </div>
 
