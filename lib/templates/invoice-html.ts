@@ -44,9 +44,9 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .header-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      column-gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 6px;
+      column-gap: 16px;
     }
     .invoice-logo {
       width: 200px;
@@ -58,14 +58,12 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-weight: 700;
       line-height: 1.35;
     }
-    .address-tier {
-      text-align: center;
+    .address-block {
       color: #0E5EA8;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
-      margin-top: 0;
-      margin-bottom: 2px;
-      line-height: 1.3;
+      line-height: 1.35;
+      margin-top: 6px;
     }
     .branches-tier {
       text-align: center;
@@ -79,7 +77,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #111111;
       font-size: 12px;
       font-weight: 700;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
     .blue-divider {
       height: 2px;
@@ -192,23 +190,30 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
     <div class="header-top">
-      <!-- Left: Logo (34%) -->
-      <div style="width: 34%;">
+      <!-- Left: Logo (30%) -->
+      <div style="width: 30%;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- Center: Phones (28%) -->
-      <div class="contact-blue" style="width: 28%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start;">
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <span>☎</span> +91 9538840277
+      <!-- Center: Phones + Address (40%) -->
+      <div style="width: 40%; display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="contact-blue">
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span>☎</span> +91 9538840277
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span>☎</span> +91 9845326115
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <span>☎</span> +91 9845326115
+        <div class="address-block">
+          Regd. Office: #91, Sri Mallikarjuna,<br />
+          Naveen Park, Kusugal Road,<br />
+          Keshwapur, Hubballi - 580 023
         </div>
       </div>
 
-      <!-- Right: Online (38%) -->
-      <div class="contact-blue" style="width: 38%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
+      <!-- Right: Online (30%) -->
+      <div class="contact-blue" style="width: 30%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>✉</span> mracademyhubli@gmail.com
         </div>
@@ -216,10 +221,6 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
           <span>🌐</span> www.mrswimmingacademy.com
         </div>
       </div>
-    </div>
-
-    <div class="address-tier">
-      Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
     </div>
 
     <div class="branches-tier">
