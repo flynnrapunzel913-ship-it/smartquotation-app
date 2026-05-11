@@ -58,7 +58,7 @@ export default function InvoicePreview({ data, totals }: Props) {
       <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px", width: "100%" }}>
         {/* Left: Logo (28%) */}
         <div style={{ width: "28%" }}>
-          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "195px", height: "auto" }} />
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" style={{ width: "190px", height: "auto" }} />
         </div>
 
         {/* Right: Contact Grid (72%) */}
@@ -72,8 +72,12 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       </div>
 
-      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginTop: "6px", marginBottom: "3px", width: "100%", clear: "both" }}>
+      <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginTop: "6px", marginBottom: "2px", width: "100%", clear: "both" }}>
         Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+      </div>
+
+      <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "9.5px", fontWeight: 600, marginBottom: "2px" }}>
+        Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
       </div>
 
       <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "12px", fontWeight: 700, marginBottom: "4px" }}>

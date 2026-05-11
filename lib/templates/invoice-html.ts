@@ -49,7 +49,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       width: 100%;
     }
     .invoice-logo {
-      width: 195px;
+      width: 190px;
       height: auto;
     }
     .contact-grid {
@@ -67,9 +67,16 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 10.5px;
       font-weight: 600;
       margin-top: 6px;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
       width: 100%;
       clear: both;
+    }
+    .branches-tier {
+      text-align: center;
+      color: #0E5EA8;
+      font-size: 9.5px;
+      font-weight: 600;
+      margin-bottom: 2px;
     }
     .gst-tier {
       text-align: center;
@@ -213,6 +220,10 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 
     <div class="address-tier">
       Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+    </div>
+
+    <div class="branches-tier">
+      Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
     </div>
 
     <div class="gst-tier">
