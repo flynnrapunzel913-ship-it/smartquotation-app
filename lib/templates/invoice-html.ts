@@ -49,13 +49,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       width: 100%;
     }
     .invoice-logo {
-      width: 190px;
+      width: 195px;
       height: auto;
     }
     .contact-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      column-gap: 40px;
+      column-gap: 48px;
       row-gap: 6px;
       color: #0E5EA8;
       font-size: 12px;
@@ -64,19 +64,12 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .address-tier {
       text-align: center;
       color: #0E5EA8;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 600;
       margin-top: 6px;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
       width: 100%;
       clear: both;
-    }
-    .branches-tier {
-      text-align: center;
-      color: #0E5EA8;
-      font-size: 9px;
-      font-weight: 600;
-      margin-bottom: 2px;
     }
     .gst-tier {
       text-align: center;
@@ -156,12 +149,18 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 12px;
     }
     .bank-details-section {
-      margin-top: 5mm;
-      font-size: 10px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #374151;
+      line-height: 1.6;
     }
     .bank-details-section h4 {
+      font-size: 12px;
+      font-weight: 700;
       text-decoration: underline;
-      margin-bottom: 1.5mm;
+      margin-bottom: 4px;
+      color: #111111;
+      text-transform: uppercase;
     }
     .signature-section {
       margin-top: 8mm;
@@ -214,10 +213,6 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 
     <div class="address-tier">
       Regd. Office: #91, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
-    </div>
-
-    <div class="branches-tier">
-      Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
     </div>
 
     <div class="gst-tier">
@@ -299,11 +294,11 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 
     <div class="bank-details-section">
       <h4>OUR BANK DETAILS-</h4>
-      <div style="line-height: 1.5;">
-        <div>${data.bankDetails?.accountHolder || ""}</div>
-        <div>A/C NO - ${data.bankDetails?.accountNumber || ""}</div>
-        <div>${data.bankDetails?.bankName || ""}, ${data.bankDetails?.branch || ""}</div>
-        <div>IFSC CODE - ${data.bankDetails?.ifscCode || ""}</div>
+      <div style="font-weight: 500;">
+        <div>${data.bankDetails?.accountHolder || "M R SWIMMING POOLS AND SPA CONSTRUCTION COMPANY"}</div>
+        <div style="margin-top: 4px;">A/C NO - ${data.bankDetails?.accountNumber || "38693647843"}</div>
+        <div style="margin-top: 4px;">${data.bankDetails?.bankName || "STATE BANK OF INDIA"}, ${data.bankDetails?.branch || "KESHWAPUR, HUBLI"}</div>
+        <div style="margin-top: 4px;">IFSC CODE - ${data.bankDetails?.ifscCode || "SBIN0040641"}</div>
       </div>
     </div>
 
