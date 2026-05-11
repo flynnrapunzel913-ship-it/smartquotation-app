@@ -211,14 +211,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       overflow: hidden; /* Ensure it stays a crisp line */
     }
     .footer-banner {
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 12mm;
-      background: #0E5EA8;
-      clip-path: polygon(0 50%, 100% 0, 100% 100%, 0% 100%);
-      z-index: -1;
+      display: none; /* Removed as per user request */
     }
     /* Single Page Mode Adjustments */
     .single-page .invoice-title { margin: 1mm 0; font-size: 16px; }
@@ -357,8 +350,6 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       <div class="signature-line">AUTHORISED SIGNATORY.</div>
       <div class="signature-divider"></div>
     </div>
-
-    <div class="footer-banner"></div>
   </div>
 </body>
 </html>

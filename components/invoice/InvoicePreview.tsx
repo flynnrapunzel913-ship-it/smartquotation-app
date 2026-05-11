@@ -184,17 +184,6 @@ export default function InvoicePreview({ data, totals }: Props) {
         <div className="signature-line" style={{ fontWeight: 800, fontSize: "13px", color: "#111111", textTransform: "uppercase", marginBottom: "6px" }}>AUTHORISED SIGNATORY.</div>
         <div className="signature-divider" style={{ height: "1.5px", backgroundColor: "#0E5EA8", width: "100%", marginBottom: "2px", marginTop: "10px", display: "block", clear: "both", overflow: "hidden" }}></div>
       </div>
-
-      {/* Footer graphic */}
-      <div style={{ 
-        height: '40px', 
-        width: 'calc(100% + 80px)', 
-        marginLeft: '-40px', 
-        marginBottom: '-40px',
-        marginTop: '20px',
-        background: 'linear-gradient(90deg, #0284c7 0%, #0369a1 100%)',
-        clipPath: 'polygon(0 40%, 100% 0, 100% 100%, 0% 100%)'
-      }}></div>
     </div>
   );
 }
