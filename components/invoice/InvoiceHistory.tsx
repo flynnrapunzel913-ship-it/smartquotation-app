@@ -17,16 +17,25 @@ interface Invoice {
 export default function InvoiceHistory() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchInvoices();
-  }, []);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchQuery(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
 
   const fetchInvoices = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/invoices");
+      const response = await fetch(`/api/invoices?search=${encodeURIComponent(searchQuery)}`);
       const data = await response.json();
       setInvoices(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -50,10 +59,7 @@ export default function InvoiceHistory() {
     window.location.href = `/dashboard/invoices/new?duplicate=${id}`;
   };
 
-  const filteredInvoices = invoices.filter(inv => 
-    inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    inv.customerName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredInvoices = invoices;
 
   return (
     <div className="invoice-history">

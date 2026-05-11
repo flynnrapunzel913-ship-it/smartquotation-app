@@ -2,16 +2,29 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const session = await getSession();
+  if (!session.isLoggedIn) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const module = searchParams.get("module");
+
   try {
-    const session = await getSession();
-    if (!session.isLoggedIn) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!module) {
+      return NextResponse.json([]);
     }
 
     const databases = await prisma.productDatabase.findMany({
-      where: { module: "INVOICE" },
-      include: {
+      where: { module },
+      select: {
+        id: true,
+        name: true,
+        module: true,
+        sourceFile: true,
+        isActive: true,
+        createdAt: true,
         _count: {
           select: { products: true }
         }
@@ -20,29 +33,33 @@ export async function GET() {
     });
     return NextResponse.json(databases);
   } catch (error: any) {
-    console.error("Error fetching databases:", error);
-    return NextResponse.json({ 
-      error: `Database Error: ${error.message || "Failed to fetch databases."}`,
-      details: process.env.NODE_ENV === "development" ? error.stack : undefined
-    }, { status: 500 });
+    console.error("GET databases failed:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
-  try {
-    const session = await getSession();
-    if (!session.isLoggedIn) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await getSession();
+  if (!session.isLoggedIn) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const { name, products, sourceFile } = await req.json();
+  try {
+    const { name, products, sourceFile, module = "MR_INVOICE" } = await req.json();
+
+    // Deactivate all others in this module
+    await prisma.productDatabase.updateMany({
+      where: { module },
+      data: { isActive: false }
+    });
 
     // Create database
     const database = await prisma.productDatabase.create({
       data: {
         name,
-        module: "INVOICE",
+        module,
         sourceFile,
+        isActive: true,
         products: {
           create: products.map((p: any) => ({
             name: p.name,
@@ -50,7 +67,7 @@ export async function POST(req: Request) {
             productCode: p.productCode,
             defaultRate: p.defaultRate,
             unit: p.unit,
-            category: "Database",
+            category: p.category || "Database",
             hsnCode: p.hsnCode,
             gstRate: p.gstRate,
           })),

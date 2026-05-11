@@ -41,24 +41,24 @@ export default function CatalogAdminPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
         <h1>Product Catalog Admin</h1>
         <div style={{ display: "flex", gap: "12px" }}>
-          <select 
-            className="form-control" 
-            value={companyType} 
+          <select
+            className="form-control"
+            value={companyType}
             onChange={(e) => setCompanyType(e.target.value)}
             style={{ width: "200px" }}
           >
             <option value="MR_SWIMMING_POOLS">MR Swimming Pools</option>
-            <option value="KLEAN_TECH_SYSTEMS">Klean Tech Systems</option>
+            <option value="KLEAN_TECH_SYSTEMS">Klean Tech Systems Quotation</option>
           </select>
           <button className="btn-primary" onClick={fetchCatalog}>Refresh</button>
         </div>
       </div>
 
       <div style={{ marginBottom: "24px" }}>
-        <input 
-          type="text" 
-          className="form-control" 
-          placeholder="Search products..." 
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && fetchCatalog()}

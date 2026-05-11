@@ -34,26 +34,12 @@ export async function listQuotations(filters: {
     ];
   }
 
-  return prisma.quotation.findMany({
-    where,
-    select: {
-      id: true,
-      quoteNumber: true,
-      title: true,
-      date: true,
-      grandTotal: true,
-      isDraft: true,
-      createdAt: true,
-      quotationType: true, // If it exists, otherwise it might be in projectSpecifications
-      customer: {
-        select: {
-          name: true
-        }
-      },
-      projectSpecifications: true, // Still needed to check quotationType if not a separate field
-    },
+  const results = await prisma.quotation.findMany({
+    include: { customer: true },
     orderBy: { createdAt: "desc" },
   });
+  console.log("Prisma results count (simplified):", results.length);
+  return results;
 }
 
 export async function dashboardStats() {
@@ -67,7 +53,16 @@ export async function dashboardStats() {
       where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
       take: 6,
-      include: { customer: true },
+      select: {
+        id: true,
+        quoteNumber: true,
+        title: true,
+        grandTotal: true,
+        date: true,
+        customer: {
+          select: { name: true }
+        }
+      },
     }),
   ]);
 

@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import Navbar from "@/components/Navbar";
+import { GoogleProvider } from "@/components/providers/GoogleProvider";
 
 export default function RootLayout({
   children,
@@ -27,8 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Navbar />
-        {children}
+        <GoogleProvider>
+          <Navbar />
+          {children}
+        </GoogleProvider>
       </body>
     </html>
   );

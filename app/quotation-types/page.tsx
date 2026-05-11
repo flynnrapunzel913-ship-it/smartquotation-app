@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { QuotationTypeCard } from "@/components/QuotationTypeCard";
 import "@/styles/cards.css";
 
@@ -23,12 +24,12 @@ export default function QuotationTypesPage() {
             <p>Select a quotation module to begin</p>
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
-            <button className="btn btn-primary" onClick={() => router.push("/history")}>
+            <Link href="/history" prefetch={true} className="btn btn-primary" style={{ textDecoration: "none" }}>
               Quotation History
-            </button>
-            <button className="btn btn-outline" onClick={() => router.push("/dashboard/invoices")}>
+            </Link>
+            <Link href="/dashboard/invoices" prefetch={true} className="btn btn-outline" style={{ textDecoration: "none" }}>
               Invoice History
-            </button>
+            </Link>
           </div>
         </div>
 

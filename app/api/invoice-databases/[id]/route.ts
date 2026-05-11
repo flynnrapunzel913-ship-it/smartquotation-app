@@ -39,11 +39,19 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const { name, isActive } = await req.json();
 
     if (isActive) {
-      // Deactivate all others in this module
-      await prisma.productDatabase.updateMany({
-        where: { module: "INVOICE" },
-        data: { isActive: false }
+      // Find the module of this database
+      const db = await prisma.productDatabase.findUnique({
+        where: { id },
+        select: { module: true }
       });
+      
+      if (db) {
+        // Deactivate all others in this module
+        await prisma.productDatabase.updateMany({
+          where: { module: db.module },
+          data: { isActive: false }
+        });
+      }
     }
 
     const database = await prisma.productDatabase.update({

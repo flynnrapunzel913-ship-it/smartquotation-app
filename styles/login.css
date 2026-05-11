@@ -52,3 +52,36 @@
 .login-content {
   padding: 1.5rem;
 }
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.divider:not(:empty)::before {
+  margin-right: .75em;
+}
+
+.divider:not(:empty)::after {
+  margin-left: .75em;
+}
+
+.google-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

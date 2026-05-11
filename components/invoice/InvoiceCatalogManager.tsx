@@ -12,9 +12,12 @@ interface Product {
 }
 
 export default function InvoiceCatalogManager() {
-  const [activeTab, setActiveTab] = useState<"catalog" | "add" | "upload">("catalog");
+  const [activeTab, setActiveTab] = useState<"catalog" | "add" | "upload" | "databases">("databases");
   const [products, setProducts] = useState<Product[]>([]);
+  const [databases, setDatabases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingDatabaseId, setEditingDatabaseId] = useState<string | null>(null);
+  const [editDbName, setEditDbName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -36,19 +39,97 @@ export default function InvoiceCatalogManager() {
     imagePath: ""
   });
  
+  const [searchTerm, setSearchTerm] = useState("");
+  
   useEffect(() => {
-    fetchProducts();
+    fetchDatabases();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === "catalog") {
+      const active = databases.find(db => db.isActive);
+      fetchProducts(active?.id);
+    }
+  }, [databases, activeTab]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchQuery(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  const fetchDatabases = async () => {
+    try {
+      const res = await fetch("/api/invoice-databases?module=MR_INVOICE");
+      const data = await res.json();
+      setDatabases(Array.isArray(data) ? data : []);
+    } catch (e) {
+      console.error("Error fetching databases:", e);
+    }
+  };
+
+  const handleDeleteDatabase = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this entire database? All products inside will be lost.")) return;
+    try {
+      const res = await fetch(`/api/invoice-databases/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        fetchDatabases();
+        fetchProducts(""); // Clear products list
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleUpdateDatabaseName = async (id: string) => {
+    try {
+      const res = await fetch(`/api/invoice-databases/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: editDbName })
+      });
+      if (res.ok) {
+        setEditingDatabaseId(null);
+        fetchDatabases();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleToggleActive = async (id: string, currentlyActive: boolean) => {
+    if (currentlyActive) return;
+    try {
+      const res = await fetch(`/api/invoice-databases/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: true })
+      });
+      if (res.ok) {
+        fetchDatabases();
+        fetchProducts(id);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
  
-  const fetchProducts = async () => {
+  const fetchProducts = async (dbId?: string) => {
     setLoading(true);
     try {
       let allProducts: Product[] = [];
       let pageNum = 0;
       let hasMore = true;
       
+      const activeDb = databases.find(db => db.isActive);
+      const effectiveDbId = dbId || activeDb?.id;
+      const dbParam = effectiveDbId ? `&databaseId=${effectiveDbId}` : "";
+      const moduleParam = `&module=MR_INVOICE`;
+      
       while (hasMore) {
-        const res = await fetch(`/api/invoice-products?limit=100&offset=${pageNum * 100}`);
+        const res = await fetch(`/api/products?limit=100&offset=${pageNum * 100}${dbParam}${moduleParam}`);
         if (!res.ok) {
           console.error("API request failed with status:", res.status);
           break;
@@ -79,7 +160,7 @@ export default function InvoiceCatalogManager() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
-      const res = await fetch(`/api/invoice-products/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (res.ok) {
         fetchProducts();
       } else {
@@ -93,12 +174,13 @@ export default function InvoiceCatalogManager() {
   const handleSave = async () => {
     if (!editingProduct) return;
     try {
-      const res = await fetch(`/api/invoice-products/${editingProduct.id}`, {
+      const res = await fetch(`/api/products/${editingProduct.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...editFormData,
-          unitPrice: parseFloat(editFormData.unitPrice.toString() || "0")
+          defaultRate: parseFloat(editFormData.unitPrice.toString() || "0"),
+          category: editFormData.type
         })
       });
       if (res.ok) {
@@ -113,13 +195,22 @@ export default function InvoiceCatalogManager() {
   };
 
   const handleCreate = async () => {
+    const activeDb = databases.find(db => db.isActive);
+    if (!activeDb) {
+      alert("Please set a database as active in the 'My Databases' tab first.");
+      setActiveTab("databases");
+      return;
+    }
+
     try {
-      const res = await fetch("/api/invoice-products", {
+      const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...addFormData,
-          unitPrice: parseFloat(addFormData.unitPrice.toString() || "0")
+          defaultRate: parseFloat(addFormData.unitPrice.toString() || "0"),
+          category: addFormData.type,
+          databaseId: activeDb.id
         })
       });
       if (res.ok) {
@@ -174,15 +265,28 @@ export default function InvoiceCatalogManager() {
         };
       });
 
-      const res = await fetch("/api/invoice-products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productsToUpload)
+        const res = await fetch("/api/invoice-databases", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: file.name.split(".")[0],
+            sourceFile: file.name,
+            module: "MR_INVOICE",
+            products: productsToUpload.map(p => ({
+            name: p.name,
+            description: p.description,
+            defaultRate: p.unitPrice,
+            hsnCode: p.hsnCode,
+            unit: "Nos",
+            gstRate: 18,
+            category: p.type,
+          }))
+        })
       });
       if (res.ok) {
         alert("Products uploaded successfully");
-        setActiveTab("catalog");
-        fetchProducts();
+        setActiveTab("databases");
+        fetchDatabases();
       } else {
         alert("Failed to upload products");
       }
@@ -212,6 +316,22 @@ export default function InvoiceCatalogManager() {
   return (
     <div style={{ width: "100%" }}>
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px" }}>
+        <button 
+          onClick={() => setActiveTab("databases")}
+          style={{ 
+            padding: "10px 20px", 
+            background: activeTab === "databases" ? "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)" : "transparent", 
+            color: activeTab === "databases" ? "white" : "#64748b", 
+            border: "none", 
+            borderRadius: "8px",
+            cursor: "pointer", 
+            fontWeight: "600",
+            fontSize: "0.875rem",
+            transition: "all 0.2s"
+          }}
+        >
+          My Databases
+        </button>
         <button 
           onClick={() => setActiveTab("catalog")}
           style={{ 
@@ -262,14 +382,98 @@ export default function InvoiceCatalogManager() {
         </button>
       </div>
 
+      {activeTab === "databases" && (
+        <div className="databases-grid">
+          {databases.length === 0 ? (
+            <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>No databases added yet. Upload an Excel file to get started.</div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
+              {databases.map((db) => (
+                <div 
+                  key={db.id} 
+                  style={{ 
+                    padding: "20px", 
+                    background: "white", 
+                    borderRadius: "16px", 
+                    border: db.isActive ? "2px solid #4f46e5" : "1px solid #e2e8f0",
+                    boxShadow: db.isActive ? "0 4px 12px rgba(79, 70, 229, 0.1)" : "0 1px 3px rgba(0,0,0,0.1)",
+                    position: "relative",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  {db.isActive && (
+                    <span style={{ position: "absolute", top: "12px", right: "12px", background: "#4f46e5", color: "white", padding: "2px 8px", borderRadius: "4px", fontSize: "10px", fontWeight: "700" }}>ACTIVE</span>
+                  )}
+                  
+                  {editingDatabaseId === db.id ? (
+                    <div style={{ marginBottom: "12px" }}>
+                      <input 
+                        type="text" 
+                        value={editDbName}
+                        onChange={(e) => setEditDbName(e.target.value)}
+                        className="form-control"
+                        autoFocus
+                      />
+                      <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                        <button className="btn btn-primary" style={{ padding: "4px 8px", fontSize: "12px" }} onClick={() => handleUpdateDatabaseName(db.id)}>Save</button>
+                        <button className="btn btn-outline" style={{ padding: "4px 8px", fontSize: "12px" }} onClick={() => setEditingDatabaseId(null)}>Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <h4 style={{ margin: "0 0 8px 0", fontSize: "1.125rem", color: "#1e293b" }}>{db.name}</h4>
+                  )}
+                  
+                  <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 16px 0" }}>
+                    {db._count?.products || 0} Products • Added on {new Date(db.createdAt).toLocaleDateString()}
+                  </p>
+                  
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <button 
+                      className="btn btn-outline" 
+                      style={{ flex: 1, fontSize: "12px", padding: "6px" }}
+                      onClick={() => {
+                        setEditingDatabaseId(db.id);
+                        setEditDbName(db.name);
+                      }}
+                    >
+                      Rename
+                    </button>
+                    <button 
+                      className="btn btn-primary" 
+                      style={{ flex: 1, fontSize: "12px", padding: "6px" }}
+                      onClick={() => {
+                        handleToggleActive(db.id, false);
+                        setActiveTab("catalog");
+                      }}
+                    >
+                      View
+                    </button>
+                    <button 
+                      className="btn" 
+                      style={{ background: "#fee2e2", color: "#dc2626", fontSize: "12px", padding: "6px", flex: 1 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteDatabase(db.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {activeTab === "catalog" && (
         <div>
           <div style={{ display: "flex", gap: "16px", marginBottom: "20px" }}>
             <input 
               type="text" 
               placeholder="Search by name..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               style={{ 
                 padding: "12px 16px", 
                 border: "1px solid #e2e8f0", 

@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import InvoiceHistory from "@/components/invoice/InvoiceHistory";
+import dynamic from "next/dynamic";
+const InvoiceHistory = dynamic(() => import("@/components/invoice/InvoiceHistory"), {
+  loading: () => <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>Loading history...</div>
+});
 import "@/styles/invoice.css";
 
 export default function InvoiceDashboard() {

@@ -27,6 +27,17 @@ export async function GET(request: Request) {
           } : {},
         ],
       },
+      select: {
+        id: true,
+        companyType: true,
+        category: true,
+        code: true,
+        name: true,
+        description: true,
+        unitPrice: true,
+        unit: true,
+        specifications: true,
+      },
       orderBy: { name: "asc" },
     });
 

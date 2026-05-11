@@ -15,8 +15,11 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || undefined;
     
+    console.log("Fetching quotations with search:", search);
     const quotations = await listQuotations({ search });
-    return NextResponse.json(quotations);
+    console.log("Quotations found:", quotations?.length || 0);
+    
+    return NextResponse.json(quotations || []);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

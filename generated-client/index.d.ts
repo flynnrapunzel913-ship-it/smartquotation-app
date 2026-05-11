@@ -3970,12 +3970,12 @@ export namespace Prisma {
     defaultRate: Decimal | null
     unit: string | null
     warranty: string | null
-    hsnCode: string | null
     imagePath: string | null
     imageText: string | null
     sortOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    hsnCode: string | null
     databaseId: string | null
     gstRate: Decimal | null
     productCode: string | null
@@ -3990,12 +3990,12 @@ export namespace Prisma {
     defaultRate: Decimal | null
     unit: string | null
     warranty: string | null
-    hsnCode: string | null
     imagePath: string | null
     imageText: string | null
     sortOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    hsnCode: string | null
     databaseId: string | null
     gstRate: Decimal | null
     productCode: string | null
@@ -4010,12 +4010,12 @@ export namespace Prisma {
     defaultRate: number
     unit: number
     warranty: number
-    hsnCode: number
     imagePath: number
     imageText: number
     sortOrder: number
     createdAt: number
     updatedAt: number
+    hsnCode: number
     databaseId: number
     gstRate: number
     productCode: number
@@ -4044,12 +4044,12 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
-    hsnCode?: true
     imagePath?: true
     imageText?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
+    hsnCode?: true
     databaseId?: true
     gstRate?: true
     productCode?: true
@@ -4064,12 +4064,12 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
-    hsnCode?: true
     imagePath?: true
     imageText?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
+    hsnCode?: true
     databaseId?: true
     gstRate?: true
     productCode?: true
@@ -4084,12 +4084,12 @@ export namespace Prisma {
     defaultRate?: true
     unit?: true
     warranty?: true
-    hsnCode?: true
     imagePath?: true
     imageText?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
+    hsnCode?: true
     databaseId?: true
     gstRate?: true
     productCode?: true
@@ -4191,12 +4191,12 @@ export namespace Prisma {
     defaultRate: Decimal
     unit: string
     warranty: string
-    hsnCode: string | null
     imagePath: string | null
     imageText: string | null
     sortOrder: number
     createdAt: Date
     updatedAt: Date
+    hsnCode: string | null
     databaseId: string | null
     gstRate: Decimal | null
     productCode: string | null
@@ -4230,17 +4230,17 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hsnCode?: boolean
     databaseId?: boolean
     gstRate?: boolean
     productCode?: boolean
-    items?: boolean | Product$itemsArgs<ExtArgs>
     database?: boolean | Product$databaseArgs<ExtArgs>
+    items?: boolean | Product$itemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4253,12 +4253,12 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hsnCode?: boolean
     databaseId?: boolean
     gstRate?: boolean
     productCode?: boolean
@@ -4274,12 +4274,12 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hsnCode?: boolean
     databaseId?: boolean
     gstRate?: boolean
     productCode?: boolean
@@ -4295,21 +4295,21 @@ export namespace Prisma {
     defaultRate?: boolean
     unit?: boolean
     warranty?: boolean
-    hsnCode?: boolean
     imagePath?: boolean
     imageText?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    hsnCode?: boolean
     databaseId?: boolean
     gstRate?: boolean
     productCode?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "hsnCode" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt" | "databaseId" | "gstRate" | "productCode", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "category" | "sectionCode" | "defaultRate" | "unit" | "warranty" | "imagePath" | "imageText" | "sortOrder" | "createdAt" | "updatedAt" | "hsnCode" | "databaseId" | "gstRate" | "productCode", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    items?: boolean | Product$itemsArgs<ExtArgs>
     database?: boolean | Product$databaseArgs<ExtArgs>
+    items?: boolean | Product$itemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4322,8 +4322,8 @@ export namespace Prisma {
   export type $ProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Product"
     objects: {
-      items: Prisma.$QuotationItemPayload<ExtArgs>[]
       database: Prisma.$ProductDatabasePayload<ExtArgs> | null
+      items: Prisma.$QuotationItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4334,12 +4334,12 @@ export namespace Prisma {
       defaultRate: Prisma.Decimal
       unit: string
       warranty: string
-      hsnCode: string | null
       imagePath: string | null
       imageText: string | null
       sortOrder: number
       createdAt: Date
       updatedAt: Date
+      hsnCode: string | null
       databaseId: string | null
       gstRate: Prisma.Decimal | null
       productCode: string | null
@@ -4737,8 +4737,8 @@ export namespace Prisma {
    */
   export interface Prisma__ProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    items<T extends Product$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuotationItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     database<T extends Product$databaseArgs<ExtArgs> = {}>(args?: Subset<T, Product$databaseArgs<ExtArgs>>): Prisma__ProductDatabaseClient<$Result.GetResult<Prisma.$ProductDatabasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    items<T extends Product$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuotationItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4776,12 +4776,12 @@ export namespace Prisma {
     readonly defaultRate: FieldRef<"Product", 'Decimal'>
     readonly unit: FieldRef<"Product", 'String'>
     readonly warranty: FieldRef<"Product", 'String'>
-    readonly hsnCode: FieldRef<"Product", 'String'>
     readonly imagePath: FieldRef<"Product", 'String'>
     readonly imageText: FieldRef<"Product", 'String'>
     readonly sortOrder: FieldRef<"Product", 'Int'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
+    readonly hsnCode: FieldRef<"Product", 'String'>
     readonly databaseId: FieldRef<"Product", 'String'>
     readonly gstRate: FieldRef<"Product", 'Decimal'>
     readonly productCode: FieldRef<"Product", 'String'>
@@ -5181,6 +5181,25 @@ export namespace Prisma {
   }
 
   /**
+   * Product.database
+   */
+  export type Product$databaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductDatabase
+     */
+    select?: ProductDatabaseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductDatabase
+     */
+    omit?: ProductDatabaseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductDatabaseInclude<ExtArgs> | null
+    where?: ProductDatabaseWhereInput
+  }
+
+  /**
    * Product.items
    */
   export type Product$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5202,25 +5221,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuotationItemScalarFieldEnum | QuotationItemScalarFieldEnum[]
-  }
-
-  /**
-   * Product.database
-   */
-  export type Product$databaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProductDatabase
-     */
-    select?: ProductDatabaseSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProductDatabase
-     */
-    omit?: ProductDatabaseOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProductDatabaseInclude<ExtArgs> | null
-    where?: ProductDatabaseWhereInput
   }
 
   /**
@@ -7724,8 +7724,8 @@ export namespace Prisma {
     imageUrl: string | null
     imageText: string | null
     productId: string | null
-    title: string | null
     isCustom: boolean | null
+    title: string | null
   }
 
   export type QuotationItemMaxAggregateOutputType = {
@@ -7743,8 +7743,8 @@ export namespace Prisma {
     imageUrl: string | null
     imageText: string | null
     productId: string | null
-    title: string | null
     isCustom: boolean | null
+    title: string | null
   }
 
   export type QuotationItemCountAggregateOutputType = {
@@ -7763,8 +7763,8 @@ export namespace Prisma {
     imageText: number
     productId: number
     variableValues: number
-    title: number
     isCustom: number
+    title: number
     _all: number
   }
 
@@ -7798,8 +7798,8 @@ export namespace Prisma {
     imageUrl?: true
     imageText?: true
     productId?: true
-    title?: true
     isCustom?: true
+    title?: true
   }
 
   export type QuotationItemMaxAggregateInputType = {
@@ -7817,8 +7817,8 @@ export namespace Prisma {
     imageUrl?: true
     imageText?: true
     productId?: true
-    title?: true
     isCustom?: true
+    title?: true
   }
 
   export type QuotationItemCountAggregateInputType = {
@@ -7837,8 +7837,8 @@ export namespace Prisma {
     imageText?: true
     productId?: true
     variableValues?: true
-    title?: true
     isCustom?: true
+    title?: true
     _all?: true
   }
 
@@ -7944,8 +7944,8 @@ export namespace Prisma {
     imageText: string | null
     productId: string | null
     variableValues: JsonValue
-    title: string
     isCustom: boolean
+    title: string
     _count: QuotationItemCountAggregateOutputType | null
     _avg: QuotationItemAvgAggregateOutputType | null
     _sum: QuotationItemSumAggregateOutputType | null
@@ -7983,8 +7983,8 @@ export namespace Prisma {
     imageText?: boolean
     productId?: boolean
     variableValues?: boolean
-    title?: boolean
     isCustom?: boolean
+    title?: boolean
     product?: boolean | QuotationItem$productArgs<ExtArgs>
     quotation?: boolean | QuotationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quotationItem"]>
@@ -8005,8 +8005,8 @@ export namespace Prisma {
     imageText?: boolean
     productId?: boolean
     variableValues?: boolean
-    title?: boolean
     isCustom?: boolean
+    title?: boolean
     product?: boolean | QuotationItem$productArgs<ExtArgs>
     quotation?: boolean | QuotationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quotationItem"]>
@@ -8027,8 +8027,8 @@ export namespace Prisma {
     imageText?: boolean
     productId?: boolean
     variableValues?: boolean
-    title?: boolean
     isCustom?: boolean
+    title?: boolean
     product?: boolean | QuotationItem$productArgs<ExtArgs>
     quotation?: boolean | QuotationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quotationItem"]>
@@ -8049,11 +8049,11 @@ export namespace Prisma {
     imageText?: boolean
     productId?: boolean
     variableValues?: boolean
-    title?: boolean
     isCustom?: boolean
+    title?: boolean
   }
 
-  export type QuotationItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quotationId" | "section" | "serialNo" | "category" | "description" | "warranty" | "qty" | "unit" | "rate" | "amount" | "imageUrl" | "imageText" | "productId" | "variableValues" | "title" | "isCustom", ExtArgs["result"]["quotationItem"]>
+  export type QuotationItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quotationId" | "section" | "serialNo" | "category" | "description" | "warranty" | "qty" | "unit" | "rate" | "amount" | "imageUrl" | "imageText" | "productId" | "variableValues" | "isCustom" | "title", ExtArgs["result"]["quotationItem"]>
   export type QuotationItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | QuotationItem$productArgs<ExtArgs>
     quotation?: boolean | QuotationDefaultArgs<ExtArgs>
@@ -8089,8 +8089,8 @@ export namespace Prisma {
       imageText: string | null
       productId: string | null
       variableValues: Prisma.JsonValue
-      title: string
       isCustom: boolean
+      title: string
     }, ExtArgs["result"]["quotationItem"]>
     composites: {}
   }
@@ -8531,8 +8531,8 @@ export namespace Prisma {
     readonly imageText: FieldRef<"QuotationItem", 'String'>
     readonly productId: FieldRef<"QuotationItem", 'String'>
     readonly variableValues: FieldRef<"QuotationItem", 'Json'>
-    readonly title: FieldRef<"QuotationItem", 'String'>
     readonly isCustom: FieldRef<"QuotationItem", 'Boolean'>
+    readonly title: FieldRef<"QuotationItem", 'String'>
   }
     
 
@@ -10131,9 +10131,9 @@ export namespace Prisma {
     grandTotal: Decimal | null
     amountInWords: string | null
     isDraft: boolean | null
-    pdfMode: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    pdfMode: string | null
   }
 
   export type InvoiceMaxAggregateOutputType = {
@@ -10153,9 +10153,9 @@ export namespace Prisma {
     grandTotal: Decimal | null
     amountInWords: string | null
     isDraft: boolean | null
-    pdfMode: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    pdfMode: string | null
   }
 
   export type InvoiceCountAggregateOutputType = {
@@ -10179,9 +10179,9 @@ export namespace Prisma {
     sectionHeadings: number
     customSections: number
     isDraft: number
-    pdfMode: number
     createdAt: number
     updatedAt: number
+    pdfMode: number
     _all: number
   }
 
@@ -10223,9 +10223,9 @@ export namespace Prisma {
     grandTotal?: true
     amountInWords?: true
     isDraft?: true
-    pdfMode?: true
     createdAt?: true
     updatedAt?: true
+    pdfMode?: true
   }
 
   export type InvoiceMaxAggregateInputType = {
@@ -10245,9 +10245,9 @@ export namespace Prisma {
     grandTotal?: true
     amountInWords?: true
     isDraft?: true
-    pdfMode?: true
     createdAt?: true
     updatedAt?: true
+    pdfMode?: true
   }
 
   export type InvoiceCountAggregateInputType = {
@@ -10271,9 +10271,9 @@ export namespace Prisma {
     sectionHeadings?: true
     customSections?: true
     isDraft?: true
-    pdfMode?: true
     createdAt?: true
     updatedAt?: true
+    pdfMode?: true
     _all?: true
   }
 
@@ -10384,9 +10384,9 @@ export namespace Prisma {
     sectionHeadings: JsonValue | null
     customSections: JsonValue | null
     isDraft: boolean
-    pdfMode: string
     createdAt: Date
     updatedAt: Date
+    pdfMode: string
     _count: InvoiceCountAggregateOutputType | null
     _avg: InvoiceAvgAggregateOutputType | null
     _sum: InvoiceSumAggregateOutputType | null
@@ -10429,9 +10429,9 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
-    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    pdfMode?: boolean
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10455,9 +10455,9 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
-    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    pdfMode?: boolean
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10481,9 +10481,9 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
-    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    pdfMode?: boolean
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectScalar = {
@@ -10507,12 +10507,12 @@ export namespace Prisma {
     sectionHeadings?: boolean
     customSections?: boolean
     isDraft?: boolean
-    pdfMode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    pdfMode?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "invoiceDate" | "customerName" | "customerAddress" | "customerGST" | "customerMobile" | "items" | "subTotal" | "cgstPercent" | "sgstPercent" | "cgstAmount" | "sgstAmount" | "roundOff" | "grandTotal" | "amountInWords" | "bankDetails" | "sectionHeadings" | "customSections" | "isDraft" | "pdfMode" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNumber" | "invoiceDate" | "customerName" | "customerAddress" | "customerGST" | "customerMobile" | "items" | "subTotal" | "cgstPercent" | "sgstPercent" | "cgstAmount" | "sgstAmount" | "roundOff" | "grandTotal" | "amountInWords" | "bankDetails" | "sectionHeadings" | "customSections" | "isDraft" | "createdAt" | "updatedAt" | "pdfMode", ExtArgs["result"]["invoice"]>
 
   export type $InvoicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Invoice"
@@ -10538,9 +10538,9 @@ export namespace Prisma {
       sectionHeadings: Prisma.JsonValue | null
       customSections: Prisma.JsonValue | null
       isDraft: boolean
-      pdfMode: string
       createdAt: Date
       updatedAt: Date
+      pdfMode: string
     }, ExtArgs["result"]["invoice"]>
     composites: {}
   }
@@ -10984,9 +10984,9 @@ export namespace Prisma {
     readonly sectionHeadings: FieldRef<"Invoice", 'Json'>
     readonly customSections: FieldRef<"Invoice", 'Json'>
     readonly isDraft: FieldRef<"Invoice", 'Boolean'>
-    readonly pdfMode: FieldRef<"Invoice", 'String'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
+    readonly pdfMode: FieldRef<"Invoice", 'String'>
   }
     
 
@@ -13591,12 +13591,12 @@ export namespace Prisma {
     defaultRate: 'defaultRate',
     unit: 'unit',
     warranty: 'warranty',
-    hsnCode: 'hsnCode',
     imagePath: 'imagePath',
     imageText: 'imageText',
     sortOrder: 'sortOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    hsnCode: 'hsnCode',
     databaseId: 'databaseId',
     gstRate: 'gstRate',
     productCode: 'productCode'
@@ -13665,8 +13665,8 @@ export namespace Prisma {
     imageText: 'imageText',
     productId: 'productId',
     variableValues: 'variableValues',
-    title: 'title',
-    isCustom: 'isCustom'
+    isCustom: 'isCustom',
+    title: 'title'
   };
 
   export type QuotationItemScalarFieldEnum = (typeof QuotationItemScalarFieldEnum)[keyof typeof QuotationItemScalarFieldEnum]
@@ -13711,9 +13711,9 @@ export namespace Prisma {
     sectionHeadings: 'sectionHeadings',
     customSections: 'customSections',
     isDraft: 'isDraft',
-    pdfMode: 'pdfMode',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    pdfMode: 'pdfMode'
   };
 
   export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
@@ -14057,17 +14057,17 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
-    hsnCode?: StringNullableFilter<"Product"> | string | null
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
+    hsnCode?: StringNullableFilter<"Product"> | string | null
     databaseId?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableFilter<"Product"> | string | null
-    items?: QuotationItemListRelationFilter
     database?: XOR<ProductDatabaseNullableScalarRelationFilter, ProductDatabaseWhereInput> | null
+    items?: QuotationItemListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -14079,17 +14079,17 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-    hsnCode?: SortOrderInput | SortOrder
     imagePath?: SortOrderInput | SortOrder
     imageText?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hsnCode?: SortOrderInput | SortOrder
     databaseId?: SortOrderInput | SortOrder
     gstRate?: SortOrderInput | SortOrder
     productCode?: SortOrderInput | SortOrder
-    items?: QuotationItemOrderByRelationAggregateInput
     database?: ProductDatabaseOrderByWithRelationInput
+    items?: QuotationItemOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -14104,17 +14104,17 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
-    hsnCode?: StringNullableFilter<"Product"> | string | null
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
+    hsnCode?: StringNullableFilter<"Product"> | string | null
     databaseId?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableFilter<"Product"> | string | null
-    items?: QuotationItemListRelationFilter
     database?: XOR<ProductDatabaseNullableScalarRelationFilter, ProductDatabaseWhereInput> | null
+    items?: QuotationItemListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -14126,12 +14126,12 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-    hsnCode?: SortOrderInput | SortOrder
     imagePath?: SortOrderInput | SortOrder
     imageText?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hsnCode?: SortOrderInput | SortOrder
     databaseId?: SortOrderInput | SortOrder
     gstRate?: SortOrderInput | SortOrder
     productCode?: SortOrderInput | SortOrder
@@ -14154,12 +14154,12 @@ export namespace Prisma {
     defaultRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringWithAggregatesFilter<"Product"> | string
     warranty?: StringWithAggregatesFilter<"Product"> | string
-    hsnCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     imagePath?: StringNullableWithAggregatesFilter<"Product"> | string | null
     imageText?: StringNullableWithAggregatesFilter<"Product"> | string | null
     sortOrder?: IntWithAggregatesFilter<"Product"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+    hsnCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     databaseId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     gstRate?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -14408,8 +14408,8 @@ export namespace Prisma {
     imageText?: StringNullableFilter<"QuotationItem"> | string | null
     productId?: StringNullableFilter<"QuotationItem"> | string | null
     variableValues?: JsonFilter<"QuotationItem">
-    title?: StringFilter<"QuotationItem"> | string
     isCustom?: BoolFilter<"QuotationItem"> | boolean
+    title?: StringFilter<"QuotationItem"> | string
     product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
     quotation?: XOR<QuotationScalarRelationFilter, QuotationWhereInput>
   }
@@ -14430,8 +14430,8 @@ export namespace Prisma {
     imageText?: SortOrderInput | SortOrder
     productId?: SortOrderInput | SortOrder
     variableValues?: SortOrder
-    title?: SortOrder
     isCustom?: SortOrder
+    title?: SortOrder
     product?: ProductOrderByWithRelationInput
     quotation?: QuotationOrderByWithRelationInput
   }
@@ -14455,8 +14455,8 @@ export namespace Prisma {
     imageText?: StringNullableFilter<"QuotationItem"> | string | null
     productId?: StringNullableFilter<"QuotationItem"> | string | null
     variableValues?: JsonFilter<"QuotationItem">
-    title?: StringFilter<"QuotationItem"> | string
     isCustom?: BoolFilter<"QuotationItem"> | boolean
+    title?: StringFilter<"QuotationItem"> | string
     product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
     quotation?: XOR<QuotationScalarRelationFilter, QuotationWhereInput>
   }, "id">
@@ -14477,8 +14477,8 @@ export namespace Prisma {
     imageText?: SortOrderInput | SortOrder
     productId?: SortOrderInput | SortOrder
     variableValues?: SortOrder
-    title?: SortOrder
     isCustom?: SortOrder
+    title?: SortOrder
     _count?: QuotationItemCountOrderByAggregateInput
     _avg?: QuotationItemAvgOrderByAggregateInput
     _max?: QuotationItemMaxOrderByAggregateInput
@@ -14505,8 +14505,8 @@ export namespace Prisma {
     imageText?: StringNullableWithAggregatesFilter<"QuotationItem"> | string | null
     productId?: StringNullableWithAggregatesFilter<"QuotationItem"> | string | null
     variableValues?: JsonWithAggregatesFilter<"QuotationItem">
-    title?: StringWithAggregatesFilter<"QuotationItem"> | string
     isCustom?: BoolWithAggregatesFilter<"QuotationItem"> | boolean
+    title?: StringWithAggregatesFilter<"QuotationItem"> | string
   }
 
   export type ProductCatalogWhereInput = {
@@ -14622,9 +14622,9 @@ export namespace Prisma {
     sectionHeadings?: JsonNullableFilter<"Invoice">
     customSections?: JsonNullableFilter<"Invoice">
     isDraft?: BoolFilter<"Invoice"> | boolean
-    pdfMode?: StringFilter<"Invoice"> | string
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
+    pdfMode?: StringFilter<"Invoice"> | string
   }
 
   export type InvoiceOrderByWithRelationInput = {
@@ -14648,9 +14648,9 @@ export namespace Prisma {
     sectionHeadings?: SortOrderInput | SortOrder
     customSections?: SortOrderInput | SortOrder
     isDraft?: SortOrder
-    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    pdfMode?: SortOrder
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -14677,9 +14677,9 @@ export namespace Prisma {
     sectionHeadings?: JsonNullableFilter<"Invoice">
     customSections?: JsonNullableFilter<"Invoice">
     isDraft?: BoolFilter<"Invoice"> | boolean
-    pdfMode?: StringFilter<"Invoice"> | string
     createdAt?: DateTimeFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeFilter<"Invoice"> | Date | string
+    pdfMode?: StringFilter<"Invoice"> | string
   }, "id" | "invoiceNumber">
 
   export type InvoiceOrderByWithAggregationInput = {
@@ -14703,9 +14703,9 @@ export namespace Prisma {
     sectionHeadings?: SortOrderInput | SortOrder
     customSections?: SortOrderInput | SortOrder
     isDraft?: SortOrder
-    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    pdfMode?: SortOrder
     _count?: InvoiceCountOrderByAggregateInput
     _avg?: InvoiceAvgOrderByAggregateInput
     _max?: InvoiceMaxOrderByAggregateInput
@@ -14737,9 +14737,9 @@ export namespace Prisma {
     sectionHeadings?: JsonNullableWithAggregatesFilter<"Invoice">
     customSections?: JsonNullableWithAggregatesFilter<"Invoice">
     isDraft?: BoolWithAggregatesFilter<"Invoice"> | boolean
-    pdfMode?: StringWithAggregatesFilter<"Invoice"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+    pdfMode?: StringWithAggregatesFilter<"Invoice"> | string
   }
 
   export type ProductDatabaseWhereInput = {
@@ -15032,16 +15032,16 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
-    items?: QuotationItemCreateNestedManyWithoutProductInput
     database?: ProductDatabaseCreateNestedOneWithoutProductsInput
+    items?: QuotationItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -15053,12 +15053,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     databaseId?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
@@ -15074,16 +15074,16 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
-    items?: QuotationItemUpdateManyWithoutProductNestedInput
     database?: ProductDatabaseUpdateOneWithoutProductsNestedInput
+    items?: QuotationItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -15095,12 +15095,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15116,12 +15116,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     databaseId?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
@@ -15136,12 +15136,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -15155,12 +15155,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15449,8 +15449,8 @@ export namespace Prisma {
     imageUrl?: string | null
     imageText?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
     product?: ProductCreateNestedOneWithoutItemsInput
     quotation: QuotationCreateNestedOneWithoutItemsInput
   }
@@ -15471,8 +15471,8 @@ export namespace Prisma {
     imageText?: string | null
     productId?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
   }
 
   export type QuotationItemUpdateInput = {
@@ -15489,8 +15489,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
     product?: ProductUpdateOneWithoutItemsNestedInput
     quotation?: QuotationUpdateOneRequiredWithoutItemsNestedInput
   }
@@ -15511,8 +15511,8 @@ export namespace Prisma {
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     productId?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuotationItemCreateManyInput = {
@@ -15531,8 +15531,8 @@ export namespace Prisma {
     imageText?: string | null
     productId?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
   }
 
   export type QuotationItemUpdateManyMutationInput = {
@@ -15549,8 +15549,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuotationItemUncheckedUpdateManyInput = {
@@ -15569,8 +15569,8 @@ export namespace Prisma {
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     productId?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductCatalogCreateInput = {
@@ -15699,9 +15699,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: boolean
-    pdfMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    pdfMode?: string
   }
 
   export type InvoiceUncheckedCreateInput = {
@@ -15725,9 +15725,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: boolean
-    pdfMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    pdfMode?: string
   }
 
   export type InvoiceUpdateInput = {
@@ -15751,9 +15751,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
-    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pdfMode?: StringFieldUpdateOperationsInput | string
   }
 
   export type InvoiceUncheckedUpdateInput = {
@@ -15777,9 +15777,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
-    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pdfMode?: StringFieldUpdateOperationsInput | string
   }
 
   export type InvoiceCreateManyInput = {
@@ -15803,9 +15803,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: boolean
-    pdfMode?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    pdfMode?: string
   }
 
   export type InvoiceUpdateManyMutationInput = {
@@ -15829,9 +15829,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
-    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pdfMode?: StringFieldUpdateOperationsInput | string
   }
 
   export type InvoiceUncheckedUpdateManyInput = {
@@ -15855,9 +15855,9 @@ export namespace Prisma {
     sectionHeadings?: NullableJsonNullValueInput | InputJsonValue
     customSections?: NullableJsonNullValueInput | InputJsonValue
     isDraft?: BoolFieldUpdateOperationsInput | boolean
-    pdfMode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pdfMode?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductDatabaseCreateInput = {
@@ -16238,15 +16238,15 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type ProductDatabaseNullableScalarRelationFilter = {
+    is?: ProductDatabaseWhereInput | null
+    isNot?: ProductDatabaseWhereInput | null
+  }
+
   export type QuotationItemListRelationFilter = {
     every?: QuotationItemWhereInput
     some?: QuotationItemWhereInput
     none?: QuotationItemWhereInput
-  }
-
-  export type ProductDatabaseNullableScalarRelationFilter = {
-    is?: ProductDatabaseWhereInput | null
-    isNot?: ProductDatabaseWhereInput | null
   }
 
   export type QuotationItemOrderByRelationAggregateInput = {
@@ -16262,12 +16262,12 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-    hsnCode?: SortOrder
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hsnCode?: SortOrder
     databaseId?: SortOrder
     gstRate?: SortOrder
     productCode?: SortOrder
@@ -16288,12 +16288,12 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-    hsnCode?: SortOrder
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hsnCode?: SortOrder
     databaseId?: SortOrder
     gstRate?: SortOrder
     productCode?: SortOrder
@@ -16308,12 +16308,12 @@ export namespace Prisma {
     defaultRate?: SortOrder
     unit?: SortOrder
     warranty?: SortOrder
-    hsnCode?: SortOrder
     imagePath?: SortOrder
     imageText?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    hsnCode?: SortOrder
     databaseId?: SortOrder
     gstRate?: SortOrder
     productCode?: SortOrder
@@ -16623,8 +16623,8 @@ export namespace Prisma {
     imageText?: SortOrder
     productId?: SortOrder
     variableValues?: SortOrder
-    title?: SortOrder
     isCustom?: SortOrder
+    title?: SortOrder
   }
 
   export type QuotationItemAvgOrderByAggregateInput = {
@@ -16649,8 +16649,8 @@ export namespace Prisma {
     imageUrl?: SortOrder
     imageText?: SortOrder
     productId?: SortOrder
-    title?: SortOrder
     isCustom?: SortOrder
+    title?: SortOrder
   }
 
   export type QuotationItemMinOrderByAggregateInput = {
@@ -16668,8 +16668,8 @@ export namespace Prisma {
     imageUrl?: SortOrder
     imageText?: SortOrder
     productId?: SortOrder
-    title?: SortOrder
     isCustom?: SortOrder
+    title?: SortOrder
   }
 
   export type QuotationItemSumOrderByAggregateInput = {
@@ -16817,9 +16817,9 @@ export namespace Prisma {
     sectionHeadings?: SortOrder
     customSections?: SortOrder
     isDraft?: SortOrder
-    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    pdfMode?: SortOrder
   }
 
   export type InvoiceAvgOrderByAggregateInput = {
@@ -16849,9 +16849,9 @@ export namespace Prisma {
     grandTotal?: SortOrder
     amountInWords?: SortOrder
     isDraft?: SortOrder
-    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    pdfMode?: SortOrder
   }
 
   export type InvoiceMinOrderByAggregateInput = {
@@ -16871,9 +16871,9 @@ export namespace Prisma {
     grandTotal?: SortOrder
     amountInWords?: SortOrder
     isDraft?: SortOrder
-    pdfMode?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    pdfMode?: SortOrder
   }
 
   export type InvoiceSumOrderByAggregateInput = {
@@ -17058,17 +17058,17 @@ export namespace Prisma {
     deleteMany?: QuotationScalarWhereInput | QuotationScalarWhereInput[]
   }
 
+  export type ProductDatabaseCreateNestedOneWithoutProductsInput = {
+    create?: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ProductDatabaseCreateOrConnectWithoutProductsInput
+    connect?: ProductDatabaseWhereUniqueInput
+  }
+
   export type QuotationItemCreateNestedManyWithoutProductInput = {
     create?: XOR<QuotationItemCreateWithoutProductInput, QuotationItemUncheckedCreateWithoutProductInput> | QuotationItemCreateWithoutProductInput[] | QuotationItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: QuotationItemCreateOrConnectWithoutProductInput | QuotationItemCreateOrConnectWithoutProductInput[]
     createMany?: QuotationItemCreateManyProductInputEnvelope
     connect?: QuotationItemWhereUniqueInput | QuotationItemWhereUniqueInput[]
-  }
-
-  export type ProductDatabaseCreateNestedOneWithoutProductsInput = {
-    create?: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
-    connectOrCreate?: ProductDatabaseCreateOrConnectWithoutProductsInput
-    connect?: ProductDatabaseWhereUniqueInput
   }
 
   export type QuotationItemUncheckedCreateNestedManyWithoutProductInput = {
@@ -17102,6 +17102,16 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type ProductDatabaseUpdateOneWithoutProductsNestedInput = {
+    create?: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ProductDatabaseCreateOrConnectWithoutProductsInput
+    upsert?: ProductDatabaseUpsertWithoutProductsInput
+    disconnect?: ProductDatabaseWhereInput | boolean
+    delete?: ProductDatabaseWhereInput | boolean
+    connect?: ProductDatabaseWhereUniqueInput
+    update?: XOR<XOR<ProductDatabaseUpdateToOneWithWhereWithoutProductsInput, ProductDatabaseUpdateWithoutProductsInput>, ProductDatabaseUncheckedUpdateWithoutProductsInput>
+  }
+
   export type QuotationItemUpdateManyWithoutProductNestedInput = {
     create?: XOR<QuotationItemCreateWithoutProductInput, QuotationItemUncheckedCreateWithoutProductInput> | QuotationItemCreateWithoutProductInput[] | QuotationItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: QuotationItemCreateOrConnectWithoutProductInput | QuotationItemCreateOrConnectWithoutProductInput[]
@@ -17114,16 +17124,6 @@ export namespace Prisma {
     update?: QuotationItemUpdateWithWhereUniqueWithoutProductInput | QuotationItemUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: QuotationItemUpdateManyWithWhereWithoutProductInput | QuotationItemUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: QuotationItemScalarWhereInput | QuotationItemScalarWhereInput[]
-  }
-
-  export type ProductDatabaseUpdateOneWithoutProductsNestedInput = {
-    create?: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
-    connectOrCreate?: ProductDatabaseCreateOrConnectWithoutProductsInput
-    upsert?: ProductDatabaseUpsertWithoutProductsInput
-    disconnect?: ProductDatabaseWhereInput | boolean
-    delete?: ProductDatabaseWhereInput | boolean
-    connect?: ProductDatabaseWhereUniqueInput
-    update?: XOR<XOR<ProductDatabaseUpdateToOneWithWhereWithoutProductsInput, ProductDatabaseUpdateWithoutProductsInput>, ProductDatabaseUncheckedUpdateWithoutProductsInput>
   }
 
   export type QuotationItemUncheckedUpdateManyWithoutProductNestedInput = {
@@ -17707,54 +17707,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Quotation"> | Date | string
   }
 
-  export type QuotationItemCreateWithoutProductInput = {
-    id?: string
-    section: string
-    serialNo: number
-    category?: string
-    description: string
-    warranty?: string
-    qty: Decimal | DecimalJsLike | number | string
-    unit: string
-    rate: Decimal | DecimalJsLike | number | string
-    amount: Decimal | DecimalJsLike | number | string
-    imageUrl?: string | null
-    imageText?: string | null
-    variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
-    isCustom?: boolean
-    quotation: QuotationCreateNestedOneWithoutItemsInput
-  }
-
-  export type QuotationItemUncheckedCreateWithoutProductInput = {
-    id?: string
-    quotationId: string
-    section: string
-    serialNo: number
-    category?: string
-    description: string
-    warranty?: string
-    qty: Decimal | DecimalJsLike | number | string
-    unit: string
-    rate: Decimal | DecimalJsLike | number | string
-    amount: Decimal | DecimalJsLike | number | string
-    imageUrl?: string | null
-    imageText?: string | null
-    variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
-    isCustom?: boolean
-  }
-
-  export type QuotationItemCreateOrConnectWithoutProductInput = {
-    where: QuotationItemWhereUniqueInput
-    create: XOR<QuotationItemCreateWithoutProductInput, QuotationItemUncheckedCreateWithoutProductInput>
-  }
-
-  export type QuotationItemCreateManyProductInputEnvelope = {
-    data: QuotationItemCreateManyProductInput | QuotationItemCreateManyProductInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ProductDatabaseCreateWithoutProductsInput = {
     id?: string
     name: string
@@ -17780,6 +17732,87 @@ export namespace Prisma {
   export type ProductDatabaseCreateOrConnectWithoutProductsInput = {
     where: ProductDatabaseWhereUniqueInput
     create: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
+  }
+
+  export type QuotationItemCreateWithoutProductInput = {
+    id?: string
+    section: string
+    serialNo: number
+    category?: string
+    description: string
+    warranty?: string
+    qty: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    imageUrl?: string | null
+    imageText?: string | null
+    variableValues?: JsonNullValueInput | InputJsonValue
+    isCustom?: boolean
+    title?: string
+    quotation: QuotationCreateNestedOneWithoutItemsInput
+  }
+
+  export type QuotationItemUncheckedCreateWithoutProductInput = {
+    id?: string
+    quotationId: string
+    section: string
+    serialNo: number
+    category?: string
+    description: string
+    warranty?: string
+    qty: Decimal | DecimalJsLike | number | string
+    unit: string
+    rate: Decimal | DecimalJsLike | number | string
+    amount: Decimal | DecimalJsLike | number | string
+    imageUrl?: string | null
+    imageText?: string | null
+    variableValues?: JsonNullValueInput | InputJsonValue
+    isCustom?: boolean
+    title?: string
+  }
+
+  export type QuotationItemCreateOrConnectWithoutProductInput = {
+    where: QuotationItemWhereUniqueInput
+    create: XOR<QuotationItemCreateWithoutProductInput, QuotationItemUncheckedCreateWithoutProductInput>
+  }
+
+  export type QuotationItemCreateManyProductInputEnvelope = {
+    data: QuotationItemCreateManyProductInput | QuotationItemCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductDatabaseUpsertWithoutProductsInput = {
+    update: XOR<ProductDatabaseUpdateWithoutProductsInput, ProductDatabaseUncheckedUpdateWithoutProductsInput>
+    create: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
+    where?: ProductDatabaseWhereInput
+  }
+
+  export type ProductDatabaseUpdateToOneWithWhereWithoutProductsInput = {
+    where?: ProductDatabaseWhereInput
+    data: XOR<ProductDatabaseUpdateWithoutProductsInput, ProductDatabaseUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type ProductDatabaseUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    module?: StringFieldUpdateOperationsInput | string
+    sourceFile?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    securityPin?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductDatabaseUncheckedUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    module?: StringFieldUpdateOperationsInput | string
+    sourceFile?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    securityPin?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QuotationItemUpsertWithWhereUniqueWithoutProductInput = {
@@ -17817,41 +17850,8 @@ export namespace Prisma {
     imageText?: StringNullableFilter<"QuotationItem"> | string | null
     productId?: StringNullableFilter<"QuotationItem"> | string | null
     variableValues?: JsonFilter<"QuotationItem">
-    title?: StringFilter<"QuotationItem"> | string
     isCustom?: BoolFilter<"QuotationItem"> | boolean
-  }
-
-  export type ProductDatabaseUpsertWithoutProductsInput = {
-    update: XOR<ProductDatabaseUpdateWithoutProductsInput, ProductDatabaseUncheckedUpdateWithoutProductsInput>
-    create: XOR<ProductDatabaseCreateWithoutProductsInput, ProductDatabaseUncheckedCreateWithoutProductsInput>
-    where?: ProductDatabaseWhereInput
-  }
-
-  export type ProductDatabaseUpdateToOneWithWhereWithoutProductsInput = {
-    where?: ProductDatabaseWhereInput
-    data: XOR<ProductDatabaseUpdateWithoutProductsInput, ProductDatabaseUncheckedUpdateWithoutProductsInput>
-  }
-
-  export type ProductDatabaseUpdateWithoutProductsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    module?: StringFieldUpdateOperationsInput | string
-    sourceFile?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    securityPin?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProductDatabaseUncheckedUpdateWithoutProductsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    module?: StringFieldUpdateOperationsInput | string
-    sourceFile?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    securityPin?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: StringFilter<"QuotationItem"> | string
   }
 
   export type CustomerCreateWithoutQuotationsInput = {
@@ -17893,8 +17893,8 @@ export namespace Prisma {
     imageUrl?: string | null
     imageText?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
     product?: ProductCreateNestedOneWithoutItemsInput
   }
 
@@ -17913,8 +17913,8 @@ export namespace Prisma {
     imageText?: string | null
     productId?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
   }
 
   export type QuotationItemCreateOrConnectWithoutQuotationInput = {
@@ -17983,12 +17983,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     database?: ProductDatabaseCreateNestedOneWithoutProductsInput
@@ -18003,12 +18003,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     databaseId?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
@@ -18088,12 +18088,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     database?: ProductDatabaseUpdateOneWithoutProductsNestedInput
@@ -18108,12 +18108,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     databaseId?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18183,12 +18183,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     items?: QuotationItemCreateNestedManyWithoutProductInput
@@ -18203,12 +18203,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
     items?: QuotationItemUncheckedCreateNestedManyWithoutProductInput
@@ -18252,12 +18252,12 @@ export namespace Prisma {
     defaultRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     unit?: StringFilter<"Product"> | string
     warranty?: StringFilter<"Product"> | string
-    hsnCode?: StringNullableFilter<"Product"> | string | null
     imagePath?: StringNullableFilter<"Product"> | string | null
     imageText?: StringNullableFilter<"Product"> | string | null
     sortOrder?: IntFilter<"Product"> | number
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
+    hsnCode?: StringNullableFilter<"Product"> | string | null
     databaseId?: StringNullableFilter<"Product"> | string | null
     gstRate?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     productCode?: StringNullableFilter<"Product"> | string | null
@@ -18364,8 +18364,8 @@ export namespace Prisma {
     imageUrl?: string | null
     imageText?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
   }
 
   export type QuotationItemUpdateWithoutProductInput = {
@@ -18382,8 +18382,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
     quotation?: QuotationUpdateOneRequiredWithoutItemsNestedInput
   }
 
@@ -18402,8 +18402,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuotationItemUncheckedUpdateManyWithoutProductInput = {
@@ -18421,8 +18421,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuotationItemCreateManyQuotationInput = {
@@ -18440,8 +18440,8 @@ export namespace Prisma {
     imageText?: string | null
     productId?: string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: string
     isCustom?: boolean
+    title?: string
   }
 
   export type QuotationItemUpdateWithoutQuotationInput = {
@@ -18458,8 +18458,8 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
     product?: ProductUpdateOneWithoutItemsNestedInput
   }
 
@@ -18478,8 +18478,8 @@ export namespace Prisma {
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     productId?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuotationItemUncheckedUpdateManyWithoutQuotationInput = {
@@ -18497,8 +18497,8 @@ export namespace Prisma {
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     productId?: NullableStringFieldUpdateOperationsInput | string | null
     variableValues?: JsonNullValueInput | InputJsonValue
-    title?: StringFieldUpdateOperationsInput | string
     isCustom?: BoolFieldUpdateOperationsInput | boolean
+    title?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductCreateManyDatabaseInput = {
@@ -18510,12 +18510,12 @@ export namespace Prisma {
     defaultRate: Decimal | DecimalJsLike | number | string
     unit?: string
     warranty?: string
-    hsnCode?: string | null
     imagePath?: string | null
     imageText?: string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    hsnCode?: string | null
     gstRate?: Decimal | DecimalJsLike | number | string | null
     productCode?: string | null
   }
@@ -18529,12 +18529,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUpdateManyWithoutProductNestedInput
@@ -18549,12 +18549,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: QuotationItemUncheckedUpdateManyWithoutProductNestedInput
@@ -18569,12 +18569,12 @@ export namespace Prisma {
     defaultRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unit?: StringFieldUpdateOperationsInput | string
     warranty?: StringFieldUpdateOperationsInput | string
-    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     imageText?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hsnCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     productCode?: NullableStringFieldUpdateOperationsInput | string | null
   }

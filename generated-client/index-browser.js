@@ -149,12 +149,12 @@ exports.Prisma.ProductScalarFieldEnum = {
   defaultRate: 'defaultRate',
   unit: 'unit',
   warranty: 'warranty',
-  hsnCode: 'hsnCode',
   imagePath: 'imagePath',
   imageText: 'imageText',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  hsnCode: 'hsnCode',
   databaseId: 'databaseId',
   gstRate: 'gstRate',
   productCode: 'productCode'
@@ -214,8 +214,8 @@ exports.Prisma.QuotationItemScalarFieldEnum = {
   imageText: 'imageText',
   productId: 'productId',
   variableValues: 'variableValues',
-  title: 'title',
-  isCustom: 'isCustom'
+  isCustom: 'isCustom',
+  title: 'title'
 };
 
 exports.Prisma.ProductCatalogScalarFieldEnum = {
@@ -254,9 +254,9 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   sectionHeadings: 'sectionHeadings',
   customSections: 'customSections',
   isDraft: 'isDraft',
-  pdfMode: 'pdfMode',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  pdfMode: 'pdfMode'
 };
 
 exports.Prisma.ProductDatabaseScalarFieldEnum = {

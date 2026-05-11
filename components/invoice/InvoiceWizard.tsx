@@ -103,13 +103,6 @@ export default function InvoiceWizard({ initialData }: Props) {
     pdfMode: "STANDARD",
   });
 
-  const [totals, setTotals] = useState({
-    subTotal: 0,
-    cgstAmount: 0,
-    sgstAmount: 0,
-    grandTotal: 0,
-    amountInWords: "",
-  });
 
   const [databaseId, setDatabaseId] = useState<string>("");
   const [databaseName, setDatabaseName] = useState<string>("");
@@ -133,7 +126,7 @@ export default function InvoiceWizard({ initialData }: Props) {
 
   const fetchActiveDatabase = async () => {
     try {
-      const response = await fetch("/api/invoice-databases");
+      const response = await fetch("/api/invoice-databases?module=MR_INVOICE");
       const data = await response.json();
       const active = data.find((db: any) => db.isActive);
       if (active) {
@@ -148,7 +141,7 @@ export default function InvoiceWizard({ initialData }: Props) {
   const fetchProducts = async () => {
     setIsLoadingProducts(true);
     try {
-      const response = await fetch("/api/products");
+      const response = await fetch("/api/products?module=MR_INVOICE");
       const data = await response.json();
       setProducts(data || []);
     } catch (error) {
@@ -158,20 +151,20 @@ export default function InvoiceWizard({ initialData }: Props) {
     }
   };
 
-  useEffect(() => {
-    const subTotal = formData.items.reduce((sum, item) => sum + item.total, 0);
-    const cgstAmount = (subTotal * formData.cgstRate) / 100;
-    const sgstAmount = (subTotal * formData.sgstRate) / 100;
-    const grandTotalBeforeRound = subTotal + cgstAmount + sgstAmount + Number(formData.roundOff);
+  const totals = React.useMemo(() => {
+    const subTotal = formData.items.reduce((sum, item) => sum + (item.total || 0), 0);
+    const cgstAmount = (subTotal * (formData.cgstRate || 0)) / 100;
+    const sgstAmount = (subTotal * (formData.sgstRate || 0)) / 100;
+    const grandTotalBeforeRound = subTotal + cgstAmount + sgstAmount + Number(formData.roundOff || 0);
     const grandTotal = Math.round(grandTotalBeforeRound * 100) / 100;
     
-    setTotals({
+    return {
       subTotal,
       cgstAmount,
       sgstAmount,
       grandTotal,
       amountInWords: convertToWordsINR(grandTotal),
-    });
+    };
   }, [formData.items, formData.cgstRate, formData.sgstRate, formData.roundOff]);
 
   useEffect(() => {

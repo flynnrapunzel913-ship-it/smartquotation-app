@@ -10,15 +10,19 @@ export default function HistoryPage() {
   const [quotations, setQuotations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchQuotations = async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/quotations?search=${encodeURIComponent(search)}`);
+      console.log("History API Response status:", res.status);
       const data = await res.json();
-      setQuotations(data);
+      console.log("History API Data received:", data);
+      setQuotations(Array.isArray(data) ? data : []);
     } catch (e) {
-      console.error("Failed to fetch", e);
+      console.error("Failed to fetch quotations:", e);
+      setQuotations([]);
     }
     setLoading(false);
   };
@@ -26,6 +30,14 @@ export default function HistoryPage() {
   useEffect(() => {
     fetchQuotations();
   }, [search]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearch(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this quotation?")) return;
@@ -67,8 +79,8 @@ export default function HistoryPage() {
             type="text"
             className="search-input"
             placeholder="Search by quote #, title, or customer..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
