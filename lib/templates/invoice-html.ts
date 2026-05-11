@@ -34,12 +34,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .invoice-paper {
       width: 100%;
       max-width: 100%;
-      padding: 24px 0 0 0; /* Increased top padding */
+      padding: 24px 48px 0 48px; /* Increased side padding for alignment */
       margin: 0;
       background: white;
       position: relative;
       font-size: 12px;
       line-height: 1.3;
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
     }
     .header-top {
       display: flex;
@@ -89,8 +90,8 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .gst-tier {
       text-align: right;
       color: #111111;
-      font-size: 11.5px; /* Reduced font size */
-      font-weight: 700; /* Reduced weight */
+      font-size: 11.5px;
+      font-weight: 700;
       margin-top: 6px;
       margin-bottom: 2px;
       width: 100%;

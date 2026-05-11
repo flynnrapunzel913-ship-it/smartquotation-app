@@ -54,7 +54,7 @@ interface Props {
 
 export default function InvoicePreview({ data, totals }: Props) {
   return (
-    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "24px 24px 12px 24px" }}>
+    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "24px 48px 12px 48px", boxSizing: "border-box" }}>
       <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "6px" }}>
         {/* Left: Logo (195px) */}
         <div style={{ width: "195px" }}>
