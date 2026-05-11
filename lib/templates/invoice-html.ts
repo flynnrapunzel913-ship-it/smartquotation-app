@@ -182,31 +182,19 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       text-transform: uppercase;
     }
     .signature-section {
-      margin-top: 12mm;
+      margin-top: 30px;
       margin-bottom: 5mm;
       text-align: right;
-    }
-    .footer-divider {
-      height: 1.5px;
-      background-color: #0E5EA8;
-      width: 100%;
-      margin-bottom: 10px;
     }
     .footer-declaration {
       font-size: 11px;
       font-weight: 600;
       color: #1E3A5F;
-      margin-bottom: 4px;
-    }
-    .footer-subtitle {
-      font-size: 9px;
-      font-style: italic;
-      color: #6B7280;
-      margin-bottom: 8px;
+      margin-bottom: 18px;
     }
     .signature-line {
       font-weight: 800;
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.5px;
       color: #111111;
       text-transform: uppercase;
@@ -225,7 +213,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .single-page .invoice-title { margin: 1mm 0; font-size: 16px; }
     .single-page .invoice-table th, .single-page .invoice-table td { padding: 3px 5px; font-size: 10px; }
     .single-page .totals-table td { padding: 3px 6px; font-size: 10px; }
-    .single-page .signature-section { margin-top: 6mm; }
+    .single-page .signature-section { margin-top: 20px; }
     .single-page .custom-section { margin-bottom: 2mm; }
     .single-page .amount-in-words { margin-bottom: 2mm; font-size: 10px; }
     .single-page .invoice-paper { padding-bottom: 10mm; }
@@ -354,9 +342,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     `).join("")}
 
     <div class="signature-section">
-      <div class="footer-divider"></div>
       <div class="footer-declaration">For M R Swimming Pools and Spa Construction Company</div>
-      <div class="footer-subtitle">(Digitally Generated Invoice)</div>
       <div class="signature-line">AUTHORISED SIGNATORY</div>
     </div>
 
