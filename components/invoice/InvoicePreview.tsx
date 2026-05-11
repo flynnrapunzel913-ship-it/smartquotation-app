@@ -54,7 +54,7 @@ interface Props {
 
 export default function InvoicePreview({ data, totals }: Props) {
   return (
-    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "12px 24px" }}>
+    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "24px 24px 12px 24px" }}>
       <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "6px" }}>
         {/* Left: Logo (195px) */}
         <div style={{ width: "195px" }}>
@@ -79,7 +79,7 @@ export default function InvoicePreview({ data, totals }: Props) {
             Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
           </div>
 
-          <div className="gst-tier" style={{ textAlign: "right", color: "#111111", fontSize: "14px", fontWeight: 800, marginBottom: "4px", width: "100%" }}>
+          <div className="gst-tier" style={{ textAlign: "right", color: "#111111", fontSize: "11.5px", fontWeight: 700, marginTop: "6px", marginBottom: "2px", width: "100%" }}>
             GSTNo:29ABMFM0120E1ZL
           </div>
         </div>

@@ -34,7 +34,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .invoice-paper {
       width: 100%;
       max-width: 100%;
-      padding: 0;
+      padding: 24px 0 0 0; /* Increased top padding */
       margin: 0;
       background: white;
       position: relative;
@@ -67,14 +67,14 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #0E5EA8;
       font-size: 13px;
       font-weight: 700;
-      margin-bottom: 10px; /* Increased gap */
+      margin-bottom: 10px;
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 11.5px;
       font-weight: 600;
-      margin-bottom: 4px; /* Increased gap */
+      margin-bottom: 4px;
       width: 100%;
       line-height: 1.4;
     }
@@ -83,15 +83,16 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #0E5EA8;
       font-size: 10.5px;
       font-weight: 600;
-      margin-bottom: 10px; /* Increased gap before GST */
+      margin-bottom: 10px;
       width: 100%;
     }
     .gst-tier {
       text-align: right;
       color: #111111;
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 4px; /* Gap before Divider */
+      font-size: 11.5px; /* Reduced font size */
+      font-weight: 700; /* Reduced weight */
+      margin-top: 6px;
+      margin-bottom: 2px;
       width: 100%;
     }
     .blue-divider {
