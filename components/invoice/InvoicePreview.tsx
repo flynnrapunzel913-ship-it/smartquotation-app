@@ -179,11 +179,11 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       ))}
 
-      <div className="signature-section">
-        <div style={{ fontWeight: 800 }}>For M R SWIMMING POOL AND SPA CONSTRUCTION CO,</div>
-        {/* Placeholder for stamp/signature */}
-        <div style={{ height: '80px' }}></div>
-        <div className="signature-line">AUTHORISED SIGNATORY.</div>
+      <div className="signature-section" style={{ marginTop: "12mm", marginBottom: "5mm", textAlign: "right" }}>
+        <div className="footer-divider" style={{ height: "1.5px", backgroundColor: "#0E5EA8", width: "100%", marginBottom: "10px" }}></div>
+        <div className="footer-declaration" style={{ fontSize: "11px", fontWeight: 600, color: "#1E3A5F", marginBottom: "4px" }}>For M R Swimming Pools and Spa Construction Company</div>
+        <div className="footer-subtitle" style={{ fontSize: "9px", fontStyle: "italic", color: "#6B7280", marginBottom: "8px" }}>(Digitally Generated Invoice)</div>
+        <div className="signature-line" style={{ fontWeight: 800, fontSize: "12px", letterSpacing: "0.5px", color: "#111111", textTransform: "uppercase" }}>AUTHORISED SIGNATORY</div>
       </div>
 
       {/* Footer graphic */}
