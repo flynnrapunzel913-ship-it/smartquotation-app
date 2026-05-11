@@ -190,7 +190,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       font-size: 11px;
       font-weight: 600;
       color: #1E3A5F;
-      margin-bottom: 18px;
+      margin-bottom: 14px; /* Adjusted gap */
     }
     .signature-line {
       font-weight: 800;
