@@ -54,59 +54,58 @@ interface Props {
 
 export default function InvoicePreview({ data, totals }: Props) {
   return (
-    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "20px 25px" }}>
       <div className="invoice-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "5px" }}>
-        <div style={{ width: "25%" }}>
-          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" className="invoice-logo" style={{ width: "100%", height: "auto", maxHeight: "130px", objectFit: "contain" }} />
+        {/* Left: Logo */}
+        <div style={{ width: "22%" }}>
+          <img src="/templates/mr-swimming-pools/logo.png" alt="Logo" className="invoice-logo" style={{ width: "100%", height: "auto", maxHeight: "120px", objectFit: "contain" }} />
         </div>
-        <div style={{ width: "72%", color: "#0369a1", fontFamily: "Arial, sans-serif" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "45%" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <div style={{ background: "#0369a1", borderRadius: "50%", width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                </div>
-                <span style={{ fontSize: "13px", fontWeight: "600", whiteSpace: "nowrap" }}>+91 9538840277</span>
+
+        {/* Center: Contact & Address */}
+        <div style={{ width: "48%", color: "#1e3a5f", fontFamily: "Arial, sans-serif", display: "flex", flexDirection: "column", gap: "8px", borderLeft: "1px solid #cbd5e1", borderRight: "1px solid #cbd5e1", padding: "0 15px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <div style={{ background: "#0369a1", borderRadius: "50%", width: "14px", height: "14px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <div style={{ background: "#0369a1", borderRadius: "50%", width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                </div>
-                <span style={{ fontSize: "13px", fontWeight: "600", whiteSpace: "nowrap" }}>+91 9845326115</span>
-              </div>
-            </div>
-            <div style={{ borderLeft: "1.5px dashed #0369a1", height: "35px" }}></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "45%", alignItems: "flex-end" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <div style={{ background: "#0369a1", borderRadius: "50%", width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                </div>
-                <span style={{ fontSize: "13px", fontWeight: "600", whiteSpace: "nowrap" }}>mracademyhubli@gmail.com</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <div style={{ background: "#0369a1", borderRadius: "50%", width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                </div>
-                <span style={{ fontSize: "13px", fontWeight: "600", whiteSpace: "nowrap" }}>www.mrswimmingacademy.com</span>
-              </div>
+              <span style={{ fontSize: "11px", fontWeight: "600" }}>+91 9538840277, +91 9845326115</span>
             </div>
           </div>
-          <div style={{ borderTop: "1.5px dashed #0369a1", marginBottom: "6px" }}></div>
-          <div style={{ textAlign: "center", color: "#0369a1" }}>
-            <div style={{ display: "inline-flex", alignItems: "flex-start", gap: "6px", fontSize: "12.5px", fontWeight: "600", textAlign: "left" }}>
-              <div style={{ background: "#0369a1", borderRadius: "50%", width: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "2px" }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              </div>
-              <span>Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023</span>
+          <div style={{ fontSize: "10px", lineHeight: "1.4", color: "#1e3a5f" }}>
+            <strong style={{ fontWeight: 700, fontSize: "11px", display: "block", marginBottom: "2px" }}>Regd. Office:</strong>
+            #91, Sri Mallikarjuna,<br />
+            Naveen Park, Kusugal Road,<br />
+            Keshwapur, Hubballi – 580023
+          </div>
+        </div>
+
+        {/* Right: Email & Website */}
+        <div style={{ width: "25%", color: "#1e3a5f", fontFamily: "Arial, sans-serif", display: "flex", flexDirection: "column", gap: "6px", alignItems: "flex-end", textAlign: "right" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end" }}>
+            <span style={{ fontSize: "11px", fontWeight: "600" }}>mracademyhubli@gmail.com</span>
+            <div style={{ background: "#0369a1", borderRadius: "50%", width: "14px", height: "14px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             </div>
-            <div style={{ fontSize: "12px", marginTop: "2px", fontWeight: "600" }}>
-              Branches: &bull;Bengaluru &bull;Mysuru &bull;Kalburgi
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end" }}>
+            <span style={{ fontSize: "11px", fontWeight: "600" }}>www.mrswimmingacademy.com</span>
+            <div style={{ background: "#0369a1", borderRadius: "50%", width: "14px", height: "14px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             </div>
           </div>
         </div>
       </div>
-      <div style={{ textAlign: "right", fontWeight: 800, fontSize: "16px", marginTop: "2px", color: "#000" }}>GSTNo:29ABMFM0120E1ZL</div>
-      <div style={{ borderTop: "2px solid #0369a1", margin: "2px 0 10px 0" }}></div>
+
+      {/* Bottom Header Row: Branches & GST */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", borderTop: "1.5px solid #0369a1", paddingTop: "4px", marginBottom: "8px" }}>
+        <div style={{ width: "25%" }}></div>
+        <div style={{ width: "50%", textAlign: "center", fontSize: "11px", fontWeight: "600", color: "#0369a1" }}>
+          Branches: Bengaluru &bull; Mysuru &bull; Kalaburagi
+        </div>
+        <div style={{ width: "25%", textAlign: "right", fontWeight: 800, fontSize: "14px", color: "#000" }}>
+          GSTNo: 29ABMFM0120E1ZL
+        </div>
+      </div>
+      <div style={{ borderTop: "2px solid #0369a1", marginTop: "2px", marginBottom: "10px" }}></div>
 
       <div className="invoice-title" style={{ margin: "2mm 0", fontSize: "20px" }}>Tax Invoice No: {data.invoiceNumber || "___"}</div>
 
