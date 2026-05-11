@@ -201,12 +201,14 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       margin-bottom: 6px;
     }
     .signature-divider {
-      border-top: 1.5px solid #0E5EA8; /* Using border for reliability */
+      height: 1.5px;
+      background-color: #0E5EA8;
       width: 100%;
-      margin-top: 6px;
+      margin-top: 10px;
       margin-bottom: 2px;
       display: block;
       clear: both;
+      overflow: hidden; /* Ensure it stays a crisp line */
     }
     .footer-banner {
       position: absolute;
