@@ -11,7 +11,9 @@ datasource db {
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  passwordHash String
+  passwordHash String?
+  googleId     String?  @unique
+  name         String?
   role         UserRole @default(ADMIN)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -37,21 +39,23 @@ model Product {
   defaultRate Decimal          @db.Decimal(14, 2)
   unit        String           @default("Nos")
   warranty    String           @default("")
-  hsnCode     String?          @default("")
-  imagePath   String?          @db.Text
-  imageText   String?          @db.Text
+  imagePath   String?
+  imageText   String?
   sortOrder   Int              @default(0)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
-  items       QuotationItem[]
+  hsnCode     String?          @default("")
   databaseId  String?
-  database    ProductDatabase? @relation(fields: [databaseId], references: [id])
   gstRate     Decimal?         @db.Decimal(5, 2)
   productCode String?
+  database    ProductDatabase? @relation(fields: [databaseId], references: [id])
+  items       QuotationItem[]
 
   @@index([name])
   @@index([category])
   @@index([sectionCode])
+  @@index([databaseId])
+  @@index([createdAt])
 }
 
 model CompanySettings {
@@ -96,6 +100,8 @@ model Quotation {
   @@index([quoteNumber])
   @@index([date])
   @@index([deletedAt])
+  @@index([createdAt])
+  @@index([isDraft])
 }
 
 model QuotationItem {
@@ -114,8 +120,8 @@ model QuotationItem {
   imageText      String?
   productId      String?
   variableValues Json      @default("{}")
-  title          String    @default("")
   isCustom       Boolean   @default(false)
+  title          String    @default("")
   product        Product?  @relation(fields: [productId], references: [id])
   quotation      Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
 
@@ -143,17 +149,6 @@ model ProductCatalog {
   @@index([code])
 }
 
-enum UserRole {
-  ADMIN
-  USER
-}
-
-enum CompanyType {
-  MR_SWIMMING_POOLS
-  KLEAN_TECH_SYSTEMS
-  MR_ACADEMY
-}
-
 model Invoice {
   id              String   @id @default(cuid())
   invoiceNumber   String   @unique
@@ -162,7 +157,7 @@ model Invoice {
   customerAddress String
   customerGST     String?
   customerMobile  String?
-  items           Json // Array of { description, unitPrice, qty, total }
+  items           Json
   subTotal        Decimal  @db.Decimal(14, 2)
   cgstPercent     Decimal  @default(9) @db.Decimal(5, 2)
   sgstPercent     Decimal  @default(9) @db.Decimal(5, 2)
@@ -171,21 +166,23 @@ model Invoice {
   roundOff        Decimal  @default(0) @db.Decimal(10, 2)
   grandTotal      Decimal  @db.Decimal(14, 2)
   amountInWords   String
-  bankDetails     Json? // { accountHolder, accountNumber, bankName, branch, ifscCode }
-  sectionHeadings Json? // { step1, step2, step3, step4, step5 }
-  customSections  Json? // Array of { title, content }
+  bankDetails     Json?
+  sectionHeadings Json?
+  customSections  Json?
   isDraft         Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  pdfMode         String   @default("STANDARD")
 
   @@index([invoiceNumber])
   @@index([invoiceDate])
+  @@index([createdAt])
 }
 
 model ProductDatabase {
   id          String    @id @default(cuid())
   name        String
-  module      String // e.g., "INVOICE"
+  module      String
   sourceFile  String?
   isActive    Boolean   @default(false)
   securityPin String?
@@ -194,6 +191,7 @@ model ProductDatabase {
   products    Product[]
 
   @@index([module])
+  @@index([isActive])
 }
 
 model InvoiceProduct {
@@ -206,4 +204,35 @@ model InvoiceProduct {
   imagePath   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum CompanyType {
+  MR_SWIMMING_POOLS
+  KLEAN_TECH_SYSTEMS
+  MR_ACADEMY
+}
+
+model EmailLog {
+  id             String   @id @default(cuid())
+  module         String
+  documentNumber String
+  to             String
+  cc             String?
+  subject        String
+  senderEmail    String
+  status         String
+  errorMessage   String?
+  sentAt         DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@index([module])
+  @@index([documentNumber])
+  @@index([to])
+  @@index([status])
+  @@index([createdAt])
 }

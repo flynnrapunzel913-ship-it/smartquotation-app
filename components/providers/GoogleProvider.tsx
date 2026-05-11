@@ -7,6 +7,7 @@ export function GoogleProvider({ children }: { children: React.ReactNode }) {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
   
   if (!clientId) {
+    console.error("NEXT_PUBLIC_GOOGLE_CLIENT_ID is missing. Google OAuth will not work.");
     return <>{children}</>;
   }
 
