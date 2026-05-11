@@ -74,24 +74,26 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       color: #0E5EA8;
       font-size: 11.5px;
       font-weight: 600;
+      margin-top: 4px;
       margin-bottom: 2px;
       width: 100%;
-      max-width: 480px;
+      line-height: 1.35;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
       font-size: 10.5px;
       font-weight: 600;
-      margin-bottom: 8px; /* Gap before GST */
+      margin-top: 2px;
+      margin-bottom: 6px;
       width: 100%;
     }
     .gst-tier {
-      text-align: center;
+      text-align: right;
       color: #111111;
       font-size: 14px;
       font-weight: 800;
-      margin-bottom: 2px; /* Gap before Divider */
+      margin-bottom: 2px;
       width: 100%;
     }
     .blue-divider {
@@ -227,7 +229,8 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
         </div>
 
         <div class="address-tier">
-          Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+          Regd. Office: #191, Sri Mallikarjuna, Naveen Park,<br />
+          Kusugal Road, Keshwapur, Hubballi - 580 023
         </div>
 
         <div class="branches-tier">

@@ -70,15 +70,16 @@ export default function InvoicePreview({ data, totals }: Props) {
             <div>🌐 www.mrswimmingacademy.com</div>
           </div>
 
-          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "11.5px", fontWeight: 600, marginBottom: "2px", width: "100%", maxWidth: "480px" }}>
-            Regd. Office: #191, Sri Mallikarjuna, Naveen Park, Kusugal Road, Keshwapur, Hubballi - 580 023
+          <div className="address-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "11.5px", fontWeight: 600, marginTop: "4px", marginBottom: "2px", width: "100%", lineHeight: "1.35" }}>
+            Regd. Office: #191, Sri Mallikarjuna, Naveen Park,<br />
+            Kusugal Road, Keshwapur, Hubballi - 580 023
           </div>
 
-          <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginBottom: "8px", width: "100%" }}>
+          <div className="branches-tier" style={{ textAlign: "center", color: "#0E5EA8", fontSize: "10.5px", fontWeight: 600, marginTop: "2px", marginBottom: "6px", width: "100%" }}>
             Branches: &bull; Bengaluru &bull; Mysuru &bull; Kalaburagi
           </div>
 
-          <div className="gst-tier" style={{ textAlign: "center", color: "#111111", fontSize: "14px", fontWeight: 800, marginBottom: "2px", width: "100%" }}>
+          <div className="gst-tier" style={{ textAlign: "right", color: "#111111", fontSize: "14px", fontWeight: 800, marginBottom: "2px", width: "100%" }}>
             GSTNo:29ABMFM0120E1ZL
           </div>
         </div>
