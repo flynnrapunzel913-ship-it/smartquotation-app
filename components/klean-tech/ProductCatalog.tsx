@@ -45,17 +45,19 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("/api/products");
+        // Use the dedicated cleantech API for machines/spares
+        const response = await fetch("/api/cleantech/products?limit=100");
         const text = await response.text();
         
         if (!response.ok) {
           throw new Error(text || `Failed to load products: ${response.status}`);
         }
         
-        const data = text ? JSON.parse(text) : [];
-        console.log("Loaded products:", data.length);
+        const data = text ? JSON.parse(text) : { products: [], total: 0 };
+        const productsArray = Array.isArray(data) ? data : (data.products || []);
+        console.log("Loaded products:", productsArray.length);
         
-        const ktProducts = data.filter((p: any) => p.category === "MACHINE" || p.category === "SPARE");
+        const ktProducts = productsArray.filter((p: any) => p.category === "MACHINE" || p.category === "SPARE");
         setProducts(ktProducts);
       } catch (err: any) {
         console.error("Error fetching products:", err);

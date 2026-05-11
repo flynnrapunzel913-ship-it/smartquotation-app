@@ -143,7 +143,9 @@ export default function InvoiceWizard({ initialData }: Props) {
     try {
       const response = await fetch("/api/products?module=MR_INVOICE");
       const data = await response.json();
-      setProducts(data || []);
+      // Handle both array and object responses for backward compatibility
+      const productsArray = Array.isArray(data) ? data : (data.products || []);
+      setProducts(productsArray);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {

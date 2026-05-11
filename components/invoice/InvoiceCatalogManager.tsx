@@ -64,11 +64,15 @@ export default function InvoiceCatalogManager() {
     try {
       const res = await fetch("/api/invoice-databases?module=MR_INVOICE");
       const data = await res.json();
-      setDatabases(Array.isArray(data) ? data : []);
+      const dbs = Array.isArray(data) ? data : [];
+      setDatabases(dbs);
+      return dbs;
     } catch (e) {
-      console.error("Error fetching databases:", e);
+      console.error(e);
+      return [];
     }
   };
+
 
   const handleDeleteDatabase = async (id: string) => {
     if (!confirm("Are you sure you want to delete this entire database? All products inside will be lost.")) return;
@@ -285,8 +289,10 @@ export default function InvoiceCatalogManager() {
       });
       if (res.ok) {
         alert("Products uploaded successfully");
-        setActiveTab("databases");
-        fetchDatabases();
+        const updatedDbs = await fetchDatabases();
+        const active = updatedDbs.find((db: any) => db.isActive);
+        setActiveTab("catalog");
+        fetchProducts(active?.id);
       } else {
         alert("Failed to upload products");
       }
@@ -619,7 +625,19 @@ export default function InvoiceCatalogManager() {
 
       {activeTab === "add" && (
         <div style={{ maxWidth: "600px" }}>
-          <h3 style={{ marginTop: 0, marginBottom: "20px", fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Add New Product</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Add New Product</h3>
+            {databases.find(db => db.isActive) && (
+              <div style={{ padding: "6px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "8px", fontSize: "0.75rem", color: "#0369a1", fontWeight: "600" }}>
+                Adding to: <span style={{ color: "#0ea5e9" }}>{databases.find(db => db.isActive)?.name}</span>
+              </div>
+            )}
+          </div>
+          {!databases.find(db => db.isActive) && (
+            <div style={{ padding: "12px", background: "#fff7ed", border: "1px solid #ffedd5", borderRadius: "10px", color: "#9a3412", fontSize: "0.875rem", marginBottom: "20px" }}>
+              ⚠️ No active database selected. Please select a database in the "Datasets" tab first.
+            </div>
+          )}
           <div style={{ marginBottom: "20px" }}>
             <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Name *</label>
             <input 
