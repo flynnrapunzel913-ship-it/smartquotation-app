@@ -45,39 +45,41 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      column-gap: 12px;
     }
     .invoice-logo {
-      width: 190px;
+      width: 200px;
       height: auto;
     }
     .contact-blue {
       color: #0E5EA8;
-      font-size: 10px;
-      font-weight: 600;
-      line-height: 1.3;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
     }
     .address-tier {
       text-align: center;
       color: #0E5EA8;
-      font-size: 9.5px;
+      font-size: 10.5px;
       font-weight: 600;
       margin-top: 0;
       margin-bottom: 2px;
+      line-height: 1.3;
     }
     .branches-tier {
       text-align: center;
       color: #0E5EA8;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 600;
       margin-bottom: 2px;
     }
     .gst-tier {
       text-align: center;
       color: #111111;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .blue-divider {
       height: 2px;
@@ -190,13 +192,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
 <body class="${data.pdfMode === 'SINGLE_PAGE' ? 'single-page' : ''}">
   <div class="invoice-paper">
     <div class="header-top">
-      <!-- Left: Logo (30%) -->
-      <div style="width: 30%;">
+      <!-- Left: Logo (34%) -->
+      <div style="width: 34%;">
         <img src="${logoSrc}" alt="Logo" class="invoice-logo" />
       </div>
 
-      <!-- Center-Left: Phones (30%) -->
-      <div class="contact-blue" style="width: 30%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start;">
+      <!-- Center: Phones (28%) -->
+      <div class="contact-blue" style="width: 28%; display: flex; flex-direction: column; gap: 2px; align-items: flex-start;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>☎</span> +91 9538840277
         </div>
@@ -205,8 +207,8 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
         </div>
       </div>
 
-      <!-- Right: Online (40%) -->
-      <div class="contact-blue" style="width: 40%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
+      <!-- Right: Online (38%) -->
+      <div class="contact-blue" style="width: 38%; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; text-align: right;">
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>✉</span> mracademyhubli@gmail.com
         </div>
