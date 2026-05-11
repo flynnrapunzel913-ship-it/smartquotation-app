@@ -179,9 +179,10 @@ export default function InvoicePreview({ data, totals }: Props) {
         </div>
       ))}
 
-      <div className="signature-section" style={{ marginTop: "30px", marginBottom: "5mm", textAlign: "right" }}>
-        <div className="footer-declaration" style={{ fontSize: "11px", fontWeight: 600, color: "#1E3A5F", marginBottom: "14px" }}>For M R Swimming Pools and Spa Construction Company</div>
-        <div className="signature-line" style={{ fontWeight: 800, fontSize: "13px", letterSpacing: "0.5px", color: "#111111", textTransform: "uppercase" }}>AUTHORISED SIGNATORY</div>
+      <div className="signature-section" style={{ marginTop: "40px", marginBottom: "5mm", textAlign: "right" }}>
+        <div className="footer-declaration" style={{ fontSize: "11px", fontWeight: 700, color: "#1E3A5F", marginBottom: "60px", textTransform: "uppercase" }}>For M R SWIMMING POOLS AND SPA CONSTRUCTION CO.,</div>
+        <div className="signature-line" style={{ fontWeight: 800, fontSize: "13px", color: "#111111", textTransform: "uppercase", marginBottom: "6px" }}>AUTHORISED SIGNATORY.</div>
+        <div className="signature-divider" style={{ height: "1px", backgroundColor: "#0E5EA8", width: "100%", marginBottom: "2px" }}></div>
       </div>
 
       {/* Footer graphic */}

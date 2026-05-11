@@ -182,22 +182,29 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       text-transform: uppercase;
     }
     .signature-section {
-      margin-top: 30px;
+      margin-top: 40px;
       margin-bottom: 5mm;
       text-align: right;
     }
     .footer-declaration {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       color: #1E3A5F;
-      margin-bottom: 14px; /* Adjusted gap */
+      margin-bottom: 60px; /* Signature Area */
+      text-transform: uppercase;
     }
     .signature-line {
       font-weight: 800;
       font-size: 13px;
-      letter-spacing: 0.5px;
       color: #111111;
       text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .signature-divider {
+      height: 1px;
+      background-color: #0E5EA8;
+      width: 100%;
+      margin-bottom: 2px;
     }
     .footer-banner {
       position: absolute;
@@ -213,7 +220,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .single-page .invoice-title { margin: 1mm 0; font-size: 16px; }
     .single-page .invoice-table th, .single-page .invoice-table td { padding: 3px 5px; font-size: 10px; }
     .single-page .totals-table td { padding: 3px 6px; font-size: 10px; }
-    .single-page .signature-section { margin-top: 20px; }
+    .single-page .signature-section { margin-top: 25px; }
     .single-page .custom-section { margin-bottom: 2mm; }
     .single-page .amount-in-words { margin-bottom: 2mm; font-size: 10px; }
     .single-page .invoice-paper { padding-bottom: 10mm; }
@@ -342,8 +349,9 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     `).join("")}
 
     <div class="signature-section">
-      <div class="footer-declaration">For M R Swimming Pools and Spa Construction Company</div>
-      <div class="signature-line">AUTHORISED SIGNATORY</div>
+      <div class="footer-declaration">For M R SWIMMING POOLS AND SPA CONSTRUCTION CO.,</div>
+      <div class="signature-line">AUTHORISED SIGNATORY.</div>
+      <div class="signature-divider"></div>
     </div>
 
     <div class="footer-banner"></div>
