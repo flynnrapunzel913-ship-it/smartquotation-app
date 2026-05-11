@@ -34,13 +34,13 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .invoice-paper {
       width: 100%;
       max-width: 100%;
-      padding: 24px 48px 0 48px; /* Increased side padding for alignment */
+      padding: 24px 30px 0 30px; /* Adjusted margins to 30px */
       margin: 0;
       background: white;
       position: relative;
       font-size: 12px;
       line-height: 1.3;
-      box-sizing: border-box; /* Ensure padding doesn't affect width */
+      box-sizing: border-box;
     }
     .header-top {
       display: flex;
@@ -201,10 +201,12 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
       margin-bottom: 6px;
     }
     .signature-divider {
-      height: 1px;
-      background-color: #0E5EA8;
+      border-top: 1.5px solid #0E5EA8; /* Using border for reliability */
       width: 100%;
+      margin-top: 6px;
       margin-bottom: 2px;
+      display: block;
+      clear: both;
     }
     .footer-banner {
       position: absolute;

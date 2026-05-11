@@ -54,7 +54,7 @@ interface Props {
 
 export default function InvoicePreview({ data, totals }: Props) {
   return (
-    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "24px 48px 12px 48px", boxSizing: "border-box" }}>
+    <div className={`invoice-paper ${data.pdfMode === "SINGLE_PAGE" ? "single-page" : ""}`} style={{ padding: "24px 30px 12px 30px", boxSizing: "border-box" }}>
       <div className="header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "6px" }}>
         {/* Left: Logo (195px) */}
         <div style={{ width: "195px" }}>
@@ -182,7 +182,7 @@ export default function InvoicePreview({ data, totals }: Props) {
       <div className="signature-section" style={{ marginTop: "40px", marginBottom: "5mm", textAlign: "right" }}>
         <div className="footer-declaration" style={{ fontSize: "11px", fontWeight: 700, color: "#1E3A5F", marginBottom: "60px", textTransform: "uppercase" }}>For M R SWIMMING POOLS AND SPA CONSTRUCTION CO.,</div>
         <div className="signature-line" style={{ fontWeight: 800, fontSize: "13px", color: "#111111", textTransform: "uppercase", marginBottom: "6px" }}>AUTHORISED SIGNATORY.</div>
-        <div className="signature-divider" style={{ height: "1px", backgroundColor: "#0E5EA8", width: "100%", marginBottom: "2px" }}></div>
+        <div className="signature-divider" style={{ borderTop: "1.5px solid #0E5EA8", width: "100%", marginBottom: "2px", display: "block", clear: "both" }}></div>
       </div>
 
       {/* Footer graphic */}
