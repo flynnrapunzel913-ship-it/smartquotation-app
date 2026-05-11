@@ -44,7 +44,7 @@ export function generateInvoiceHtml(data: any, logoBase64?: string) {
     .header-top {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       width: 100%;
       margin-bottom: 6px;
     }
