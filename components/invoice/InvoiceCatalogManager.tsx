@@ -166,7 +166,7 @@ export default function InvoiceCatalogManager() {
         const normalizedHsn = hsnCode !== null && hsnCode !== undefined ? String(hsnCode).trim() : "";
         
         return {
-          name: row["Name"] || row["name"],
+          name: row["Title"] || row["title"] || row["Name"] || row["name"],
           description: row["Description"] || row["description"] || "",
           type: (row["Type"] || row["type"] || "MACHINE").toString().toUpperCase(),
           unitPrice: parseFloat(row["Price"] || row["price"] || "0"),

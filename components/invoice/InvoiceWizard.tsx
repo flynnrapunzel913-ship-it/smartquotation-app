@@ -14,6 +14,9 @@ interface InvoiceItem {
   unitPrice: number;
   qty: number;
   total: number;
+  hsn?: string;
+  gstRate?: number;
+  unit?: string;
 }
 
 interface BankDetails {
@@ -495,7 +498,7 @@ export default function InvoiceWizard({ initialData }: Props) {
                           )}
                           {products
                             .filter(p => 
-                              p.name.toLowerCase().includes(item.description.toLowerCase()) || 
+                              (p.name && p.name.toLowerCase().includes(item.description.toLowerCase())) || 
                               (p.description && p.description.toLowerCase().includes(item.description.toLowerCase()))
                             )
                             .slice(0, 50)
@@ -504,14 +507,23 @@ export default function InvoiceWizard({ initialData }: Props) {
                               key={p.id} 
                               className="product-item"
                               onClick={() => {
-                                handleItemChange(index, "description", p.name + (p.description ? `\n${p.description}` : ""));
-                                handleItemChange(index, "unitPrice", p.defaultRate);
+                                const newItems = [...formData.items];
+                                newItems[index] = {
+                                  ...newItems[index],
+                                  description: (p.name || p.description || "").trim(),
+                                  unitPrice: Number(p.defaultRate || 0),
+                                  hsn: p.hsnCode || "",
+                                  gstRate: Number(p.gstRate || 0),
+                                  unit: p.unit || "Nos",
+                                  total: Number(p.defaultRate || 0) * newItems[index].qty
+                                };
+                                setFormData((prev) => ({ ...prev, items: newItems }));
                                 setShowDropdown(null);
                               }}
                             >
-                              <div style={{ fontWeight: 600, color: "#0f172a" }}>{p.name}</div>
-                              {p.description && <div style={{ fontSize: "11px", color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{p.description}</div>}
-                              <div style={{ fontSize: "11px", color: "#0ea5e9", marginTop: "4px" }}>Rate: {formatCurrencyINR(p.defaultRate)}</div>
+                              <div style={{ fontWeight: 600, color: "#0f172a" }}>{p.name || p.description || "Untitled Product"}</div>
+                              {p.name && p.description && <div style={{ fontSize: "11px", color: "#64748b", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{p.description}</div>}
+                              <div style={{ fontSize: "11px", color: "#0ea5e9", marginTop: "4px" }}>Rate: {formatCurrencyINR(p.defaultRate)} | Unit: {p.unit || "Nos"}</div>
                             </div>
                           ))}
                           {products.filter(p => 

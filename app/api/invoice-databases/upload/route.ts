@@ -37,7 +37,7 @@ export async function POST(req: Request) {
             columns.find(col => patterns.some(p => col.toLowerCase().includes(p.toLowerCase())));
 
           const codeCol = findCol(["code", "id", "ref", "sl", "no"]);
-          const nameCol = findCol(["product", "item", "description", "material", "name"]);
+          const nameCol = findCol(["product", "item", "description", "material", "name", "title"]);
           const descCol = findCol(["details", "full description", "specs"]);
           const rateCol = findCol(["rate", "price", "unit price", "amount", "mrp"]);
           const unitCol = findCol(["unit", "uom", "per"]);

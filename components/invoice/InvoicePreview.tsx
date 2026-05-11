@@ -9,6 +9,9 @@ interface InvoiceItem {
   unitPrice: number;
   qty: number;
   total: number;
+  hsn?: string;
+  gstRate?: number;
+  unit?: string;
 }
 
 interface BankDetails {
@@ -120,7 +123,7 @@ export default function InvoicePreview({ data, totals }: Props) {
             <tr key={index}>
               <td className="text-center">{index + 1}</td>
               <td style={{ textTransform: 'uppercase', whiteSpace: 'pre-wrap' }}>{item.description}</td>
-              <td className="text-right">{Number(item.unitPrice || 0).toFixed(2)}</td>
+              <td className="text-right">{Number(item.unitPrice || 0).toFixed(2)}{item.unit ? ` / ${item.unit}` : ""}</td>
               <td className="text-center">{item.qty}</td>
               <td className="text-right">{Number(item.total || 0).toFixed(2)}</td>
             </tr>
