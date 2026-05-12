@@ -17,6 +17,7 @@ const InvoicePreview = dynamic(() => import("./InvoicePreview"), {
 });
 import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
 import { InvoiceItemRow } from "./InvoiceItemRow";
+import Button from "@/components/ui/Button";
 
 interface InvoiceItem {
   description: string;
@@ -114,6 +115,7 @@ export default function InvoiceWizard({ initialData }: Props) {
   const [isSaved, setIsSaved] = useState(false);
   const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
   const [savedInvoiceNumber, setSavedInvoiceNumber] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchActiveDatabase();
@@ -324,6 +326,7 @@ export default function InvoiceWizard({ initialData }: Props) {
   };
 
   const handleSave = async (isDraft = false) => {
+    setIsSaving(true);
     try {
       const response = await fetch("/api/invoices", {
         method: "POST",
@@ -347,6 +350,8 @@ export default function InvoiceWizard({ initialData }: Props) {
     } catch (error) {
       console.error("Error saving invoice:", error);
       alert("Error saving invoice");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -503,9 +508,10 @@ export default function InvoiceWizard({ initialData }: Props) {
                 <tr style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
                   <th style={{ padding: "12px", textAlign: "center", width: "60px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>SL</th>
                   <th style={{ padding: "12px", textAlign: "left", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Description</th>
-                  <th style={{ padding: "12px", textAlign: "right", width: "140px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Unit Price</th>
+                  <th style={{ padding: "12px", textAlign: "center", width: "120px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>HSN</th>
+                  <th style={{ padding: "12px", textAlign: "right", width: "120px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Unit Price</th>
                   <th style={{ padding: "12px", textAlign: "center", width: "100px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Qty</th>
-                  <th style={{ padding: "12px", textAlign: "right", width: "140px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Total</th>
+                  <th style={{ padding: "12px", textAlign: "right", width: "120px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Total</th>
                   <th style={{ padding: "12px", width: "60px" }}></th>
                 </tr>
               </thead>
@@ -832,12 +838,12 @@ export default function InvoiceWizard({ initialData }: Props) {
           <div style={{ display: "flex", gap: "12px" }}>
             {step === 5 ? (
               <>
-                <button className="btn btn-outline" onClick={() => handleSave(true)}>
+                <Button className="btn-outline" onClick={() => handleSave(true)} loading={isSaving} loadingText="Saving...">
                   Save Draft
-                </button>
-                <button className="btn btn-primary" onClick={() => handleSave(false)}>
+                </Button>
+                <Button className="btn-primary" onClick={() => handleSave(false)} loading={isSaving} loadingText="Saving...">
                   Finalize & Save
-                </button>
+                </Button>
               </>
             ) : (
               <button className="btn btn-primary" onClick={() => setStep(step + 1)}>

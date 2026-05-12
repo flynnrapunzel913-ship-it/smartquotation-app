@@ -8,6 +8,7 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [searchFocused, setSearchFocused] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   // Don't show navbar on login page
   if (pathname === "/login") return null;
@@ -109,20 +110,6 @@ export default function Navbar() {
           )}
 
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px", paddingLeft: "16px", borderLeft: "1px solid var(--border-subtle)" }}>
-            <div style={{ 
-              width: "32px", 
-              height: "32px", 
-              borderRadius: "50%", 
-              background: "var(--accent-slate)", 
-              display: "flex", 
-              alignItems: "center", 
-              justifyContent: "center",
-              color: "white",
-              fontSize: "12px",
-              fontWeight: "600"
-            }}>
-              AD
-            </div>
             <button onClick={handleLogout} className="logout-button" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <LogOut size={16} />
               <span>Logout</span>

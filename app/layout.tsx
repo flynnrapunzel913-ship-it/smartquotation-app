@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "../styles/globals.css";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,12 +13,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const roboto = Roboto({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-roboto",
+});
+
 export const metadata: Metadata = {
   title: "SmartQuotation — Pool quotations",
   description: "Professional quotations for swimming pool construction",
 };
-
-import Navbar from "@/components/Navbar";
 
 export default function RootLayout({
   children,
@@ -26,11 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-          <Navbar />
-          {children}
+      <body className={roboto.variable}>
+        <Navbar />
+        {children}
       </body>
     </html>
   );
 }
- 

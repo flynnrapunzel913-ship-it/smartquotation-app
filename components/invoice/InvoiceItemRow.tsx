@@ -34,8 +34,8 @@ export const InvoiceItemRow = React.memo(({
 }: InvoiceItemRowProps) => {
   return (
     <tr style={{ borderBottom: "1px solid #f1f5f9" }}>
-      <td style={{ padding: "12px", width: "40px", textAlign: "center", color: "#94a3b8", fontSize: "0.875rem" }}>{index + 1}</td>
-      <td style={{ padding: "12px", position: "relative" }}>
+      <td className="number-font" style={{ padding: "12px", width: "40px", textAlign: "center", color: "#94a3b8", fontSize: "0.875rem" }}>{index + 1}</td>
+      <td className="description-cell" style={{ padding: "12px", position: "relative" }}>
         <input
           type="text"
           value={item.description}
@@ -99,7 +99,7 @@ export const InvoiceItemRow = React.memo(({
           type="number"
           value={item.unitPrice}
           onChange={(e) => handleItemChange(index, "unitPrice", e.target.value)}
-          className="form-control"
+          className="form-control number-font"
           style={{ textAlign: "right" }}
         />
       </td>
@@ -108,11 +108,11 @@ export const InvoiceItemRow = React.memo(({
           type="number"
           value={item.qty}
           onChange={(e) => handleItemChange(index, "qty", e.target.value)}
-          className="form-control"
+          className="form-control number-font"
           style={{ textAlign: "center" }}
         />
       </td>
-      <td style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#0f172a", fontSize: "0.875rem", width: "120px" }}>
+      <td className="number-font" style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#0f172a", fontSize: "0.875rem", width: "120px" }}>
         {formatCurrencyINR(item.total)}
       </td>
       <td style={{ padding: "12px", textAlign: "center", width: "50px" }}>

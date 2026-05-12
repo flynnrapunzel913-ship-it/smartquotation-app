@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { Star, ArrowRight, ShieldCheck, Database, FileText } from "lucide-react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Star, ArrowRight, ShieldCheck, Database, FileText, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface Props {
@@ -16,7 +16,9 @@ interface Props {
 }
 
 export function QuotationTypeCard({ title, description, href, theme, disabled, compact, logoUrl }: Props) {
-  const [isFavorite, setIsFavorite] = React.useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const getThemeConfig = () => {
     switch (theme) {
@@ -59,13 +61,16 @@ export function QuotationTypeCard({ title, description, href, theme, disabled, c
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       style={{ height: "100%" }}
     >
-      <Link 
-        href={disabled ? "#" : href}
-        prefetch={true}
+      <div 
+        onClick={(e) => {
+          if (disabled || isLoading) return;
+          setIsLoading(true);
+          router.push(href);
+        }}
         className="card-premium" 
         style={{ 
-          opacity: disabled ? 0.7 : 1, 
-          cursor: disabled ? "default" : "pointer",
+          opacity: disabled || isLoading ? 0.7 : 1, 
+          cursor: disabled || isLoading ? "default" : "pointer",
           textDecoration: "none",
           display: "flex",
           flexDirection: "column",
@@ -165,12 +170,12 @@ export function QuotationTypeCard({ title, description, href, theme, disabled, c
               background: "white"
             }}
           >
-            {config.cta}
-            <ArrowRight size={compact ? 14 : 18} />
+            {isLoading ? "Opening..." : config.cta}
+            {isLoading ? <Loader2 className="animate-spin" size={compact ? 14 : 18} /> : <ArrowRight size={compact ? 14 : 18} />}
           </div>
           {!compact && <span style={{ fontSize: "13px", fontWeight: "500", color: "var(--text-subtle)" }}>Last used 2h ago</span>}
         </div>
-      </Link>
+      </div>
       
       <style jsx>{`
         .btn-module-cta {
