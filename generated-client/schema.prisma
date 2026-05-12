@@ -216,23 +216,3 @@ enum CompanyType {
   KLEAN_TECH_SYSTEMS
   MR_ACADEMY
 }
-
-model EmailLog {
-  id             String   @id @default(cuid())
-  module         String
-  documentNumber String
-  to             String
-  cc             String?
-  subject        String
-  senderEmail    String
-  status         String
-  errorMessage   String?
-  sentAt         DateTime @default(now())
-  createdAt      DateTime @default(now())
-
-  @@index([module])
-  @@index([documentNumber])
-  @@index([to])
-  @@index([status])
-  @@index([createdAt])
-}

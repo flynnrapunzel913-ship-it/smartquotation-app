@@ -284,20 +284,6 @@ exports.Prisma.InvoiceProductScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.EmailLogScalarFieldEnum = {
-  id: 'id',
-  module: 'module',
-  documentNumber: 'documentNumber',
-  to: 'to',
-  cc: 'cc',
-  subject: 'subject',
-  senderEmail: 'senderEmail',
-  status: 'status',
-  errorMessage: 'errorMessage',
-  sentAt: 'sentAt',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -348,8 +334,7 @@ exports.Prisma.ModelName = {
   ProductCatalog: 'ProductCatalog',
   Invoice: 'Invoice',
   ProductDatabase: 'ProductDatabase',
-  InvoiceProduct: 'InvoiceProduct',
-  EmailLog: 'EmailLog'
+  InvoiceProduct: 'InvoiceProduct'
 };
 
 /**
