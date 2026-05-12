@@ -16,8 +16,9 @@ export async function htmlToPdfBuffer(
   if (isVercel) {
     const browser = await puppeteerCore.launch({
       args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
-      headless: true,
+      headless: chromium.headless,
     });
     try {
       const page = await browser.newPage();
