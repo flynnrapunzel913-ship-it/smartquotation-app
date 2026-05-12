@@ -503,9 +503,10 @@ export default function InvoiceWizard({ initialData }: Props) {
                 <tr style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
                   <th style={{ padding: "12px", textAlign: "center", width: "60px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>SL</th>
                   <th style={{ padding: "12px", textAlign: "left", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Description</th>
-                  <th style={{ padding: "12px", textAlign: "right", width: "140px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Unit Price</th>
+                  <th style={{ padding: "12px", textAlign: "center", width: "120px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>HSN</th>
+                  <th style={{ padding: "12px", textAlign: "right", width: "120px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Unit Price</th>
                   <th style={{ padding: "12px", textAlign: "center", width: "100px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Qty</th>
-                  <th style={{ padding: "12px", textAlign: "right", width: "140px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Total</th>
+                  <th style={{ padding: "12px", textAlign: "right", width: "120px", color: "#475569", fontWeight: "600", fontSize: "0.875rem" }}>Total</th>
                   <th style={{ padding: "12px", width: "60px" }}></th>
                 </tr>
               </thead>

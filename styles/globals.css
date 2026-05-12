@@ -285,4 +285,8 @@ div[class*="DevOverlay"],
   animation: shimmer 4s linear infinite;
 }
 
+.number-font {
+  font-family: var(--font-roboto), sans-serif !important;
+}
+
 
