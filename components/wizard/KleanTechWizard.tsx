@@ -6,6 +6,8 @@ import CategoryTabs from "@/components/klean-tech/CategoryTabs";
 import ProductCatalog from "@/components/klean-tech/ProductCatalog";
 import SelectedItemsTable from "@/components/klean-tech/SelectedItemsTable";
 import ProductManagerModal from "@/components/klean-tech/ProductManagerModal";
+import KleanTechQuotationTemplate from "@/components/templates/KleanTechQuotationTemplate";
+import { Pencil, Check, X } from "lucide-react";
 import "@/styles/wizard.css"; // Reuse existing styles if possible
 
 interface Product {
@@ -29,6 +31,12 @@ interface QuotationItem {
   unitPrice: number;
   quantity: number;
   lineTotal: number;
+  htsCode?: string;
+  unit?: string;
+  specs?: string;
+  notes?: string;
+  warranty?: string;
+  deliveryTime?: string;
 }
 
 interface FormData {
@@ -66,6 +74,8 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
   const [quoteId, setQuoteId] = useState<string | null>(id || null);
   const [isLoading, setIsLoading] = useState(!!id);
   const [activeCategory, setActiveCategory] = useState<"MACHINE" | "SPARE">("MACHINE");
+  const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null);
+  const [editRowData, setEditRowData] = useState<QuotationItem | null>(null);
 
   const [formData, setFormData] = useState<FormData>({
     date: new Date().toISOString().split("T")[0],
@@ -80,6 +90,29 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
     termsAndConditions: DEFAULT_TERMS,
     items: [],
   });
+
+  const [isDuplicateReference, setIsDuplicateReference] = useState(false);
+  const [isCheckingDuplicate, setIsCheckingDuplicate] = useState(false);
+
+  useEffect(() => {
+    const checkDuplicate = async () => {
+      if (!formData.referenceNumber) return;
+      setIsCheckingDuplicate(true);
+      try {
+        const res = await fetch(`/api/quotations?search=${formData.referenceNumber}`);
+        const data = await res.json();
+        const duplicate = data.some((q: any) => q.quoteNumber === formData.referenceNumber);
+        setIsDuplicateReference(duplicate);
+      } catch (e) {
+        console.error("Failed to check duplicate", e);
+      } finally {
+        setIsCheckingDuplicate(false);
+      }
+    };
+
+    const timer = setTimeout(checkDuplicate, 500);
+    return () => clearTimeout(timer);
+  }, [formData.referenceNumber]);
 
   // Calculate totals
   const subtotal = formData.items.reduce((sum, item) => sum + item.lineTotal, 0);
@@ -164,6 +197,7 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
       customerEmail: "", 
       quoteNumber: formData.referenceNumber,
       title: "KLEAN TECH SYSTEMS Quotation",
+      quotationType: "klean-tech",
       date: formData.date,
       gstPercent: formData.gstPercent,
       projectSpecifications: {
@@ -186,6 +220,12 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
         variableValues: {
           code: item.code,
           hsnCode: item.hsnCode,
+          htsCode: item.htsCode,
+          unit: item.unit,
+          specs: item.specs,
+          notes: item.notes,
+          warranty: item.warranty,
+          deliveryTime: item.deliveryTime,
         },
       })),
       notes: "",
@@ -230,7 +270,8 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
           { s: 1, name: "Details" },
           { s: 2, name: "Products" },
           { s: 3, name: "Terms" },
-          { s: 4, name: "Preview" },
+          { s: 4, name: "Product Details" },
+          { s: 5, name: "Preview" },
         ].map(({ s, name }) => (
           <div
             key={s}
@@ -249,9 +290,25 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
           <div>
             <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 1: Quotation Details</h2>
             <div className="form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
-              <div className="form-group" style={{ gridColumn: "span 2" }}>
+              <div className="form-group">
                 <label>Date</label>
                 <input type="date" className="form-control" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>QUOTATION NUMBER</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  value={formData.referenceNumber} 
+                  onChange={(e) => handleInputChange("referenceNumber", e.target.value)} 
+                  placeholder="KT-559372"
+                  style={{ borderColor: isDuplicateReference ? "#ef4444" : "inherit" }}
+                />
+                {isDuplicateReference && (
+                  <div style={{ color: "#ef4444", fontSize: "0.75rem", marginTop: "4px" }}>
+                    This quotation number already exists. Please use a unique quotation number.
+                  </div>
+                )}
               </div>
               <div className="form-group" style={{ gridColumn: "span 2" }}>
                 <label>Invoice To Company Name</label>
@@ -374,39 +431,224 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
 
         {step === 4 && (
           <div>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 4: Preview & Generate</h2>
-            <div style={{ padding: "24px", background: "#f8fafc", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-              <h3 style={{ marginTop: 0, fontSize: "1rem", fontWeight: "700", color: "#0f172a", marginBottom: "16px" }}>Quotation Summary</h3>
-              <div style={{ display: "grid", gap: "12px", fontSize: "0.875rem", color: "#475569" }}>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Subtotal:</span>
-                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {subtotal.toFixed(2)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Carrying & Forwarding (C&F):</span>
-                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {carryingForwardCharge.toFixed(2)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Service Charges:</span>
-                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {formData.serviceCharges.toFixed(2)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid #e2e8f0" }}>
-                  <span>Taxable Amount:</span>
-                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {taxableAmount.toFixed(2)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>GST ({formData.gstPercent}%):</span>
-                  <span style={{ fontWeight: "600", color: "#0f172a" }}>₹ {gstAmount.toFixed(2)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.125rem", fontWeight: "700", color: "#4f46e5", paddingTop: "12px", borderTop: "1px solid #e2e8f0" }}>
-                  <span>Grand Total:</span>
-                  <span>₹ {grandTotal.toFixed(2)}</span>
-                </div>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 4: Product Details</h2>
+            <div style={{ border: "1px solid #e2e8f0", borderRadius: "12px", overflow: "hidden", background: "white", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+                <thead style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
+                  <tr>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Sl. No</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Description</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Image</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>HSN Code</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Unit Price (INR)</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Qty</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Total Price</th>
+                    <th style={{ padding: "14px 16px", fontSize: "0.75rem", fontWeight: "700", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {formData.items.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} style={{ padding: "32px", textAlign: "center", color: "#94a3b8", fontSize: "0.875rem" }}>
+                        No products selected. Please go back to Step 2.
+                      </td>
+                    </tr>
+                  ) : (
+                    formData.items.map((item, idx) => {
+                      const isEditing = editingRowIndex === idx;
+                      const displayItem = isEditing ? editRowData! : item;
+                      
+                      return (
+                        <tr key={idx} style={{ borderBottom: "1px solid #e2e8f0", background: isEditing ? "#f0f9ff" : "inherit" }}>
+                          <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#475569" }}>{idx + 1}</td>
+                          <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#0f172a" }}>
+                            {isEditing ? (
+                              <input 
+                                type="text" 
+                                className="form-control" 
+                                value={displayItem.description} 
+                                onChange={(e) => setEditRowData({ ...displayItem, description: e.target.value })} 
+                                style={{ width: "100%", padding: "8px", fontSize: "0.875rem" }}
+                              />
+                            ) : (
+                              displayItem.description
+                            )}
+                          </td>
+                          <td style={{ padding: "14px 16px" }}>
+                            <div style={{ width: "50px", height: "50px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                              {displayItem.imagePath ? (
+                                <img src={displayItem.imagePath} alt={displayItem.description} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                              ) : (
+                                <span style={{ fontSize: "10px", color: "#94a3b8" }}>No Image</span>
+                              )}
+                            </div>
+                            {isEditing && (
+                              <div style={{ marginTop: "4px" }}>
+                                <input 
+                                  type="file" 
+                                  accept="image/*" 
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      const reader = new FileReader();
+                                      reader.onload = (evt) => {
+                                        setEditRowData({ ...displayItem, imagePath: evt.target?.result as string });
+                                      };
+                                      reader.readAsDataURL(file);
+                                    }
+                                  }} 
+                                  style={{ fontSize: "0.75rem", width: "100%" }}
+                                />
+                                {displayItem.imagePath && (
+                                  <button 
+                                    type="button" 
+                                    onClick={() => setEditRowData({ ...displayItem, imagePath: "" })}
+                                    style={{ fontSize: "0.75rem", color: "#ef4444", border: "none", background: "none", cursor: "pointer", marginTop: "4px" }}
+                                  >
+                                    Remove
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </td>
+                          <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#0f172a" }}>
+                            {isEditing ? (
+                              <input 
+                                type="text" 
+                                className="form-control" 
+                                value={displayItem.hsnCode} 
+                                onChange={(e) => setEditRowData({ ...displayItem, hsnCode: e.target.value })} 
+                                style={{ width: "100%", padding: "8px", fontSize: "0.875rem" }}
+                              />
+                            ) : (
+                              displayItem.hsnCode || "N/A"
+                            )}
+                          </td>
+                          <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#0f172a", fontWeight: "600" }}>
+                            {isEditing ? (
+                              <input 
+                                type="number" 
+                                className="form-control" 
+                                value={displayItem.unitPrice} 
+                                onChange={(e) => {
+                                  const price = parseFloat(e.target.value) || 0;
+                                  setEditRowData({ ...displayItem, unitPrice: price, lineTotal: price * displayItem.quantity });
+                                }} 
+                                style={{ width: "100%", padding: "8px", fontSize: "0.875rem" }}
+                              />
+                            ) : (
+                              `₹ ${displayItem.unitPrice.toLocaleString()}`
+                            )}
+                          </td>
+                          <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#0f172a" }}>
+                            {isEditing ? (
+                              <input 
+                                type="number" 
+                                className="form-control" 
+                                value={displayItem.quantity} 
+                                onChange={(e) => {
+                                  const qty = parseFloat(e.target.value) || 0;
+                                  setEditRowData({ ...displayItem, quantity: qty, lineTotal: displayItem.unitPrice * qty });
+                                }} 
+                                style={{ width: "100%", padding: "8px", fontSize: "0.875rem" }}
+                              />
+                            ) : (
+                              displayItem.quantity
+                            )}
+                          </td>
+                          <td style={{ padding: "14px 16px", fontSize: "0.875rem", color: "#0f172a", fontWeight: "700" }}>
+                            ₹ {displayItem.lineTotal.toLocaleString()}
+                          </td>
+                          <td style={{ padding: "14px 16px" }}>
+                            {isEditing ? (
+                              <div style={{ display: "flex", gap: "8px" }}>
+                                <button 
+                                  type="button" 
+                                  onClick={() => {
+                                    if (!displayItem.description) {
+                                      alert("Description cannot be empty");
+                                      return;
+                                    }
+                                    if (displayItem.quantity <= 0) {
+                                      alert("Quantity must be greater than 0");
+                                      return;
+                                    }
+                                    const newItems = [...formData.items];
+                                    newItems[idx] = displayItem;
+                                    setFormData({ ...formData, items: newItems });
+                                    setEditingRowIndex(null);
+                                    setEditRowData(null);
+                                  }}
+                                  style={{ background: "#10b981", color: "white", border: "none", borderRadius: "4px", padding: "6px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                                  title="Save"
+                                >
+                                  <Check size={16} />
+                                </button>
+                                <button 
+                                  type="button" 
+                                  onClick={() => {
+                                    setEditingRowIndex(null);
+                                    setEditRowData(null);
+                                  }}
+                                  style={{ background: "#ef4444", color: "white", border: "none", borderRadius: "4px", padding: "6px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                                  title="Cancel"
+                                >
+                                  <X size={16} />
+                                </button>
+                              </div>
+                            ) : (
+                              <button 
+                                type="button" 
+                                onClick={() => {
+                                  setEditingRowIndex(idx);
+                                  setEditRowData({ ...item });
+                                }}
+                                style={{ background: "#4f46e5", color: "white", border: "none", borderRadius: "4px", padding: "6px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                                title="Edit"
+                              >
+                                <Pencil size={16} />
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0f172a", marginBottom: "20px" }}>Step 5: Preview & Generate</h2>
+            
+            <div style={{ 
+              display: "flex", 
+              justifyContent: "center", 
+              background: "#f1f5f9", 
+              padding: "40px", 
+              borderRadius: "12px",
+              boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+              maxHeight: "800px",
+              overflowY: "auto"
+            }}>
+              <div style={{ 
+                width: "794px", 
+                background: "white", 
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                borderRadius: "4px",
+                border: "1px solid #e2e8f0",
+                overflow: "hidden"
+              }}>
+                <KleanTechQuotationTemplate data={formData} />
               </div>
             </div>
-            <div style={{ marginTop: "24px", display: "flex", gap: "12px" }}>
+
+            <div style={{ marginTop: "24px", display: "flex", gap: "12px", justifyContent: "flex-end" }}>
               <button className="btn btn-primary" style={{ background: "linear-gradient(135deg, #059669 0%, #10b981 100%)" }} onClick={() => handleSubmit(false)}>Save & Generate</button>
-              <button className="btn btn-secondary" onClick={() => setStep(1)}>Edit Details</button>
+              <button className="btn btn-secondary" onClick={() => setStep(4)}>Edit Details</button>
             </div>
           </div>
         )}
@@ -418,8 +660,14 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
         )}
         {step === 1 && <div></div>}
         
-        {step < 4 ? (
-          <button className="btn btn-primary" onClick={() => setStep(step + 1)}>Next Step →</button>
+        {step < 5 ? (
+          <button 
+            className="btn btn-primary" 
+            onClick={() => setStep(step + 1)}
+            disabled={step === 1 && isDuplicateReference}
+          >
+            Next Step →
+          </button>
         ) : (
           <div></div>
         )}

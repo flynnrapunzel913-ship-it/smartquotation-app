@@ -55,35 +55,58 @@ export default function Navbar() {
 
         {/* Right: Search, Account, Logout */}
         <div className="navbar-right" style={{ display: "flex", gap: "16px", alignItems: "center", justifyContent: "flex-end" }}>
-          <div className={`search-container ${searchFocused ? "focused" : ""}`} style={{ 
-            position: "relative", 
-            display: "flex", 
-            alignItems: "center",
-            background: "white",
-            borderRadius: "10px",
-            padding: "0 12px",
-            border: "1px solid #e2e8f0",
-            transition: "all 0.2s",
-            width: searchFocused ? "240px" : "180px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-          }}>
-            <Search size={16} style={{ color: "#64748b" }} />
-            <input 
-              type="text" 
-              placeholder="Search anything..." 
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
+          {pathname.startsWith("/quotations/klean-tech") ? (
+            <button
+              type="button"
+              onClick={() => router.push(`${pathname}?manageProducts=true`)}
               style={{
-                background: "transparent",
+                padding: "8px 16px",
+                background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)",
+                color: "white",
                 border: "none",
-                padding: "8px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
                 fontSize: "13px",
-                outline: "none",
-                width: "100%",
-                color: "#0F172A"
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px"
               }}
-            />
-          </div>
+            >
+              <span>+ Add Product</span>
+            </button>
+          ) : (
+            <div className={`search-container ${searchFocused ? "focused" : ""}`} style={{ 
+              position: "relative", 
+              display: "flex", 
+              alignItems: "center",
+              background: "white",
+              borderRadius: "10px",
+              padding: "0 12px",
+              border: "1px solid #e2e8f0",
+              transition: "all 0.2s",
+              width: searchFocused ? "240px" : "180px",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+            }}>
+              <Search size={16} style={{ color: "#64748b" }} />
+              <input 
+                type="text" 
+                placeholder="Search anything..." 
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  padding: "8px",
+                  fontSize: "13px",
+                  outline: "none",
+                  width: "100%",
+                  color: "#0F172A"
+                }}
+              />
+            </div>
+          )}
 
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px", paddingLeft: "16px", borderLeft: "1px solid var(--border-subtle)" }}>
             <div style={{ 

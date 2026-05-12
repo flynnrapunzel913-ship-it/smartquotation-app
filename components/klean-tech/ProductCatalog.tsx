@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import QuantitySelector from "./QuantitySelector";
 
 interface Product {
@@ -20,6 +21,8 @@ interface Props {
 }
 
 export default function ProductCatalog({ activeCategory, onAddProduct, selectedItems }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
@@ -119,21 +122,27 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
     <div style={{ marginTop: "24px" }}>
       <div style={{ display: "flex", gap: "16px", marginBottom: "20px", alignItems: "center", flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: "250px" }}>
-          <input
-            type="text"
-            placeholder="Search by name, code or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ 
-              width: "100%", 
-              padding: "12px 16px", 
-              borderRadius: "10px", 
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+          <button
+            type="button"
+            onClick={() => router.push(`${pathname}?manageProducts=true`)}
+            style={{
+              padding: "12px 20px",
+              background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)",
+              color: "white",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer",
+              fontWeight: "600",
               fontSize: "0.875rem",
-              transition: "all 0.2s"
+              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.2s",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px"
             }}
-          />
+          >
+            + Add Product
+          </button>
         </div>
         <div>
           <select

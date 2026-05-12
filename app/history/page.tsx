@@ -52,7 +52,7 @@ export default function HistoryPage() {
   const handleDuplicate = async (id: string) => {
     const q = quotations.find((item) => item.id === id);
     const specs = q?.projectSpecifications as any;
-    if (q?.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+    if (q?.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "klean-tech") {
       router.push(`/quotations/klean-tech/new?id=${id}&mode=duplicate`);
     } else {
       router.push(`/quotations/mr-swimming-pools/new?id=${id}&mode=duplicate`);
@@ -146,7 +146,7 @@ export default function HistoryPage() {
                           className="btn btn-small btn-edit" 
                           onClick={() => {
                             const specs = q.projectSpecifications as any;
-                            if (q.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS") {
+                            if (q.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "KLEAN_TECH_SYSTEMS" || specs?.quotationType === "klean-tech") {
                               router.push(`/quotations/klean-tech/${q.id}/edit`);
                             } else {
                               router.push(`/quotations/mr-swimming-pools/new?id=${q.id}`);

@@ -35,12 +35,21 @@ export default function RecentActivity() {
         const qData = await qRes.json();
         const iData = await iRes.json();
 
+        const MODULE_LABELS: Record<string, string> = {
+          "klean-tech": "Klean Tech Systems",
+          "mr-construction": "MR Construction",
+          "mr-invoice": "MR Invoice",
+          "mr-swimming-pools": "MR Swimming Pools & Spa Construction Company",
+        };
+
         const merged: ActivityItem[] = [
           ...qData.slice(0, 5).map((q: any) => ({
             id: q.id,
             type: "quotation",
             name: q.quoteNumber || "Untitled Quote",
-            module: q.quotationType === "KLEAN_TECH_SYSTEMS" ? "Klean Tech" : "MR Construction",
+            module: (q.projectSpecifications?.quotationType === "klean-tech" || q.title === "KLEAN TECH SYSTEMS Quotation") 
+              ? "Klean Tech Systems" 
+              : MODULE_LABELS[q.projectSpecifications?.quotationType] || "MR Construction",
             status: q.isDraft ? "Draft" : "Completed",
             timestamp: q.createdAt || q.date
           })),
