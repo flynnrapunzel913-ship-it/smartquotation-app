@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "../styles/globals.css";
-import { GoogleProvider } from "@/components/providers/GoogleProvider";
 import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
@@ -33,10 +32,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.variable}>
-        <GoogleProvider>
-          <Navbar />
-          {children}
-        </GoogleProvider>
+        <Navbar />
+        {children}
       </body>
     </html>
   );
