@@ -17,6 +17,7 @@ const InvoicePreview = dynamic(() => import("./InvoicePreview"), {
 });
 import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
 import { InvoiceItemRow } from "./InvoiceItemRow";
+import Button from "@/components/ui/Button";
 
 interface InvoiceItem {
   description: string;
@@ -114,6 +115,7 @@ export default function InvoiceWizard({ initialData }: Props) {
   const [isSaved, setIsSaved] = useState(false);
   const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
   const [savedInvoiceNumber, setSavedInvoiceNumber] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchActiveDatabase();
@@ -324,6 +326,7 @@ export default function InvoiceWizard({ initialData }: Props) {
   };
 
   const handleSave = async (isDraft = false) => {
+    setIsSaving(true);
     try {
       const response = await fetch("/api/invoices", {
         method: "POST",
@@ -347,6 +350,8 @@ export default function InvoiceWizard({ initialData }: Props) {
     } catch (error) {
       console.error("Error saving invoice:", error);
       alert("Error saving invoice");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -833,12 +838,12 @@ export default function InvoiceWizard({ initialData }: Props) {
           <div style={{ display: "flex", gap: "12px" }}>
             {step === 5 ? (
               <>
-                <button className="btn btn-outline" onClick={() => handleSave(true)}>
+                <Button className="btn-outline" onClick={() => handleSave(true)} loading={isSaving} loadingText="Saving...">
                   Save Draft
-                </button>
-                <button className="btn btn-primary" onClick={() => handleSave(false)}>
+                </Button>
+                <Button className="btn-primary" onClick={() => handleSave(false)} loading={isSaving} loadingText="Saving...">
                   Finalize & Save
-                </button>
+                </Button>
               </>
             ) : (
               <button className="btn btn-primary" onClick={() => setStep(step + 1)}>
