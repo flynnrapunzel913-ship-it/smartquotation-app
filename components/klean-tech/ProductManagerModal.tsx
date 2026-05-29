@@ -19,9 +19,6 @@ interface Props {
 
 export default function ProductManagerModal({ onClose }: Props) {
   const [activeTab, setActiveTab] = useState<"catalog" | "add" | "upload">("catalog");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminPassword, setAdminPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -213,80 +210,6 @@ export default function ProductManagerModal({ onClose }: Props) {
     const matchesType = filterType === "all" || p.category === filterType;
     return matchesSearch && matchesType;
   }) : [];
-
-  if (!isAuthenticated) {
-    return (
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-        <div style={{ background: "white", padding: "32px", borderRadius: "16px", width: "100%", maxWidth: "400px", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}>
-          <div style={{ textAlign: "center", marginBottom: "24px" }}>
-            <h3 style={{ margin: "0 0 8px 0", fontSize: "1.25rem", fontWeight: "700", color: "#0f172a" }}>Admin Access Required</h3>
-            <p style={{ fontSize: "0.875rem", color: "#64748b", margin: 0 }}>Please enter the admin password to manage products.</p>
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <input 
-              type="password" 
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-              style={{ 
-                width: "100%", 
-                padding: "12px 16px", 
-                border: "1px solid #e2e8f0", 
-                borderRadius: "10px", 
-                fontSize: "0.875rem",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                transition: "border-color 0.2s"
-              }}
-              placeholder="Enter password"
-            />
-            {passwordError && <p style={{ color: "#ef4444", fontSize: "0.75rem", marginTop: "6px", fontWeight: "500" }}>{passwordError}</p>}
-          </div>
-          <div style={{ display: "flex", gap: "12px" }}>
-            <button 
-              onClick={onClose} 
-              style={{ 
-                flex: 1,
-                padding: "12px", 
-                background: "white", 
-                color: "#475569", 
-                border: "1px solid #e2e8f0", 
-                borderRadius: "10px", 
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "0.875rem",
-                transition: "all 0.2s"
-              }}
-            >
-              Cancel
-            </button>
-            <button 
-              onClick={() => {
-                if (adminPassword === "AdminSecure@12#") {
-                  setIsAuthenticated(true);
-                } else {
-                  setPasswordError("Incorrect password!");
-                }
-              }}
-              style={{ 
-                flex: 1,
-                padding: "12px", 
-                background: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)", 
-                color: "white", 
-                border: "none", 
-                borderRadius: "10px", 
-                cursor: "pointer",
-                fontWeight: "600",
-                fontSize: "0.875rem",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                transition: "all 0.2s"
-              }}
-            >
-              Access
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
