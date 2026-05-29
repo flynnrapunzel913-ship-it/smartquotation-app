@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const chromiumBinIncludes = ["./node_modules/@sparticuz/chromium/bin/**"];
+
 const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -8,6 +10,11 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
+  outputFileTracingIncludes: {
+    "/api/invoices/*/pdf": chromiumBinIncludes,
+    "/api/quotations/*/pdf": chromiumBinIncludes,
+    "/app/dev/mr-preview/pdf": chromiumBinIncludes,
+  },
   devIndicators: {
     appIsrStatus: false,
     buildActivity: false,

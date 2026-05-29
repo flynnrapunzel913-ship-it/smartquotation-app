@@ -6,6 +6,9 @@ import { generateInvoiceHtml } from "@/lib/templates/invoice-html";
 import fs from "fs";
 import path from "path";
 
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
