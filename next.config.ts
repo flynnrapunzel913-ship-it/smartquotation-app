@@ -2,6 +2,19 @@ import type { NextConfig } from "next";
 
 const chromiumBinIncludes = ["./node_modules/@sparticuz/chromium/bin/**"];
 
+/** Shrink PDF serverless bundles — keep public/templates and templates/klean-tech for runtime assets. */
+const pdfTraceExcludes = [
+  "./generated-client/query_engine*.tmp*",
+  "./generated-client/query_engine-windows.dll.node",
+  "./README.md",
+  "./FEATURES.md",
+  "./ANSWER.txt",
+  "./data/**",
+  "./templates/*.doc",
+  "./templates/*.pdf",
+  "./lib/templates/*.pdf",
+];
+
 const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -13,6 +26,10 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/invoices/*/pdf": chromiumBinIncludes,
     "/api/quotations/*/pdf": chromiumBinIncludes,
+  },
+  outputFileTracingExcludes: {
+    "/api/invoices/*/pdf": pdfTraceExcludes,
+    "/api/quotations/*/pdf": pdfTraceExcludes,
   },
   devIndicators: {
     appIsrStatus: false,

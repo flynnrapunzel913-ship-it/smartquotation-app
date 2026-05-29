@@ -320,7 +320,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\KLE\\KLE_Projects\\smart-quotation\\generated-client",
+      "value": "C:\\Users\\pavan\\projects\\Quot-proj\\smartquotation-app\\generated-client",
       "fromEnvVar": null
     },
     "config": {
@@ -334,7 +334,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\KLE\\KLE_Projects\\smart-quotation\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\pavan\\projects\\Quot-proj\\smartquotation-app\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
