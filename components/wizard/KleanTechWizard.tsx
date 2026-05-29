@@ -6,6 +6,7 @@ import CategoryTabs from "@/components/klean-tech/CategoryTabs";
 import ProductCatalog from "@/components/klean-tech/ProductCatalog";
 import SelectedItemsTable from "@/components/klean-tech/SelectedItemsTable";
 import ProductManagerModal from "@/components/klean-tech/ProductManagerModal";
+import ProductImageThumbnail from "@/components/klean-tech/ProductImageThumbnail";
 import KleanTechQuotationTemplate from "@/components/templates/KleanTechQuotationTemplate";
 import { Pencil, Check, X } from "lucide-react";
 import "@/styles/wizard.css"; // Reuse existing styles if possible
@@ -359,13 +360,12 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
                     ) : (
                       formData.items.map((item, idx) => (
                         <div key={idx} style={{ display: "flex", gap: "12px", marginBottom: "16px", borderBottom: "1px solid #f1f5f9", paddingBottom: "16px" }}>
-                          <div style={{ width: "48px", height: "48px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                            {item.imagePath ? (
-                              <img src={item.imagePath} alt={item.description} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
-                            ) : (
-                              <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "500" }}>No Image</span>
-                            )}
-                          </div>
+                          <ProductImageThumbnail
+                            imagePath={item.imagePath}
+                            alt=""
+                            width={48}
+                            height={48}
+                          />
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontWeight: "600", fontSize: "0.875rem", color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.description}</div>
                             <div style={{ fontSize: "0.75rem", color: "#64748b", marginTop: "2px" }}>{item.quantity} x ₹ {item.unitPrice.toLocaleString()}</div>
@@ -475,13 +475,12 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
                             )}
                           </td>
                           <td style={{ padding: "14px 16px" }}>
-                            <div style={{ width: "50px", height: "50px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                              {displayItem.imagePath ? (
-                                <img src={displayItem.imagePath} alt={displayItem.description} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
-                              ) : (
-                                <span style={{ fontSize: "10px", color: "#94a3b8" }}>No Image</span>
-                              )}
-                            </div>
+                            <ProductImageThumbnail
+                              imagePath={displayItem.imagePath}
+                              alt=""
+                              width={50}
+                              height={50}
+                            />
                             {isEditing && (
                               <div style={{ marginTop: "4px" }}>
                                 <input 

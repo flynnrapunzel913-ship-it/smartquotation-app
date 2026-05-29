@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import QuantitySelector from "./QuantitySelector";
+import ProductImageThumbnail from "./ProductImageThumbnail";
 
 interface Product {
   id: string;
@@ -248,27 +249,12 @@ export default function ProductCatalog({ activeCategory, onAddProduct, selectedI
                     />
                   </td>
                   <td style={{ padding: "14px 16px" }}>
-                    <div style={{ 
-                      width: "60px", 
-                      height: "60px", 
-                      background: "#f8fafc", 
-                      borderRadius: "8px", 
-                      border: "1px solid #e2e8f0",
-                      display: "flex", 
-                      alignItems: "center", 
-                      justifyContent: "center", 
-                      overflow: "hidden" 
-                    }}>
-                      {product.imagePath ? (
-                        <img 
-                          src={product.imagePath.startsWith("/") ? product.imagePath : `/${product.imagePath}`} 
-                          alt={product.name} 
-                          style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} 
-                        />
-                      ) : (
-                        <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "500" }}>No Image</span>
-                      )}
-                    </div>
+                    <ProductImageThumbnail
+                      imagePath={product.imagePath}
+                      alt=""
+                      width={60}
+                      height={60}
+                    />
                   </td>
                   <td style={{ padding: "14px 16px", fontWeight: "600", color: "#475569", fontSize: "0.875rem" }}>{product.code || "N/A"}</td>
                   <td style={{ padding: "14px 16px", fontWeight: "600", color: "#1e293b", fontSize: "0.875rem" }}>{product.name}</td>

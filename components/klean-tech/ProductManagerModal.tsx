@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import ProductImageThumbnail from "./ProductImageThumbnail";
+import { hasProductImage } from "@/lib/product-image";
 
 interface Product {
   id: string;
@@ -415,17 +417,12 @@ export default function ProductManagerModal({ onClose }: Props) {
                   {filteredProducts.map(p => (
                     <tr key={p.id} style={{ borderBottom: "1px solid #e2e8f0", transition: "background 0.2s" }}>
                       <td style={{ padding: "14px 16px" }}>
-                        <div style={{ width: "50px", height: "50px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                          {p.imagePath ? (
-                            <img 
-                              src={p.imagePath.startsWith("/") ? p.imagePath : `/${p.imagePath}`} 
-                              alt={p.name} 
-                              style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} 
-                            />
-                          ) : (
-                            <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "500" }}>No Image</span>
-                          )}
-                        </div>
+                        <ProductImageThumbnail
+                          imagePath={p.imagePath}
+                          alt=""
+                          width={50}
+                          height={50}
+                        />
                       </td>
                       <td style={{ padding: "14px 16px", fontWeight: "600", color: "#1e293b", fontSize: "0.875rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -581,9 +578,14 @@ export default function ProductManagerModal({ onClose }: Props) {
                 }}
                 style={{ width: "100%", padding: "12px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "0.875rem" }}
               />
-              {addFormData.imagePath && (
-                <div style={{ marginTop: "12px", width: "120px", height: "120px", background: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                  <img src={addFormData.imagePath} alt="Preview" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+              {hasProductImage(addFormData.imagePath) && (
+                <div style={{ marginTop: "12px" }}>
+                  <ProductImageThumbnail
+                    imagePath={addFormData.imagePath}
+                    alt=""
+                    width={120}
+                    height={120}
+                  />
                 </div>
               )}
             </div>
@@ -712,12 +714,13 @@ export default function ProductManagerModal({ onClose }: Props) {
             </div>
             <div style={{ marginBottom: "24px" }}>
               <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", fontSize: "0.85rem", color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Product Image</label>
-              {editFormData.imagePath && (
+              {hasProductImage(editFormData.imagePath) && (
                 <div style={{ marginBottom: "12px", position: "relative", width: "100px", height: "100px" }}>
-                  <img 
-                    src={editFormData.imagePath.startsWith("data:") ? editFormData.imagePath : editFormData.imagePath.startsWith("/") ? editFormData.imagePath : `/${editFormData.imagePath}`} 
-                    alt="Preview" 
-                    style={{ width: "100%", height: "100%", objectFit: "contain", border: "1px solid #e2e8f0", borderRadius: "8px" }} 
+                  <ProductImageThumbnail
+                    imagePath={editFormData.imagePath}
+                    alt=""
+                    width={100}
+                    height={100}
                   />
                   <button 
                     onClick={() => setEditFormData({ ...editFormData, imagePath: "" })}
