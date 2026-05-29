@@ -13,16 +13,10 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/invoices/*/pdf": chromiumBinIncludes,
     "/api/quotations/*/pdf": chromiumBinIncludes,
-    "/app/dev/mr-preview/pdf": chromiumBinIncludes,
   },
   devIndicators: {
     appIsrStatus: false,
     buildActivity: false,
-  },
-  experimental: {
-    outputFileTracingIncludes: {
-      '/api/**/*': ['./node_modules/@sparticuz/chromium/bin/**/*'],
-    },
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
