@@ -6,6 +6,7 @@ import type { ProjectSpecifications } from "@/types";
 import fs from "fs";
 import path from "path";
 import { buildMRPoolSpecificationSectionHtml } from "@/components/templates/MRPoolSpecificationSection";
+import { isOverflowPool, isProductVisibleForPoolType } from "@/lib/mr-pool-utils";
 import { buildMRQuotationSummaryHtml } from "@/components/templates/MRQuotationSummary";
 
 function escapeHtml(s: string): string {
@@ -358,8 +359,15 @@ export function buildQuotationHtml(
     cssContent = fs.readFileSync(cssPath, "utf-8");
   }
 
+  const visibleItems = quote.items.filter((item) =>
+    isProductVisibleForPoolType(
+      { title: (item as { title?: string }).title, poolTypeFilter: (item as { poolTypeFilter?: string }).poolTypeFilter as "skimmer" | "overflow" | undefined },
+      specs?.typeOfPool,
+    ),
+  );
+
   const itemsBySection = new Map<string, typeof quote.items>();
-  for (const item of quote.items) {
+  for (const item of visibleItems) {
     const list = itemsBySection.get(item.section) ?? [];
     list.push(item);
     itemsBySection.set(item.section, list);
@@ -377,7 +385,7 @@ export function buildQuotationHtml(
     ];
 
   const sumSections = (sectionCodes: string[]) =>
-    quote.items
+    visibleItems
       .filter((item) => sectionCodes.includes(item.section))
       .reduce((total, item) => total + Number(item.amount), 0);
 
@@ -465,15 +473,29 @@ export function buildQuotationHtml(
     poolWidth: specs.poolWidth,
     poolDepth: specs.poolDepth,
     waterVolume: specs.poolVolume,
+    waterVolumeLiters: specs.waterVolumeLiters,
     totalPoolVolume: specs.totalPoolVolume,
     filtrationVolume: specs.filtrationVolume,
+    filtrationFlowRate: specs.filtrationFlowRate,
     turnoverPeriod: specs.turnoverPeriod,
     tilingArea: specs.tilingArea,
     copingArea: specs.copingArea,
     waterproofingArea: specs.waterproofingArea,
     plantRoomSize: specs.plantRoomSize,
+    plantRoomLength: specs.plantRoomLength,
+    plantRoomWidth: specs.plantRoomWidth,
+    plantRoomDepth: specs.plantRoomHeight ?? specs.plantRoomDepth,
+    kidPoolLength: specs.kidPoolLength,
+    kidPoolWidth: specs.kidPoolWidth,
+    kidPoolDepth: specs.kidPoolDepth,
+    kidPoolSize: specs.kidPoolSize,
+    balancingTankLength: specs.balancingTankLength,
+    balancingTankWidth: specs.balancingTankWidth,
+    balancingTankDepth: specs.balancingTankDepth,
+    balancingTankSize: specs.balancingTankSize,
     poolShape: specs.shapeOfPool,
     poolType: specs.typeOfPool,
+    showBalancingTank: isOverflowPool(specs.typeOfPool),
   });
   const summaryHtml = buildMRQuotationSummaryHtml({
     part1Total: formatCurrencyINR(part1Total),

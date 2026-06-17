@@ -16,6 +16,7 @@ import {
 } from "docx";
 import { format } from "date-fns";
 import { formatCurrencyINR } from "@/lib/utils";
+import { isOverflowPool, isProductVisibleForPoolType } from "@/lib/mr-pool-utils";
 import type { QuotationWithRelations } from "@/types";
 import type { CompanySettings } from "@prisma/client";
 import type { ProjectSpecifications } from "@/types";
@@ -366,9 +367,16 @@ export async function quotationToDocxBuffer(
         { code: "Part 2", title: "Part 2 - Pool Finishes" },
       ];
 
+  const visibleItems = quote.items.filter((item) =>
+    isProductVisibleForPoolType(
+      { title: (item as { title?: string }).title, poolTypeFilter: (item as { poolTypeFilter?: string }).poolTypeFilter as "skimmer" | "overflow" | undefined },
+      specs?.typeOfPool,
+    ),
+  );
+
   const children: (Paragraph | Table)[] = [];
   const sumSections = (sectionCodes: string[]) =>
-    quote.items
+    visibleItems
       .filter((item) => sectionCodes.includes(item.section))
       .reduce((total, item) => total + Number(item.amount), 0);
   const part1Total = sumSections(["A", "B", "C", "D"]);
@@ -466,6 +474,14 @@ export async function quotationToDocxBuffer(
 
   const s = specs as any;
   const mainPoolSize = [s.poolLength, s.poolWidth, s.poolDepth].map(plainValue).filter(Boolean).join("X");
+  const kidPoolSize = [s.kidPoolLength, s.kidPoolWidth, s.kidPoolDepth].map(plainValue).filter(Boolean).join("X");
+  const subtitle = kidPoolSize
+    ? `(Main Pool -${mainPoolSize}Kid pool ${kidPoolSize} within)`
+    : `(Main Pool ${mainPoolSize})`;
+  const facilityParts = [`Plant Room -${String(s.plantRoomSize ?? "")}`];
+  if (isOverflowPool(s.typeOfPool) && plainValue(s.balancingTankSize)) {
+    facilityParts.push(`balancing Tank -${plainValue(s.balancingTankSize)}`);
+  }
 
   children.push(
     new Table({
@@ -478,8 +494,8 @@ export async function quotationToDocxBuffer(
               width: { size: 50, type: WidthType.PERCENTAGE },
               children: [
                 new Paragraph({ alignment: AlignmentType.CENTER, children: [specText("SWIMMING POOL SPECIFICATIONS", true)] }),
-                new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(`(Main Pool ${mainPoolSize})`)] }),
-                new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(`Plant Room -${String(s.plantRoomSize ?? "")}`)] }),
+                new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(subtitle)] }),
+                new Paragraph({ alignment: AlignmentType.CENTER, children: [specText(facilityParts.join(" "))] }),
               ],
             }),
             new TableCell({
@@ -525,8 +541,8 @@ export async function quotationToDocxBuffer(
       }),
       new TableRow({
         children: [
-          specSimpleCell("Water Volume", 50),
-          specSimpleCell(plainValue(s.poolVolume), 50, { align: AlignmentType.CENTER }),
+          specSimpleCell("Water Volume Ltrs", 50),
+          specSimpleCell(plainValue(s.waterVolumeLiters || s.poolVolume), 50, { align: AlignmentType.CENTER }),
         ],
       }),
     ],
@@ -548,6 +564,7 @@ export async function quotationToDocxBuffer(
     ["Total Pool Volume in Liters", s.totalPoolVolume],
     ["Total Filtration Volume in Ltrs", s.filtrationVolume],
     ["Turnover Period", s.turnoverPeriod],
+    ["Filtration Flow rate Required", s.filtrationFlowRate],
     ["Total Tiling Area in Sft", s.tilingArea],
     ["Total Coping Area in Rft", s.copingArea],
     ["Total Waterproofing Area in Sft", s.waterproofingArea],
@@ -582,7 +599,7 @@ export async function quotationToDocxBuffer(
   );
 
   const itemsBySection = new Map<string, typeof quote.items>();
-  for (const item of quote.items) {
+  for (const item of visibleItems) {
     const list = itemsBySection.get(item.section) ?? [];
     list.push(item);
     itemsBySection.set(item.section, list);

@@ -4,7 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
-import { calculatePoolMetrics, renderTemplate, extractTemplateVariables } from "@/lib/utils";
+import { renderTemplate, extractTemplateVariables } from "@/lib/utils";
+import {
+  applyMRPoolMetricsToSpecs,
+  getDefaultMRItems,
+  isOverflowPool,
+  isProductVisibleForPoolType,
+} from "@/lib/mr-pool-utils";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
 import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
@@ -58,11 +64,21 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       plantRoomLength: "8",
       plantRoomWidth: "8",
       plantRoomHeight: "6",
+      kidPoolLength: "",
+      kidPoolWidth: "",
+      kidPoolDepth: "",
+      balancingTankLength: "",
+      balancingTankWidth: "",
+      balancingTankDepth: "",
       turnoverPeriod: "4",
-      shapeOfPool: "RECTANGLE POOL",
-      typeOfPool: "SKIMMER TYPE",
+      shapeOfPool: "Rectangle Pool",
+      typeOfPool: "Skimmer Pool",
     },
-    items: [...(MR_MASTER_TEMPLATE.items || [])] as any,
+    items: getDefaultMRItems([...(MR_MASTER_TEMPLATE.items || [])] as any, "Skimmer Pool").map((it: any) => ({
+      ...it,
+      description: renderTemplate(it.description, it.variableValues || {}),
+      templateText: it.description,
+    })),
     sections: [...(MR_MASTER_TEMPLATE.sections || [])] as any,
     notes: MR_MASTER_TEMPLATE.notes || "",
     terms: MR_MASTER_TEMPLATE.terms || DEFAULT_TERMS,
@@ -166,7 +182,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       customerPhone: "",
       customerEmail: "",
     };
-    initial.items = initial.items.map((it: any) => ({
+    initial.items = getDefaultMRItems(initial.items, initial.projectSpecifications?.typeOfPool).map((it: any) => ({
       ...it,
       description: renderTemplate(it.description, it.variableValues || {}),
       templateText: it.description
@@ -202,6 +218,12 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
               plantRoomLength: String(data.projectSpecifications?.plantRoomLength ?? "8"),
               plantRoomWidth: String(data.projectSpecifications?.plantRoomWidth ?? "8"),
               plantRoomHeight: String(data.projectSpecifications?.plantRoomHeight ?? "6"),
+              kidPoolLength: String(data.projectSpecifications?.kidPoolLength ?? ""),
+              kidPoolWidth: String(data.projectSpecifications?.kidPoolWidth ?? ""),
+              kidPoolDepth: String(data.projectSpecifications?.kidPoolDepth ?? ""),
+              balancingTankLength: String(data.projectSpecifications?.balancingTankLength ?? ""),
+              balancingTankWidth: String(data.projectSpecifications?.balancingTankWidth ?? ""),
+              balancingTankDepth: String(data.projectSpecifications?.balancingTankDepth ?? ""),
               turnoverPeriod: String(data.projectSpecifications?.turnoverPeriod ?? "4"),
             },
             items: data.items.map((it: any) => ({
@@ -233,7 +255,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           customerPhone: "",
           customerEmail: "",
         };
-        initial.items = initial.items.map((it: any) => ({
+        initial.items = getDefaultMRItems(initial.items, initial.projectSpecifications?.typeOfPool).map((it: any) => ({
           ...it,
           description: renderTemplate(it.description, it.variableValues || {}),
           templateText: it.description
@@ -244,7 +266,11 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     }
   }, [id, mode]);
 
-  const subtotal = formData.items.reduce((sum, item) => {
+  const visibleItems = formData.items.filter((item) =>
+    isProductVisibleForPoolType(item, formData.projectSpecifications.typeOfPool),
+  );
+
+  const subtotal = visibleItems.reduce((sum, item) => {
     const section = formData.sections?.find((s) => s.code === item.section);
     if (section && !section.included) return sum;
     return sum + Number(item.amount || 0);
@@ -271,19 +297,25 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           poolWidth: "20",
           poolDepth: "5",
           shapeOfPool: "Rectangle Pool",
-          typeOfPool: "Skimmer Type",
+          typeOfPool: "Skimmer Pool",
           plantRoomLength: "8",
           plantRoomWidth: "8",
           plantRoomHeight: "6",
+          kidPoolLength: "",
+          kidPoolWidth: "",
+          kidPoolDepth: "",
+          balancingTankLength: "",
+          balancingTankWidth: "",
+          balancingTankDepth: "",
           turnoverPeriod: "4",
         };
         return {
           ...prev,
-          projectSpecifications: nextSpecs
+          projectSpecifications: applyMRPoolMetricsToSpecs(nextSpecs)
         };
       });
     } else if (step === 3) {
-      ["poolVolume", "totalPoolVolume", "filtrationVolume", "tilingArea", "copingArea", "waterproofingArea", "plantRoomSize"].forEach(m => resetMetric(m));
+      ["poolVolume", "waterVolumeLiters", "totalPoolVolume", "filtrationVolume", "filtrationFlowRate", "tilingArea", "copingArea", "waterproofingArea", "plantRoomSize"].forEach(m => resetMetric(m));
     } else if (step >= 4 && step <= 8) {
       const sectionCodes = ["A", "B", "C", "D", "Part 2"];
       const code = sectionCodes[step - 4];
@@ -291,7 +323,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
       setFormData(prev => {
         const otherItems = prev.items.filter(it => it.section !== code);
-        const resetItems = JSON.parse(JSON.stringify(masterItems)).map((it: any) => ({
+        const resetItems = getDefaultMRItems(
+          JSON.parse(JSON.stringify(masterItems)) as any,
+          prev.projectSpecifications.typeOfPool,
+        ).map((it: any) => ({
           ...it,
           description: renderTemplate(it.description, it.variableValues || {}),
           templateText: it.description
@@ -331,30 +366,34 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
   const handleSpecChange = (field: string, value: string) => {
     setFormData((prev) => {
-      const nextSpecs = { ...prev.projectSpecifications, [field]: value };
+      let nextSpecs = { ...prev.projectSpecifications, [field]: value };
 
-      const l = parseFloat(nextSpecs.poolLength) || 0;
-      const w = parseFloat(nextSpecs.poolWidth) || 0;
-      const d = parseFloat(nextSpecs.poolDepth) || 0;
-      const shape = nextSpecs.shapeOfPool || "Rectangle Pool";
+      if (field === "typeOfPool") {
+        const masterItems = MR_MASTER_TEMPLATE.items ?? [];
+        const filteredMaster = getDefaultMRItems(masterItems as any, value);
+        const existingTitles = new Set(prev.items.map((it) => (it.title ?? "").toUpperCase()));
+        const itemsToAdd = filteredMaster.filter(
+          (it) => !existingTitles.has((it.title ?? "").toUpperCase()),
+        );
+        const nextItems = [
+          ...prev.items.filter((it) => isProductVisibleForPoolType(it, value)),
+          ...itemsToAdd.map((it: any) => ({
+            ...it,
+            description: renderTemplate(it.description, it.variableValues || {}),
+            templateText: it.description,
+          })),
+        ].sort((a, b) => {
+          const sectionOrder = ["A", "B", "C", "D", "Part 2"];
+          const sectionDiff = sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section);
+          if (sectionDiff !== 0) return sectionDiff;
+          return a.serialNo - b.serialNo;
+        });
 
-      if (l > 0 && w > 0 && d > 0) {
-        const metrics = calculatePoolMetrics(l, w, d, shape);
-
-        // Update values only if they are not overridden
-        if (!nextSpecs.poolVolumeOverride) nextSpecs.poolVolume = `${metrics.volumeCubicFeet.toFixed(0)} Cft`;
-        if (!nextSpecs.totalPoolVolumeOverride) nextSpecs.totalPoolVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
-        if (!nextSpecs.filtrationVolumeOverride) nextSpecs.filtrationVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
-        if (!nextSpecs.tilingAreaOverride) nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
-        if (!nextSpecs.copingAreaOverride) nextSpecs.copingArea = `${metrics.copingArea} Rft`;
-        if (!nextSpecs.waterproofingAreaOverride) nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
+        nextSpecs = applyMRPoolMetricsToSpecs(nextSpecs);
+        return { ...prev, projectSpecifications: nextSpecs, items: nextItems };
       }
 
-      const pl = nextSpecs.plantRoomLength || "8";
-      const pw = nextSpecs.plantRoomWidth || "8";
-      const ph = nextSpecs.plantRoomHeight || "6";
-      nextSpecs.plantRoomSize = `${pl}'X${pw}'X${ph}'`;
-
+      nextSpecs = applyMRPoolMetricsToSpecs(nextSpecs);
       return { ...prev, projectSpecifications: nextSpecs };
     });
     setHasUnsavedChanges(true);
@@ -375,31 +414,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   const resetMetric = (field: string) => {
     setFormData(prev => {
       const nextSpecs = { ...prev.projectSpecifications, [`${field}Override`]: false };
-
-      // Re-trigger calculation
-      const l = parseFloat(nextSpecs.poolLength) || 0;
-      const w = parseFloat(nextSpecs.poolWidth) || 0;
-      const d = parseFloat(nextSpecs.poolDepth) || 0;
-      const shape = nextSpecs.shapeOfPool || "Rectangle Pool";
-
-      if (l > 0 && w > 0 && d > 0) {
-        const metrics = calculatePoolMetrics(l, w, d, shape);
-        if (field === "poolVolume") nextSpecs.poolVolume = `${metrics.volumeCubicFeet.toFixed(0)} Cft`;
-        if (field === "totalPoolVolume") nextSpecs.totalPoolVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
-        if (field === "filtrationVolume") nextSpecs.filtrationVolume = `${metrics.volumeLiters.toLocaleString()} Ltrs`;
-        if (field === "tilingArea") nextSpecs.tilingArea = `${metrics.tilingArea} Sft`;
-        if (field === "copingArea") nextSpecs.copingArea = `${metrics.copingArea} Rft`;
-        if (field === "waterproofingArea") nextSpecs.waterproofingArea = `${metrics.waterproofingArea} Sft`;
-      }
-      
-      if (field === "plantRoomSize") {
-        const pl = nextSpecs.plantRoomLength || "8";
-        const pw = nextSpecs.plantRoomWidth || "8";
-        const ph = nextSpecs.plantRoomHeight || "6";
-        nextSpecs.plantRoomSize = `${pl}'X${pw}'X${ph}'`;
-      }
-
-      return { ...prev, projectSpecifications: nextSpecs };
+      const recalculated = applyMRPoolMetricsToSpecs(nextSpecs);
+      return { ...prev, projectSpecifications: recalculated };
     });
     setHasUnsavedChanges(true);
   };
@@ -746,9 +762,9 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         )}
 
         {step === 2 && (
-          <div className="metrics-card" style={{ maxWidth: "800px", margin: "0 auto" }}>
-            <h3 style={{ marginBottom: "20px", textAlign: "center" }}>Pool Dimensions</h3>
-            <div className="form-grid" style={{ gridTemplateColumns: "1fr" }}>
+          <div className="metrics-card" style={{ maxWidth: "900px", margin: "0 auto" }}>
+            <h3 style={{ marginBottom: "20px", textAlign: "center" }}>Pool Specifications</h3>
+            <div className="form-grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div className="form-group">
                 <label>Pool Shape</label>
                 <select
@@ -762,6 +778,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                   <option value="Oval Pool">Oval Pool</option>
                   <option value="L Shape Pool">L Shape Pool</option>
                   <option value="Infinity Pool">Infinity Pool</option>
+                  <option value="Designer Pool">Designer Pool</option>
                   <option value="Custom">Custom</option>
                 </select>
                 {formData.projectSpecifications.shapeOfPool === "Custom" && (
@@ -781,6 +798,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                   value={formData.projectSpecifications.typeOfPool}
                   onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
                 >
+                  <option value="Skimmer Pool">Skimmer Pool</option>
+                  <option value="Overflow Pool">Overflow Pool</option>
                   <option value="Skimmer Type">Skimmer Type</option>
                   <option value="Overflow Type">Overflow Type</option>
                   <option value="Infinity Type">Infinity Type</option>
@@ -799,33 +818,53 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                   />
                 )}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-                <div className="form-group">
-                  <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
-                  <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={formData.projectSpecifications.poolWidth}
-                    disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
-                    onChange={(e) => handleSpecChange("poolWidth", e.target.value)}
-                  />
-                </div>
-                <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
-              </div>
             </div>
 
-            <h3 style={{ margin: "24px 0 20px", textAlign: "center" }}>Plant Room</h3>
+            <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Main Pool</h4>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+              <div className="form-group">
+                <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
+                <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.projectSpecifications.poolWidth}
+                  disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
+                  onChange={(e) => handleSpecChange("poolWidth", e.target.value)}
+                />
+              </div>
+              <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
+            </div>
+
+            <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Kid Pool</h4>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+              <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolLength ?? ""} onChange={(e) => handleSpecChange("kidPoolLength", e.target.value)} /></div>
+              <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolWidth ?? ""} onChange={(e) => handleSpecChange("kidPoolWidth", e.target.value)} /></div>
+              <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolDepth ?? ""} onChange={(e) => handleSpecChange("kidPoolDepth", e.target.value)} /></div>
+            </div>
+
+            <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Plant Room</h4>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
               <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomLength} onChange={(e) => handleSpecChange("plantRoomLength", e.target.value)} /></div>
               <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomWidth} onChange={(e) => handleSpecChange("plantRoomWidth", e.target.value)} /></div>
-              <div className="form-group"><label>Height (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
+              <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
             </div>
 
-            <div className="form-group" style={{ marginTop: "12px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
+            {isOverflowPool(formData.projectSpecifications.typeOfPool) && (
+              <>
+                <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Balancing Tank</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                  <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.balancingTankLength ?? ""} onChange={(e) => handleSpecChange("balancingTankLength", e.target.value)} /></div>
+                  <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.balancingTankWidth ?? ""} onChange={(e) => handleSpecChange("balancingTankWidth", e.target.value)} /></div>
+                  <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.balancingTankDepth ?? ""} onChange={(e) => handleSpecChange("balancingTankDepth", e.target.value)} /></div>
+                </div>
+              </>
+            )}
+
+            <div className="form-group" style={{ marginTop: "16px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
             
             <div style={{ marginTop: "40px", textAlign: "center" }}>
               <button className="btn btn-primary" onClick={nextStep}>Calculate Metrics →</button>
@@ -841,12 +880,17 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
               {[
                 { label: "Water Volume (Cft)", key: "poolVolume" },
+                { label: "Water Volume (Liters)", key: "waterVolumeLiters" },
                 { label: "Total Volume (Ltrs)", key: "totalPoolVolume" },
                 { label: "Filtration Volume (Ltrs)", key: "filtrationVolume" },
+                { label: "Filtration Flow Rate", key: "filtrationFlowRate" },
                 { label: "Tiling Area (Sft)", key: "tilingArea" },
                 { label: "Coping Area (Rft)", key: "copingArea" },
                 { label: "Waterproofing Area (Sft)", key: "waterproofingArea" },
                 { label: "Plant Room Size", key: "plantRoomSize" },
+                ...(isOverflowPool(formData.projectSpecifications.typeOfPool)
+                  ? [{ label: "Balancing Tank Size", key: "balancingTankSize" }]
+                  : []),
               ].map((m) => {
                 const isOverridden = (formData.projectSpecifications as any)[`${m.key}Override`];
                 return (
@@ -889,7 +933,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                   <button className="btn-secondary" onClick={() => addItem(formData.sections?.[sIdx - 4].code || "A")}>+ Add Custom Product</button>
                 </div>
               </div>
-              {formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).map((it, i) => {
+              {formData.items
+                .filter(it => it.section === (formData.sections?.[sIdx - 4].code))
+                .filter(it => isProductVisibleForPoolType(it, formData.projectSpecifications.typeOfPool))
+                .map((it, i) => {
                 const actualIdx = formData.items.findIndex(orig => orig === it);
                 return renderProductCard(actualIdx, i + 1);
               })}
@@ -937,7 +984,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                 <button className="btn-secondary" onClick={() => resetPhase()}>Reset Phase</button>
               </div>
             </div>
-            {formData.items.filter(it => it.section === "Part 2").map((it, i) => {
+            {formData.items
+              .filter(it => it.section === "Part 2")
+              .filter(it => isProductVisibleForPoolType(it, formData.projectSpecifications.typeOfPool))
+              .map((it, i) => {
               const actualIdx = formData.items.findIndex(orig => orig === it);
               return renderProductCard(actualIdx, i + 1);
             })}

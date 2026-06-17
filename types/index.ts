@@ -1,5 +1,7 @@
 import type { Customer, Quotation, QuotationItem, Product, CompanySettings, Invoice } from "@prisma/client";
 
+export type PoolTypeFilter = "skimmer" | "overflow";
+
 export type ProjectSpecifications = {
   poolLength: string;
   poolWidth: string;
@@ -10,14 +12,28 @@ export type ProjectSpecifications = {
   typeOfPool: string;
   totalPoolVolume?: string;
   filtrationVolume?: string;
+  filtrationFlowRate?: string;
   turnoverPeriod?: string;
   tilingArea?: string;
   copingArea?: string;
   waterproofingArea?: string;
+  waterVolumeLiters?: string;
+  // Kid pool
+  kidPoolLength?: string;
+  kidPoolWidth?: string;
+  kidPoolDepth?: string;
+  kidPoolSize?: string;
+  // Balancing tank (overflow pools)
+  balancingTankLength?: string;
+  balancingTankWidth?: string;
+  balancingTankDepth?: string;
+  balancingTankSize?: string;
   // Overrides
   poolVolumeOverride?: boolean;
+  waterVolumeLitersOverride?: boolean;
   totalPoolVolumeOverride?: boolean;
   filtrationVolumeOverride?: boolean;
+  filtrationFlowRateOverride?: boolean;
   tilingAreaOverride?: boolean;
   copingAreaOverride?: boolean;
   waterproofingAreaOverride?: boolean;
@@ -50,6 +66,7 @@ export type QuotationItemForm = {
   templateText?: string;
   isCustom?: boolean;
   title?: string;
+  poolTypeFilter?: PoolTypeFilter;
 };
 
 export type QuotationSection = {

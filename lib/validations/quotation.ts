@@ -10,11 +10,24 @@ const projectSpecsSchema = z.object({
   typeOfPool: z.string().default(""),
   totalPoolVolume: z.string().default(""),
   filtrationVolume: z.string().default(""),
+  filtrationFlowRate: z.string().default(""),
   turnoverPeriod: z.string().default(""),
   tilingArea: z.string().default(""),
   copingArea: z.string().default(""),
   waterproofingArea: z.string().default(""),
-});
+  waterVolumeLiters: z.string().optional(),
+  kidPoolLength: z.string().optional(),
+  kidPoolWidth: z.string().optional(),
+  kidPoolDepth: z.string().optional(),
+  kidPoolSize: z.string().optional(),
+  balancingTankLength: z.string().optional(),
+  balancingTankWidth: z.string().optional(),
+  balancingTankDepth: z.string().optional(),
+  balancingTankSize: z.string().optional(),
+  plantRoomLength: z.string().optional(),
+  plantRoomWidth: z.string().optional(),
+  plantRoomHeight: z.string().optional(),
+}).passthrough();
 
 const itemSchema = z.object({
   id: z.string().optional(),
