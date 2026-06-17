@@ -491,6 +491,11 @@ export function buildQuotationHtml(
     poolShape: specs.shapeOfPool,
     poolType: specs.typeOfPool,
     showBalancingTank: isOverflowPool(specs.typeOfPool),
+    includeMainPool: specs.includeMainPool,
+    includeKidPool: specs.includeKidPool,
+    includePlantRoom: specs.includePlantRoom,
+    includeBalancingTank: specs.includeBalancingTank,
+    includeTurnoverPeriod: specs.includeTurnoverPeriod,
   });
   const summaryHtml = buildMRQuotationSummaryHtml({
     part1Total: formatCurrencyINR(part1Total),

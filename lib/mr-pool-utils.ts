@@ -1,4 +1,5 @@
 import { calculatePoolMetrics } from "@/lib/utils";
+import { specsForMetrics } from "@/lib/mr-pool-spec-sections";
 import type { ProjectSpecifications, QuotationItemForm } from "@/types";
 
 export type PoolTypeFilter = "skimmer" | "overflow";
@@ -111,10 +112,11 @@ export function calculateMRPoolMetrics(
     | "balancingTankDepth"
   >,
 ): MRPoolMetricsResult {
-  const shape = specs.shapeOfPool || "Rectangle Pool";
-  const mainL = parseDim(specs.poolLength);
-  const mainW = parseDim(specs.poolWidth);
-  const mainD = parseDim(specs.poolDepth);
+  const activeSpecs = specsForMetrics(specs);
+  const shape = activeSpecs.shapeOfPool || "Rectangle Pool";
+  const mainL = parseDim(activeSpecs.poolLength);
+  const mainW = parseDim(activeSpecs.poolWidth);
+  const mainD = parseDim(activeSpecs.poolDepth);
 
   const mainMetrics =
     mainL > 0 && mainW > 0 && mainD > 0
@@ -129,9 +131,9 @@ export function calculateMRPoolMetrics(
           wallArea: 0,
         };
 
-  const kidL = parseDim(specs.kidPoolLength);
-  const kidW = parseDim(specs.kidPoolWidth);
-  const kidD = parseDim(specs.kidPoolDepth);
+  const kidL = parseDim(activeSpecs.kidPoolLength);
+  const kidW = parseDim(activeSpecs.kidPoolWidth);
+  const kidD = parseDim(activeSpecs.kidPoolDepth);
   const kidMetrics =
     kidL > 0 && kidW > 0 && kidD > 0
       ? calculatePoolMetrics(kidL, kidW, kidD, "Rectangle Pool")
@@ -143,9 +145,9 @@ export function calculateMRPoolMetrics(
           waterproofingArea: 0,
         };
 
-  const tankL = parseDim(specs.balancingTankLength);
-  const tankW = parseDim(specs.balancingTankWidth);
-  const tankD = parseDim(specs.balancingTankDepth);
+  const tankL = parseDim(activeSpecs.balancingTankLength);
+  const tankW = parseDim(activeSpecs.balancingTankWidth);
+  const tankD = parseDim(activeSpecs.balancingTankDepth);
   const tankMetrics =
     tankL > 0 && tankW > 0 && tankD > 0
       ? calculatePoolMetrics(tankL, tankW, tankD, "Rectangle Pool")
@@ -158,12 +160,12 @@ export function calculateMRPoolMetrics(
         };
 
   const totalPoolVolumeLiters = mainMetrics.volumeLiters + kidMetrics.volumeLiters;
-  const overflow = isOverflowPool(specs.typeOfPool);
+  const overflow = isOverflowPool(activeSpecs.typeOfPool);
   const filtrationVolumeLiters = overflow
     ? totalPoolVolumeLiters + tankMetrics.volumeLiters
     : mainMetrics.volumeLiters;
 
-  const turnoverHours = parseDim(specs.turnoverPeriod) || 4;
+  const turnoverHours = parseDim(activeSpecs.turnoverPeriod) || 4;
   const flowRate = turnoverHours > 0 ? filtrationVolumeLiters / turnoverHours : 0;
 
   let tilingArea = mainMetrics.tilingArea;
@@ -190,11 +192,11 @@ export function calculateMRPoolMetrics(
     totalPoolVolumeLiters,
     filtrationVolumeLiters,
     filtrationFlowRate: formatFlowRate(flowRate),
-    kidPoolSize: formatSize(specs.kidPoolLength, specs.kidPoolWidth, specs.kidPoolDepth),
+    kidPoolSize: formatSize(activeSpecs.kidPoolLength, activeSpecs.kidPoolWidth, activeSpecs.kidPoolDepth),
     balancingTankSize: formatSize(
-      specs.balancingTankLength,
-      specs.balancingTankWidth,
-      specs.balancingTankDepth,
+      activeSpecs.balancingTankLength,
+      activeSpecs.balancingTankWidth,
+      activeSpecs.balancingTankDepth,
     ),
   };
 }

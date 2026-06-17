@@ -26,6 +26,11 @@ export type MRPoolSpecificationSectionProps = {
   poolShape?: string;
   poolType?: string;
   showBalancingTank?: boolean;
+  includeMainPool?: boolean;
+  includeKidPool?: boolean;
+  includePlantRoom?: boolean;
+  includeBalancingTank?: boolean;
+  includeTurnoverPeriod?: boolean;
 };
 
 export const MR_POOL_SPECIFICATION_TITLE =
@@ -49,8 +54,14 @@ function formatPoolSize(length?: string, width?: string, depth?: string): string
 }
 
 function buildSubtitle(props: MRPoolSpecificationSectionProps): string {
-  const main = formatPoolSize(props.poolLength, props.poolWidth, props.poolDepth);
-  const kid = formatPoolSize(props.kidPoolLength, props.kidPoolWidth, props.kidPoolDepth);
+  const main =
+    props.includeMainPool !== false
+      ? formatPoolSize(props.poolLength, props.poolWidth, props.poolDepth)
+      : "";
+  const kid =
+    props.includeKidPool !== false
+      ? formatPoolSize(props.kidPoolLength, props.kidPoolWidth, props.kidPoolDepth)
+      : "";
   let subtitle = main ? `(Main Pool -${main}` : "(Main Pool";
   if (kid) subtitle += `Kid pool ${kid} within`;
   subtitle += ")";
@@ -59,10 +70,13 @@ function buildSubtitle(props: MRPoolSpecificationSectionProps): string {
 
 function buildFacilityLine(props: MRPoolSpecificationSectionProps): string {
   const parts: string[] = [];
-  if (valueOrBlank(String(props.plantRoomSize ?? ""))) {
+  if (props.includePlantRoom !== false && valueOrBlank(String(props.plantRoomSize ?? ""))) {
     parts.push(`Plant Room -${valueOrBlank(String(props.plantRoomSize ?? ""))}`);
   }
-  if (props.showBalancingTank && valueOrBlank(props.balancingTankSize)) {
+  const showTank =
+    props.includeBalancingTank !== false &&
+    (props.showBalancingTank ?? props.includeBalancingTank !== false);
+  if (showTank && valueOrBlank(props.balancingTankSize)) {
     parts.push(`balancing Tank -${valueOrBlank(props.balancingTankSize)}`);
   }
   return parts.join(" ");
@@ -98,11 +112,12 @@ function buildDimensionTableHtml(
 }
 
 function buildDetailsRows(props: MRPoolSpecificationSectionProps): string {
-  const waterDisplay = valueOrBlank(props.waterVolumeLiters) || valueOrBlank(props.waterVolume);
   const rows: Array<[string, string | undefined]> = [
     ["Total Pool Volume in Liters", props.totalPoolVolume],
     ["Total Filtration Volume in Ltrs", props.filtrationVolume],
-    ["Turnover Period", props.turnoverPeriod],
+    ...(props.includeTurnoverPeriod !== false
+      ? ([["Turnover Period", props.turnoverPeriod]] as Array<[string, string | undefined]>)
+      : []),
     ["Filtration Flow rate Required", props.filtrationFlowRate],
     ["Total Tiling Area in Sft", props.tilingArea],
     ["Total Coping Area in Rft", props.copingArea],
@@ -120,20 +135,28 @@ function buildDetailsRows(props: MRPoolSpecificationSectionProps): string {
 export function buildMRPoolSpecificationSectionHtml(props: MRPoolSpecificationSectionProps): string {
   const subtitle = buildSubtitle(props);
   const facilityLine = buildFacilityLine(props);
-  const kidTable = buildDimensionTableHtml(
-    "KID POOL",
-    props.kidPoolLength,
-    props.kidPoolWidth,
-    props.kidPoolDepth,
-  );
-  const plantRoomTable = buildDimensionTableHtml(
-    "PLANT ROOM",
-    props.plantRoomLength,
-    props.plantRoomWidth,
-    props.plantRoomDepth,
-  );
+  const waterDisplay = valueOrBlank(props.waterVolumeLiters) || valueOrBlank(props.waterVolume);
+  const kidTable =
+    props.includeKidPool !== false
+      ? buildDimensionTableHtml(
+          "KID POOL",
+          props.kidPoolLength,
+          props.kidPoolWidth,
+          props.kidPoolDepth,
+        )
+      : "";
+  const plantRoomTable =
+    props.includePlantRoom !== false
+      ? buildDimensionTableHtml(
+          "PLANT ROOM",
+          props.plantRoomLength,
+          props.plantRoomWidth,
+          props.plantRoomDepth,
+        )
+      : "";
   const balancingTankTable =
-    props.showBalancingTank
+    props.includeBalancingTank !== false &&
+    (props.showBalancingTank ?? true)
       ? buildDimensionTableHtml(
           "BALANCING TANK",
           props.balancingTankLength,
@@ -142,7 +165,13 @@ export function buildMRPoolSpecificationSectionHtml(props: MRPoolSpecificationSe
         )
       : "";
 
-  const waterDisplay = valueOrBlank(props.waterVolumeLiters) || valueOrBlank(props.waterVolume);
+  const mainPoolTable =
+    props.includeMainPool !== false
+      ? buildDimensionTableHtml("MAIN POOL", props.poolLength, props.poolWidth, props.poolDepth, {
+          label: "Water Volume Ltrs",
+          value: waterDisplay,
+        })
+      : "";
 
   return `
     <section class="pool-spec-section">
@@ -164,10 +193,7 @@ export function buildMRPoolSpecificationSectionHtml(props: MRPoolSpecificationSe
       </table>
       <div class="spec-side-by-side">
         <div class="spec-left-stack">
-          ${buildDimensionTableHtml("MAIN POOL", props.poolLength, props.poolWidth, props.poolDepth, {
-            label: "Water Volume Ltrs",
-            value: waterDisplay,
-          })}
+          ${mainPoolTable}
           ${kidTable}
           ${plantRoomTable}
           ${balancingTankTable}
@@ -186,7 +212,9 @@ export function MRPoolSpecificationSection(props: MRPoolSpecificationSectionProp
   const detailRows: Array<[string, string | undefined]> = [
     ["Total Pool Volume in Liters", props.totalPoolVolume],
     ["Total Filtration Volume in Ltrs", props.filtrationVolume],
-    ["Turnover Period", props.turnoverPeriod],
+    ...(props.includeTurnoverPeriod !== false
+      ? ([["Turnover Period", props.turnoverPeriod]] as Array<[string, string | undefined]>)
+      : []),
     ["Filtration Flow rate Required", props.filtrationFlowRate],
     ["Total Tiling Area in Sft", props.tilingArea],
     ["Total Coping Area in Rft", props.copingArea],
@@ -259,18 +287,25 @@ export function MRPoolSpecificationSection(props: MRPoolSpecificationSectionProp
 
       <div className="spec-side-by-side">
         <div className="spec-left-stack">
-          {renderDimTable("MAIN POOL", props.poolLength, props.poolWidth, props.poolDepth, {
-            label: "Water Volume Ltrs",
-            value: waterDisplay,
-          })}
-          {renderDimTable("KID POOL", props.kidPoolLength, props.kidPoolWidth, props.kidPoolDepth)}
-          {renderDimTable(
-            "PLANT ROOM",
-            props.plantRoomLength,
-            props.plantRoomWidth,
-            props.plantRoomDepth,
-          )}
-          {props.showBalancingTank
+          {props.includeMainPool !== false
+            ? renderDimTable("MAIN POOL", props.poolLength, props.poolWidth, props.poolDepth, {
+                label: "Water Volume Ltrs",
+                value: waterDisplay,
+              })
+            : null}
+          {props.includeKidPool !== false
+            ? renderDimTable("KID POOL", props.kidPoolLength, props.kidPoolWidth, props.kidPoolDepth)
+            : null}
+          {props.includePlantRoom !== false
+            ? renderDimTable(
+                "PLANT ROOM",
+                props.plantRoomLength,
+                props.plantRoomWidth,
+                props.plantRoomDepth,
+              )
+            : null}
+          {props.includeBalancingTank !== false &&
+          (props.showBalancingTank ?? true)
             ? renderDimTable(
                 "BALANCING TANK",
                 props.balancingTankLength,

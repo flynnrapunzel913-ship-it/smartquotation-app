@@ -10,6 +10,15 @@ import {
   getDefaultMRItems,
   isOverflowPool,
 } from "@/lib/mr-pool-utils";
+import {
+  addSpecSection,
+  removeSpecSection,
+  resolveSpecSectionFlags,
+  hiddenSpecSections,
+  POOL_SPEC_SECTION_LABELS,
+  DEFAULT_SPEC_SECTION_FLAGS,
+  type PoolSpecSectionId,
+} from "@/lib/mr-pool-spec-sections";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
 import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
@@ -59,21 +68,23 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     projectSpecifications: {
       ...MR_MASTER_TEMPLATE.projectSpecifications as any,
       poolLength: "30",
-      poolWidth: "20",
-      poolDepth: "5",
-      plantRoomSize: "8'X8'X6'",
-      plantRoomLength: "8",
-      plantRoomWidth: "8",
+      poolWidth: "60",
+      poolDepth: "4.5",
+      plantRoomSize: "12'X12'X6'",
+      plantRoomLength: "12",
+      plantRoomWidth: "12",
       plantRoomHeight: "6",
-      kidPoolLength: "",
-      kidPoolWidth: "",
-      kidPoolDepth: "",
+      kidPoolLength: "10",
+      kidPoolWidth: "10",
+      kidPoolDepth: "2.5",
       balancingTankLength: "",
       balancingTankWidth: "",
       balancingTankDepth: "",
-      turnoverPeriod: "4",
+      turnoverPeriod: "4 Hours",
       shapeOfPool: "Rectangle Pool",
       typeOfPool: "Skimmer Pool",
+      ...DEFAULT_SPEC_SECTION_FLAGS,
+      includeBalancingTank: false,
     },
     items: getDefaultMRItems([...(MR_MASTER_TEMPLATE.items || [])] as any, "Skimmer Pool").map((it: any) => ({
       ...it,
@@ -327,6 +338,31 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     }
   }, [id, mode]);
 
+  const specSectionFlags = useMemo(
+    () => resolveSpecSectionFlags(formData.projectSpecifications),
+    [formData.projectSpecifications],
+  );
+
+  const handleRemoveSpecSection = (sectionId: PoolSpecSectionId) => {
+    setFormData((prev) => ({
+      ...prev,
+      projectSpecifications: applyMRPoolMetricsToSpecs(
+        removeSpecSection(prev.projectSpecifications, sectionId),
+      ),
+    }));
+    setHasUnsavedChanges(true);
+  };
+
+  const handleAddSpecSection = (sectionId: PoolSpecSectionId) => {
+    setFormData((prev) => ({
+      ...prev,
+      projectSpecifications: applyMRPoolMetricsToSpecs(
+        addSpecSection(prev.projectSpecifications, sectionId),
+      ),
+    }));
+    setHasUnsavedChanges(true);
+  };
+
   const subtotal = formData.items.reduce((sum, item) => {
     const section = formData.sections?.find((s) => s.code === item.section);
     if (section && !section.included) return sum;
@@ -351,20 +387,22 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         const nextSpecs = {
           ...prev.projectSpecifications,
           poolLength: "30",
-          poolWidth: "20",
-          poolDepth: "5",
+          poolWidth: "60",
+          poolDepth: "4.5",
           shapeOfPool: "Rectangle Pool",
           typeOfPool: "Skimmer Pool",
-          plantRoomLength: "8",
-          plantRoomWidth: "8",
+          plantRoomLength: "12",
+          plantRoomWidth: "12",
           plantRoomHeight: "6",
-          kidPoolLength: "",
-          kidPoolWidth: "",
-          kidPoolDepth: "",
+          kidPoolLength: "10",
+          kidPoolWidth: "10",
+          kidPoolDepth: "2.5",
           balancingTankLength: "",
           balancingTankWidth: "",
           balancingTankDepth: "",
-          turnoverPeriod: "4",
+          turnoverPeriod: "4 Hours",
+          ...DEFAULT_SPEC_SECTION_FLAGS,
+          includeBalancingTank: false,
         };
         return {
           ...prev,
@@ -924,51 +962,132 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
               </div>
             </div>
 
-            <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Main Pool</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-              <div className="form-group">
-                <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
-                <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
+            {specSectionFlags.includeMainPool && (
+              <div className="pool-spec-section-block">
+                <div className="pool-spec-section-header">
+                  <h4>Main Pool</h4>
+                  <button
+                    type="button"
+                    className="pool-spec-section-remove"
+                    onClick={() => handleRemoveSpecSection("mainPool")}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                  <div className="form-group">
+                    <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "Diameter (ft)" : "Length (ft)"}</label>
+                    <input type="text" className="form-control" value={formData.projectSpecifications.poolLength} onChange={(e) => handleSpecChange("poolLength", e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={formData.projectSpecifications.poolWidth}
+                      disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
+                      onChange={(e) => handleSpecChange("poolWidth", e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
+                </div>
               </div>
-              <div className="form-group">
-                <label>{formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular") ? "N/A" : "Width (ft)"}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.projectSpecifications.poolWidth}
-                  disabled={formData.projectSpecifications.shapeOfPool?.toLowerCase().includes("circular")}
-                  onChange={(e) => handleSpecChange("poolWidth", e.target.value)}
-                />
+            )}
+
+            {specSectionFlags.includeKidPool && (
+              <div className="pool-spec-section-block">
+                <div className="pool-spec-section-header">
+                  <h4>Kid Pool</h4>
+                  <button
+                    type="button"
+                    className="pool-spec-section-remove"
+                    onClick={() => handleRemoveSpecSection("kidPool")}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                  <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolLength ?? ""} onChange={(e) => handleSpecChange("kidPoolLength", e.target.value)} /></div>
+                  <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolWidth ?? ""} onChange={(e) => handleSpecChange("kidPoolWidth", e.target.value)} /></div>
+                  <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolDepth ?? ""} onChange={(e) => handleSpecChange("kidPoolDepth", e.target.value)} /></div>
+                </div>
               </div>
-              <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.poolDepth} onChange={(e) => handleSpecChange("poolDepth", e.target.value)} /></div>
-            </div>
+            )}
 
-            <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Kid Pool</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-              <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolLength ?? ""} onChange={(e) => handleSpecChange("kidPoolLength", e.target.value)} /></div>
-              <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolWidth ?? ""} onChange={(e) => handleSpecChange("kidPoolWidth", e.target.value)} /></div>
-              <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.kidPoolDepth ?? ""} onChange={(e) => handleSpecChange("kidPoolDepth", e.target.value)} /></div>
-            </div>
+            {specSectionFlags.includePlantRoom && (
+              <div className="pool-spec-section-block">
+                <div className="pool-spec-section-header">
+                  <h4>Plant Room</h4>
+                  <button
+                    type="button"
+                    className="pool-spec-section-remove"
+                    onClick={() => handleRemoveSpecSection("plantRoom")}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                  <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomLength} onChange={(e) => handleSpecChange("plantRoomLength", e.target.value)} /></div>
+                  <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomWidth} onChange={(e) => handleSpecChange("plantRoomWidth", e.target.value)} /></div>
+                  <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
+                </div>
+              </div>
+            )}
 
-            <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Plant Room</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-              <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomLength} onChange={(e) => handleSpecChange("plantRoomLength", e.target.value)} /></div>
-              <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomWidth} onChange={(e) => handleSpecChange("plantRoomWidth", e.target.value)} /></div>
-              <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.plantRoomHeight} onChange={(e) => handleSpecChange("plantRoomHeight", e.target.value)} /></div>
-            </div>
-
-            {isOverflowPool(formData.projectSpecifications.typeOfPool) && (
-              <>
-                <h4 style={{ margin: "24px 0 12px", textAlign: "center" }}>Balancing Tank</h4>
+            {specSectionFlags.includeBalancingTank && (
+              <div className="pool-spec-section-block">
+                <div className="pool-spec-section-header">
+                  <h4>Balancing Tank</h4>
+                  <button
+                    type="button"
+                    className="pool-spec-section-remove"
+                    onClick={() => handleRemoveSpecSection("balancingTank")}
+                  >
+                    Remove
+                  </button>
+                </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                   <div className="form-group"><label>Length (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.balancingTankLength ?? ""} onChange={(e) => handleSpecChange("balancingTankLength", e.target.value)} /></div>
                   <div className="form-group"><label>Width (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.balancingTankWidth ?? ""} onChange={(e) => handleSpecChange("balancingTankWidth", e.target.value)} /></div>
                   <div className="form-group"><label>Depth (ft)</label><input type="text" className="form-control" value={formData.projectSpecifications.balancingTankDepth ?? ""} onChange={(e) => handleSpecChange("balancingTankDepth", e.target.value)} /></div>
                 </div>
-              </>
+              </div>
             )}
 
-            <div className="form-group" style={{ marginTop: "16px" }}><label>Turnover Period (Hours)</label><input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} /></div>
+            {specSectionFlags.includeTurnoverPeriod && (
+              <div className="pool-spec-section-block">
+                <div className="pool-spec-section-header">
+                  <h4>Turnover Period</h4>
+                  <button
+                    type="button"
+                    className="pool-spec-section-remove"
+                    onClick={() => handleRemoveSpecSection("turnoverPeriod")}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div className="form-group">
+                  <label>Turnover Period (Hours)</label>
+                  <input type="text" className="form-control" value={formData.projectSpecifications.turnoverPeriod} onChange={(e) => handleSpecChange("turnoverPeriod", e.target.value)} />
+                </div>
+              </div>
+            )}
+
+            {hiddenSpecSections(specSectionFlags).length > 0 && (
+              <div className="pool-spec-add-sections">
+                <span className="pool-spec-add-label">Add section:</span>
+                {hiddenSpecSections(specSectionFlags).map((sectionId) => (
+                  <button
+                    key={sectionId}
+                    type="button"
+                    className="btn-secondary pool-spec-add-btn"
+                    onClick={() => handleAddSpecSection(sectionId)}
+                  >
+                    + {POOL_SPEC_SECTION_LABELS[sectionId]}
+                  </button>
+                ))}
+              </div>
+            )}
             
             <div style={{ marginTop: "40px", textAlign: "center" }}>
               <button className="btn btn-primary" onClick={nextStep}>Calculate Metrics →</button>
@@ -991,8 +1110,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
                 { label: "Tiling Area (Sft)", key: "tilingArea" },
                 { label: "Coping Area (Rft)", key: "copingArea" },
                 { label: "Waterproofing Area (Sft)", key: "waterproofingArea" },
-                { label: "Plant Room Size", key: "plantRoomSize" },
-                ...(isOverflowPool(formData.projectSpecifications.typeOfPool)
+                ...(specSectionFlags.includePlantRoom
+                  ? [{ label: "Plant Room Size", key: "plantRoomSize" }]
+                  : []),
+                ...(specSectionFlags.includeBalancingTank
                   ? [{ label: "Balancing Tank Size", key: "balancingTankSize" }]
                   : []),
               ].map((m) => {

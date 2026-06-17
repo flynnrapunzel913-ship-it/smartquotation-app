@@ -1,5 +1,4 @@
 import type { ProjectSpecifications } from "@/types";
-import { applyMRPoolMetricsToSpecs } from "@/lib/mr-pool-utils";
 
 export type PoolSpecSectionId =
   | "mainPool"
@@ -39,13 +38,12 @@ function hasDims(...values: (string | undefined)[]): boolean {
 /** Resolve section visibility from explicit flags or legacy saved dimensions. */
 export function resolveSpecSectionFlags(specs: ProjectSpecifications): SpecSectionFlags {
   return {
-    includeMainPool:
-      specs.includeMainPool ?? hasDims(specs.poolLength, specs.poolWidth, specs.poolDepth) ?? true,
+    includeMainPool: specs.includeMainPool ?? true,
     includeKidPool:
       specs.includeKidPool ?? hasDims(specs.kidPoolLength, specs.kidPoolWidth, specs.kidPoolDepth),
     includePlantRoom:
       specs.includePlantRoom ??
-      hasDims(specs.plantRoomLength, specs.plantRoomWidth, specs.plantRoomHeight),
+      (hasDims(specs.plantRoomLength, specs.plantRoomWidth, specs.plantRoomHeight) || true),
     includeBalancingTank:
       specs.includeBalancingTank ??
       hasDims(
@@ -54,7 +52,7 @@ export function resolveSpecSectionFlags(specs: ProjectSpecifications): SpecSecti
         specs.balancingTankDepth,
       ),
     includeTurnoverPeriod:
-      specs.includeTurnoverPeriod ?? hasDims(specs.turnoverPeriod),
+      specs.includeTurnoverPeriod ?? (hasDims(specs.turnoverPeriod) || true),
   };
 }
 
@@ -118,7 +116,7 @@ export function removeSpecSection(
       break;
   }
 
-  return applyMRPoolMetricsToSpecs(next);
+  return next;
 }
 
 export function addSpecSection(
@@ -174,7 +172,7 @@ export function addSpecSection(
       break;
   }
 
-  return applyMRPoolMetricsToSpecs(next);
+  return next;
 }
 
 export function hiddenSpecSections(flags: SpecSectionFlags): PoolSpecSectionId[] {

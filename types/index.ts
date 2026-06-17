@@ -41,6 +41,12 @@ export type ProjectSpecifications = {
   plantRoomLength?: string;
   plantRoomWidth?: string;
   plantRoomHeight?: string;
+  // Optional spec sections (wizard can remove / restore)
+  includeMainPool?: boolean;
+  includeKidPool?: boolean;
+  includePlantRoom?: boolean;
+  includeBalancingTank?: boolean;
+  includeTurnoverPeriod?: boolean;
 };
 
 export const SECTIONS = ["A", "B", "C", "D"] as const;
