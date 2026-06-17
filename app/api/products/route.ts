@@ -46,8 +46,12 @@ export async function GET(req: Request) {
 
     const databaseId = searchParams.get("databaseId");
     const module = searchParams.get("module");
+    const mrTemplate = searchParams.get("mrTemplate") === "true";
 
     const where: any = {
+      ...(mrTemplate && {
+        id: { startsWith: "seed-temp-prod" },
+      }),
       ...(search && {
         OR: [
           { name: { contains: search, mode: "insensitive" } },

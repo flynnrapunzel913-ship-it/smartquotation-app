@@ -25,11 +25,11 @@ const DEFAULT_PAYMENT = `1. 30% Payment along with the PO.
 4. 10% on successful commissioning and testing.`;
 
 const DEFAULT_SECTIONS = [
-  { code: "A", title: "Section A – MEP & Filtration", included: true, sortOrder: 1 },
-  { code: "B", title: "Section B – Pool Equipment", included: true, sortOrder: 2 },
-  { code: "C", title: "Section C – Civil & Finishes", included: true, sortOrder: 3 },
-  { code: "D", title: "Section D – Supply of Swimming Pool Maintenance Cleaning Kit", included: true, sortOrder: 4 },
-  { code: "Part 2", title: "Part 2 – Pool Finishes", included: true, sortOrder: 5 },
+  { code: "A", title: "PLANT ROOM EQUIPMENTS", included: true, sortOrder: 1 },
+  { code: "B", title: "FILTRATION ROOM ELECTRICAL WORK", included: true, sortOrder: 2 },
+  { code: "C", title: "ELECTRICAL CONTROL PANEL WITH TIMER", included: true, sortOrder: 3 },
+  { code: "D", title: "SUPPLY OF SWIMMING POOL MAINTENANCE CLEANING KIT", included: true, sortOrder: 4 },
+  { code: "Part 2", title: "Part2:POOL FINISHES", included: true, sortOrder: 5 },
 ];
 
 const TOTAL_STEPS = 5;

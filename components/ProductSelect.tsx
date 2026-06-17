@@ -40,22 +40,25 @@ export default function ProductSelect({ value, companyType, onChange, placeholde
       .then((data: any[]) => {
         const enriched = data.map(p => {
           const tText = p.description || "";
-          // Extract variables like {{VarName}}
           const matches = tText.matchAll(/{{(\w+)}}/g);
-          const vars = Array.from(new Set(Array.from(matches).map(m => m[1])));
+          const extractedVars = Array.from(new Set(Array.from(matches).map(m => m[1])));
+          const templateVariables = p.templateVariables?.length ? p.templateVariables : extractedVars;
+          const specs = (p.specifications ?? {}) as Record<string, unknown>;
           return {
             id: p.id,
             name: p.name,
             description: tText,
             category: p.category || "General",
-            sectionCode: p.sectionCode || "A", // Catalog might not have sectionCode, fallback to A
+            sectionCode: p.sectionCode || String(specs.sectionCode || "A"),
             unit: p.unit || "Nos",
-            warranty: p.warranty || "",
+            warranty: p.warranty || String(specs.warranty || ""),
             defaultRate: Number(p.unitPrice) || 0,
-            imagePath: p.imagePath,
-            imageText: p.imageText,
+            imagePath: p.imagePath ?? (specs.imagePath as string | null) ?? null,
+            imageText: p.imageText ?? (specs.imageText as string | null) ?? null,
             templateText: tText,
-            templateVariables: vars
+            templateVariables,
+            defaultVariableValues: p.defaultVariableValues || {},
+            poolTypeFilter: p.poolTypeFilter || specs.poolTypeFilter || null,
           };
         });
         setProducts(enriched);
