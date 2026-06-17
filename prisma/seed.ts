@@ -46,6 +46,9 @@ async function main() {
   const { seedKleanTech } = require("./seed-klean-tech");
   await seedKleanTech();
 
+  const { seedMrQuotations } = require("./seed-mr-quotations");
+  await seedMrQuotations();
+
   console.log("Seed complete. Admin login:", adminEmail, "Password:", adminPassword);
 }
 

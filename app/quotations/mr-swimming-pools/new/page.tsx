@@ -1,21 +1,38 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import MRSamplePicker from "@/components/MRSamplePicker";
+
 const MRSwimmingPoolsWizard = dynamic(() => import("@/components/wizard/MRSwimmingPoolsWizard"), {
-  loading: () => <div style={{ padding: "100px", textAlign: "center", color: "#64748b", fontSize: "1.25rem", fontWeight: "600" }}>Initializing Quotation Wizard...</div>,
-  ssr: false
+  loading: () => (
+    <div style={{ padding: "100px", textAlign: "center", color: "#64748b", fontSize: "1.25rem", fontWeight: "600" }}>
+      Initializing Quotation Wizard...
+    </div>
+  ),
+  ssr: false,
 });
+
 import "@/styles/cards.css";
 import "@/styles/wizard.css";
 
 function WizardWrapper() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || undefined;
+  const sample = searchParams.get("sample") || undefined;
   const mode = (searchParams.get("mode") as "edit" | "duplicate") || "edit";
+  const [showWizard, setShowWizard] = useState(!!id || !!sample);
 
-  return <MRSwimmingPoolsWizard id={id} mode={mode} />;
+  if (!showWizard) {
+    return (
+      <MRSamplePicker
+        onSelectBlank={() => setShowWizard(true)}
+      />
+    );
+  }
+
+  return <MRSwimmingPoolsWizard id={id} mode={mode} sample={sample} />;
 }
 
 export default function MRSwimmingPoolsPage() {

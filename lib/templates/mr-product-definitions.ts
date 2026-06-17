@@ -128,7 +128,7 @@ export const MR_PRODUCT_DEFINITIONS: MRProductDefinition[] = [
       'Supply of Wall / Floor inlets to the pool with {{wallInletPipeSize}} pipe connection & capable of discharging 5000 - 7000 liter / Hr.\n\nMAKE : PENTAIR / MIDAS / AQUATIX / AQVASTAR',
     templateVariables: ["wallInletPipeSize"],
     defaultVariableValues: { wallInletPipeSize: '2"' },
-    imagePath: "/template-images/mr-swimming-pools/wall-inlets-composite.png",
+    imagePath: "/template-images/mr-swimming-pools/floor-inlets-composite.png",
     sortOrder: 6,
   },
   {

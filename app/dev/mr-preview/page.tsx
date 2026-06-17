@@ -1,6 +1,7 @@
 import { buildQuotationHtml } from "@/templates/quotation-html";
 import {
   getSampleCompanySettings,
+  getMrSampleDisplayName,
   listMrQuotationSamples,
   loadMrQuotationSample,
   resolveMrQuotationSample,
@@ -50,7 +51,7 @@ export default async function MRPreviewPage({
           >
             {samples.map((sample) => (
               <option key={sample} value={sample}>
-                {sample}
+                {sample === "MASTER_TEMPLATE" ? "Master Template" : getMrSampleDisplayName(sample)}
               </option>
             ))}
           </select>

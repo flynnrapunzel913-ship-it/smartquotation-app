@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QuotationTypeCard } from "@/components/QuotationTypeCard";
 import RecentActivity from "@/components/RecentActivity";
-import { Sparkles, LayoutGrid } from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnimatedText } from "@/components/ui/animated-underline-text-one";
 import TimeBasedGreeting from "@/components/dashboard/TimeBasedGreeting";

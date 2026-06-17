@@ -45,14 +45,15 @@ const TOTAL_STEPS = 5;
 interface Props {
   id?: string;
   mode?: "edit" | "duplicate";
+  sample?: string;
 }
 
-export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
+export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Props) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteId, setQuoteId] = useState<string | null>(id || null);
-  const [isLoading, setIsLoading] = useState(!!id);
+  const [isLoading, setIsLoading] = useState(!!id || !!sample);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
@@ -177,15 +178,15 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     return `Quotation for ${n} - ${a}`;
   };
 
-  // Recovery logic
+  // Recovery logic — skip when loading from a sample
   useEffect(() => {
-    if (!id) {
+    if (!id && !sample) {
       const saved = localStorage.getItem("mr_quotation_draft");
       if (saved) {
         setShowRecoveryDialog(true);
       }
     }
-  }, [id]);
+  }, [id, sample]);
 
   // Unsaved changes warning
   useEffect(() => {
@@ -241,6 +242,23 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       setIsLoading(false);
     }
     setShowRecoveryDialog(false);
+  };
+
+  const applySampleFormData = (data: QuotationFormValues) => {
+    const enriched = {
+      ...data,
+      quoteNumber: `MR-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}`,
+      items: data.items.map((it) => ({
+        ...it,
+        description: it.templateText
+          ? renderTemplate(it.templateText, it.variableValues || {})
+          : it.description,
+        templateText: it.templateText || it.description,
+      })),
+    };
+    setFormData(enriched);
+    setHasUnsavedChanges(true);
+    setIsLoading(false);
   };
 
   const startNew = () => {
@@ -313,10 +331,29 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           if (mode === "duplicate") setQuoteId(null);
           setIsLoading(false);
         });
+    } else if (sample) {
+      localStorage.removeItem("mr_quotation_draft");
+      setShowRecoveryDialog(false);
+      setIsLoading(true);
+      fetch(`/api/quotations/samples/${encodeURIComponent(sample)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            alert("Error loading sample: " + data.error);
+            setIsLoading(false);
+            return;
+          }
+          applySampleFormData(data);
+        })
+        .catch(() => {
+          alert("Failed to load sample quotation.");
+          setIsLoading(false);
+        });
     } else {
       const saved = localStorage.getItem("mr_quotation_draft");
       if (saved) {
         setShowRecoveryDialog(true);
+        setIsLoading(false);
       } else {
         const initial = {
           ...JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE)),
@@ -336,7 +373,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         setIsLoading(false);
       }
     }
-  }, [id, mode]);
+  }, [id, sample, mode]);
 
   const specSectionFlags = useMemo(
     () => resolveSpecSectionFlags(formData.projectSpecifications),

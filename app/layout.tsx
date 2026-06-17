@@ -1,22 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Roboto } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "../styles/globals.css";
 import Navbar from "@/components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 const roboto = Roboto({
-  weight: ["400", "500", "700"],
+  weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
   variable: "--font-roboto",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.variable}>
+      <body className={`${roboto.variable} ${roboto.className}`}>
         <Navbar />
         {children}
       </body>

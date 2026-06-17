@@ -49,6 +49,8 @@ export default function RecentActivity() {
             name: q.quoteNumber || "Untitled Quote",
             module: (q.projectSpecifications?.quotationType === "klean-tech" || q.title === "KLEAN TECH SYSTEMS Quotation") 
               ? "Klean Tech Systems" 
+              : q.projectSpecifications?.quotationType === "MR_SWIMMING_POOLS"
+              ? "MR Swimming Pools & Spa Construction Company"
               : MODULE_LABELS[q.projectSpecifications?.quotationType] || "MR Construction",
             status: q.isDraft ? "Draft" : "Completed",
             timestamp: q.createdAt || q.date

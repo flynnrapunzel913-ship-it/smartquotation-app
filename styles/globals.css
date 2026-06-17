@@ -47,7 +47,7 @@
 }
 
 body {
-  font-family: "Georgia", serif;
+  font-family: var(--font-roboto), "Roboto", sans-serif;
   background-color: var(--bg-main);
   background-image: url('/background.png');
   background-size: cover;
@@ -60,7 +60,7 @@ body {
 }
 
 input, button, textarea, select {
-  font-family: "Georgia", serif !important;
+  font-family: var(--font-roboto), "Roboto", sans-serif !important;
 }
 
 /* Layout Utilities */
