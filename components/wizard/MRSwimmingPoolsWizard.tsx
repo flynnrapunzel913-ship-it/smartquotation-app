@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
@@ -21,7 +22,8 @@ import {
 } from "@/lib/mr-pool-spec-sections";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
-import { CheckCircle2, AlertTriangle, Loader2, Plus, PenLine } from "lucide-react";
+import "@/styles/dialog.css";
+import { CheckCircle2, AlertTriangle, Loader2, Plus, PenLine, FilePenLine } from "lucide-react";
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useAppAlert } from "@/components/ui/AppAlert";
 
@@ -989,17 +991,38 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         </div>
       </div>
 
-      {showRecoveryDialog && (
-        <div className="recovery-overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="metrics-card" style={{ maxWidth: "400px", textAlign: "center" }}>
-            <h3>Resume Draft?</h3>
-            <p style={{ margin: "16px 0" }}>We found an unsaved quotation from your last visit.</p>
-            <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-              <button className="btn-primary" onClick={resumeDraft}>Resume</button>
-              <button className="btn-secondary" onClick={startNew}>Start New</button>
+      {showRecoveryDialog && typeof document !== "undefined" && createPortal(
+        <div className="app-dialog-overlay" role="presentation">
+          <div
+            className="app-dialog"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="recovery-dialog-title"
+            aria-describedby="recovery-dialog-message"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="app-dialog-header">
+              <div className="app-dialog-icon app-dialog-icon--info">
+                <FilePenLine size={22} />
+              </div>
+              <div className="app-dialog-title-wrap">
+                <h3 id="recovery-dialog-title" className="app-dialog-title">Resume draft?</h3>
+                <p id="recovery-dialog-message" className="app-dialog-message">
+                  We found an unsaved quotation from your last visit. Continue editing it, or start with a blank template.
+                </p>
+              </div>
+            </div>
+            <div className="app-dialog-actions">
+              <button type="button" className="app-dialog-btn app-dialog-btn--cancel" onClick={startNew}>
+                Start new
+              </button>
+              <button type="button" className="app-dialog-btn app-dialog-btn--confirm" onClick={resumeDraft}>
+                Resume draft
+              </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
 
       <div

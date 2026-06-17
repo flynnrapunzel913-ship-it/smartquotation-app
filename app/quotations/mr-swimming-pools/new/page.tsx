@@ -22,12 +22,13 @@ function WizardWrapper() {
   const id = searchParams.get("id") || undefined;
   const sample = searchParams.get("sample") || undefined;
   const mode = (searchParams.get("mode") as "edit" | "duplicate") || "edit";
-  const [showWizard, setShowWizard] = useState(!!id || !!sample);
+  const [blankStarted, setBlankStarted] = useState(false);
+  const showWizard = Boolean(id || sample || blankStarted);
 
   if (!showWizard) {
     return (
       <MRSamplePicker
-        onSelectBlank={() => setShowWizard(true)}
+        onSelectBlank={() => setBlankStarted(true)}
       />
     );
   }
