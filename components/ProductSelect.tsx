@@ -15,6 +15,8 @@ interface Product {
   imageText?: string | null;
   templateText?: string;
   templateVariables?: string[];
+  defaultVariableValues?: Record<string, string>;
+  poolTypeFilter?: "skimmer" | "overflow" | null;
 }
 
 interface ProductSelectProps {

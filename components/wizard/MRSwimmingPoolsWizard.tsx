@@ -641,10 +641,16 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       imagePath?: string | null;
       imageText?: string | null;
       templateVariables?: string[];
+      defaultVariableValues?: Record<string, string>;
+      poolTypeFilter?: "skimmer" | "overflow";
     },
   ) => {
-    const initialVars: Record<string, string> = {};
-    (product.templateVariables || []).forEach((v) => { initialVars[v] = ""; });
+    const initialVars: Record<string, string> = {
+      ...(product.defaultVariableValues || {}),
+    };
+    (product.templateVariables || []).forEach((v) => {
+      if (initialVars[v] === undefined) initialVars[v] = "";
+    });
     const newItem: QuotationItemForm = {
       section: sectionCode,
       serialNo: formData.items.filter((it) => it.section === sectionCode).length + 1,
@@ -661,6 +667,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       variableValues: initialVars,
       imageUrl: product.imagePath,
       imageText: product.imageText,
+      poolTypeFilter: product.poolTypeFilter,
     };
     setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
     setHasUnsavedChanges(true);
