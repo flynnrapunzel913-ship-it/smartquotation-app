@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { CompanyType } from "@/generated/prisma-client";
+import { CompanyType } from "@/generated-client";
 import { MR_PRODUCT_DEFINITIONS } from "@/lib/templates/mr-product-definitions";
 
 export async function GET(request: Request) {
