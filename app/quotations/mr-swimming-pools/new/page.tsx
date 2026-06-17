@@ -8,6 +8,7 @@ const MRSwimmingPoolsWizard = dynamic(() => import("@/components/wizard/MRSwimmi
   ssr: false
 });
 import "@/styles/cards.css";
+import "@/styles/wizard.css";
 
 function WizardWrapper() {
   const searchParams = useSearchParams();

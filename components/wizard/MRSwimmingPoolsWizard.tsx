@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { QuotationFormValues, QuotationItemForm } from "@/types";
 import ProductSelect from "@/components/ProductSelect";
@@ -31,6 +31,8 @@ const DEFAULT_SECTIONS = [
   { code: "D", title: "Section D – Supply of Swimming Pool Maintenance Cleaning Kit", included: true, sortOrder: 4 },
   { code: "Part 2", title: "Part 2 – Pool Finishes", included: true, sortOrder: 5 },
 ];
+
+const TOTAL_STEPS = 5;
 
 interface Props {
   id?: string;
@@ -90,13 +92,73 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     { id: 1, name: "Client Details" },
     { id: 2, name: "Pool Specifications" },
     { id: 3, name: "Calculated Values" },
-    { id: 4, name: "Section A - Plant Room" },
-    { id: 5, name: "Section B - Electrical" },
-    { id: 6, name: "Section C - Control Panel" },
-    { id: 7, name: "Section D - Cleaning Kit" },
-    { id: 8, name: "Part 2 - Pool Finishes" },
-    { id: 9, name: "Review & Generate" },
+    { id: 4, name: "Products" },
+    { id: 5, name: "Review & Generate" },
   ];
+
+  const [activeSectionCode, setActiveSectionCode] = useState<string>("A");
+  const productsScrollRef = useRef<HTMLDivElement>(null);
+
+  const includedSections = useMemo(
+    () => (formData.sections || DEFAULT_SECTIONS)
+      .filter((s) => s.included)
+      .sort((a, b) => a.sortOrder - b.sortOrder),
+    [formData.sections],
+  );
+
+  const activeSection = includedSections.find((s) => s.code === activeSectionCode)
+    ?? includedSections[0];
+
+  const scrollToSection = useCallback((code: string) => {
+    const root = productsScrollRef.current;
+    const el = document.getElementById(`mr-section-anchor-${code}`);
+    if (root && el) {
+      const rootTop = root.getBoundingClientRect().top;
+      const elTop = el.getBoundingClientRect().top;
+      root.scrollBy({ top: elTop - rootTop - 8, behavior: "smooth" });
+    }
+    setActiveSectionCode(code);
+  }, []);
+
+  useEffect(() => {
+    if (step !== 4) return;
+
+    let observer: IntersectionObserver | null = null;
+    const timer = window.setTimeout(() => {
+      const root = productsScrollRef.current;
+      if (!root) return;
+
+      const anchors = includedSections
+        .map((sec) => document.getElementById(`mr-section-anchor-${sec.code}`))
+        .filter(Boolean) as HTMLElement[];
+
+      if (!anchors.length) return;
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          const top = visible[0]?.target.getAttribute("data-section-code");
+          if (top) setActiveSectionCode(top);
+        },
+        { root, rootMargin: "-72px 0px -55% 0px", threshold: [0, 0.25, 0.5] },
+      );
+
+      anchors.forEach((el) => observer?.observe(el));
+    }, 80);
+
+    return () => {
+      window.clearTimeout(timer);
+      observer?.disconnect();
+    };
+  }, [step, includedSections]);
+
+  useEffect(() => {
+    if (step === 4 && includedSections.length) {
+      setActiveSectionCode(includedSections[0].code);
+    }
+  }, [step, includedSections]);
 
   // Helper to generate title
   const autoGenerateTitle = (name: string, address: string) => {
@@ -316,37 +378,32 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       });
     } else if (step === 3) {
       ["poolVolume", "waterVolumeLiters", "totalPoolVolume", "filtrationVolume", "filtrationFlowRate", "tilingArea", "copingArea", "waterproofingArea", "plantRoomSize"].forEach(m => resetMetric(m));
-    } else if (step >= 4 && step <= 8) {
-      const sectionCodes = ["A", "B", "C", "D", "Part 2"];
-      const code = sectionCodes[step - 4];
-      const masterItems = MR_MASTER_TEMPLATE.items?.filter(it => it.section === code) || [];
-
-      setFormData(prev => {
-        const otherItems = prev.items.filter(it => it.section !== code);
+    } else if (step === 4) {
+      setFormData((prev) => {
         const resetItems = getDefaultMRItems(
-          JSON.parse(JSON.stringify(masterItems)) as any,
+          JSON.parse(JSON.stringify(MR_MASTER_TEMPLATE.items || [])) as QuotationItemForm[],
           prev.projectSpecifications.typeOfPool,
         ).map((it: any) => ({
           ...it,
           description: renderTemplate(it.description, it.variableValues || {}),
-          templateText: it.description
+          templateText: it.description,
         }));
-        return { ...prev, items: [...otherItems, ...resetItems].sort((a, b) => a.serialNo - b.serialNo) };
+        return { ...prev, items: resetItems };
       });
     }
   };
 
   const nextStep = async () => {
-    if (step === 8) {
+    if (step === 4) {
       try {
         await handleSubmit(true, true);
-        setStep(9);
+        setStep(5);
       } catch (e) {
         console.error("Save failed in nextStep", e);
-        setStep(9); // Move anyway but log
+        setStep(5);
       }
     } else {
-      setStep((s) => Math.min(s + 1, 9));
+      setStep((s) => Math.min(s + 1, TOTAL_STEPS));
     }
   };
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
@@ -557,7 +614,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         setHasUnsavedChanges(false);
         localStorage.removeItem("mr_quotation_draft");
         if (!isDraft) {
-          setStep(9);
+          setStep(5);
         } else if (!silent) {
           alert("Draft saved!");
         }
@@ -568,6 +625,45 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
       alert("Network error");
     }
     setIsSubmitting(false);
+  };
+
+  const addProductFromCatalog = (
+    sectionCode: string,
+    product: {
+      id: string;
+      name: string;
+      category?: string;
+      templateText?: string;
+      description: string;
+      warranty?: string;
+      unit?: string;
+      defaultRate?: number;
+      imagePath?: string | null;
+      imageText?: string | null;
+      templateVariables?: string[];
+    },
+  ) => {
+    const initialVars: Record<string, string> = {};
+    (product.templateVariables || []).forEach((v) => { initialVars[v] = ""; });
+    const newItem: QuotationItemForm = {
+      section: sectionCode,
+      serialNo: formData.items.filter((it) => it.section === sectionCode).length + 1,
+      category: product.category || "General",
+      title: product.name,
+      templateText: product.templateText || product.description,
+      description: renderTemplate(product.templateText || product.description, initialVars),
+      warranty: product.warranty || "",
+      qty: 1,
+      unit: product.unit || "Nos",
+      rate: Number(product.defaultRate) || 0,
+      amount: Number(product.defaultRate) || 0,
+      productId: product.id,
+      variableValues: initialVars,
+      imageUrl: product.imagePath,
+      imageText: product.imageText,
+    };
+    setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
+    setHasUnsavedChanges(true);
   };
 
   const renderProductCard = (idx: number, displaySerial: number) => {
@@ -718,14 +814,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
   return (
     <div className="wizard-container">
       <div className="progress-bar" style={{ height: "6px", background: "#e2e8f0", borderRadius: "3px", overflow: "hidden", marginBottom: "32px" }}>
-        <div className="progress-fill" style={{ width: `${(step / 9) * 100}%`, height: "100%", background: "linear-gradient(to right, #6366f1, #4f46e5)", transition: "width 0.3s ease" }}></div>
+        <div className="progress-fill" style={{ width: `${(step / TOTAL_STEPS) * 100}%`, height: "100%", background: "linear-gradient(to right, #6366f1, #4f46e5)", transition: "width 0.3s ease" }}></div>
       </div>
 
       <div className="wizard-header" style={{ marginBottom: "32px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#0f172a", marginBottom: "4px" }}>{STEPS[step - 1].name}</h1>
-            <p style={{ color: "#64748b", fontSize: "0.875rem" }}>Step {step} of 9</p>
+            <p style={{ color: "#64748b", fontSize: "0.875rem" }}>Step {step} of {TOTAL_STEPS}</p>
           </div>
           {lastSaved && (
             <span style={{ fontSize: "0.75rem", color: "#64748b", background: "#f8fafc", padding: "6px 12px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
@@ -748,7 +844,13 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         </div>
       )}
 
-      <div className="wizard-step-content" style={{ padding: "32px", background: "white", borderRadius: "12px", marginTop: "24px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)" }}>
+      <div
+        className={`wizard-step-content${step === 4 ? " wizard-step-content--products" : ""}`}
+        style={{
+          padding: step === 4 ? "0" : "32px",
+          marginTop: "24px",
+        }}
+      >
         {step === 1 && (
           <div className="metrics-grid">
             <div className="form-grid">
@@ -924,109 +1026,74 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           </div>
         )}
 
-        {[4, 5, 6, 7].map(sIdx => (
-          step === sIdx && (
-            <div key={sIdx}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                <h3>Items for {formData.sections?.[sIdx - 4].title}</h3>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <button className="btn-secondary" onClick={() => addItem(formData.sections?.[sIdx - 4].code || "A")}>+ Add Custom Product</button>
-                </div>
+        {step === 4 && (
+          <div className="products-step">
+            <div className="products-step-sticky-bar">
+              <div className="products-active-section">
+                <span className="products-active-label">Current section</span>
+                <strong>{activeSection?.title ?? "Products"}</strong>
               </div>
-              {formData.items
-                .filter(it => it.section === (formData.sections?.[sIdx - 4].code))
-                .filter(it => isProductVisibleForPoolType(it, formData.projectSpecifications.typeOfPool))
-                .map((it, i) => {
-                const actualIdx = formData.items.findIndex(orig => orig === it);
-                return renderProductCard(actualIdx, i + 1);
-              })}
-              <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
-                <ProductSelect
-                  placeholder="Search and add a product to this section..."
-                  companyType="MR_SWIMMING_POOLS"
-                  onChange={(product) => {
-                    if (product) {
-                      const initialVars: Record<string, string> = {};
-                      const vars = product.templateVariables || [];
-                      vars.forEach(v => initialVars[v] = "");
-                      const newItem: QuotationItemForm = {
-                        section: formData.sections?.[sIdx - 4].code || "A",
-                        serialNo: formData.items.filter(it => it.section === (formData.sections?.[sIdx - 4].code)).length + 1,
-                        category: product.category || "General",
-                        title: product.name,
-                        templateText: product.templateText || product.description,
-                        description: renderTemplate(product.templateText || product.description, initialVars),
-                        warranty: product.warranty || "",
-                        qty: 1,
-                        unit: product.unit || "Nos",
-                        rate: Number(product.defaultRate) || 0,
-                        amount: Number(product.defaultRate) || 0,
-                        productId: product.id,
-                        variableValues: initialVars,
-                        imageUrl: product.imagePath,
-                        imageText: product.imageText,
-                      };
-                      setFormData(prev => ({ ...prev, items: [...prev.items, newItem] }));
-                    }
-                  }}
-                />
+              <div className="products-section-nav">
+                {includedSections.map((sec) => (
+                  <button
+                    key={sec.code}
+                    type="button"
+                    className={`products-section-pill${activeSectionCode === sec.code ? " active" : ""}`}
+                    onClick={() => scrollToSection(sec.code)}
+                  >
+                    {sec.code === "Part 2" ? "Part 2" : sec.code}
+                  </button>
+                ))}
               </div>
+              <button className="btn-secondary" type="button" onClick={() => addItem(activeSectionCode)}>
+                + Add Custom
+              </button>
             </div>
-          )
-        ))}
 
-        {step === 8 && (
-          <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h3>Part 2 - Pool Finishes</h3>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button className="btn-secondary" onClick={() => addItem("Part 2")}>+ Add Custom Product</button>
-                <button className="btn-secondary" onClick={() => resetPhase()}>Reset Phase</button>
-              </div>
-            </div>
-            {formData.items
-              .filter(it => it.section === "Part 2")
-              .filter(it => isProductVisibleForPoolType(it, formData.projectSpecifications.typeOfPool))
-              .map((it, i) => {
-              const actualIdx = formData.items.findIndex(orig => orig === it);
-              return renderProductCard(actualIdx, i + 1);
-            })}
-            <div style={{ marginTop: "24px", padding: "20px", border: "2px dashed #e2e8f0", borderRadius: "12px", textAlign: "center" }}>
-              <ProductSelect
-                placeholder="Search and add a product to Part 2..."
-                companyType="MR_SWIMMING_POOLS"
-                onChange={(product) => {
-                  if (product) {
-                    const initialVars: Record<string, string> = {};
-                    const vars = product.templateVariables || [];
-                    vars.forEach(v => initialVars[v] = "");
-                    const newItem: QuotationItemForm = {
-                      section: "Part 2",
-                      serialNo: formData.items.filter(it => it.section === "Part 2").length + 1,
-                      category: product.category || "General",
-                      title: product.name,
-                      templateText: product.templateText || product.description,
-                      description: renderTemplate(product.templateText || product.description, initialVars),
-                      warranty: product.warranty || "",
-                      qty: 1,
-                      unit: product.unit || "Nos",
-                      rate: Number(product.defaultRate) || 0,
-                      amount: Number(product.defaultRate) || 0,
-                      productId: product.id,
-                      variableValues: initialVars,
-                      imageUrl: product.imagePath,
-                      imageText: product.imageText,
-                    };
-                    setFormData(prev => ({ ...prev, items: [...prev.items, newItem] }));
-                  }
-                }}
-              />
-              <button className="btn-secondary" style={{ marginTop: "12px" }} onClick={() => addItem("Part 2")}>+ Add Manual Item</button>
+            <div ref={productsScrollRef} className="products-scroll-panel">
+              {includedSections.map((sec) => {
+                const sectionItems = formData.items
+                  .filter((it) => it.section === sec.code)
+                  .filter((it) => isProductVisibleForPoolType(it, formData.projectSpecifications.typeOfPool));
+
+                return (
+                  <section
+                    key={sec.code}
+                    id={`mr-section-anchor-${sec.code}`}
+                    data-section-code={sec.code}
+                    className="products-section-block"
+                  >
+                    <div className="products-section-header">
+                      <h3>{sec.title}</h3>
+                      <span className="products-section-count">{sectionItems.length} items</span>
+                    </div>
+
+                    {sectionItems.map((it, i) => {
+                      const actualIdx = formData.items.findIndex((orig) => orig === it);
+                      return renderProductCard(actualIdx, i + 1);
+                    })}
+
+                    <div className="products-add-panel">
+                      <ProductSelect
+                        value=""
+                        placeholder={`Search and add a product to ${sec.title}...`}
+                        companyType="MR_SWIMMING_POOLS"
+                        onChange={(product) => {
+                          if (product) addProductFromCatalog(sec.code, product);
+                        }}
+                      />
+                      <button className="btn-secondary" type="button" onClick={() => addItem(sec.code)}>
+                        + Add Manual Item
+                      </button>
+                    </div>
+                  </section>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {step === 9 && (
+        {step === 5 && (
           <div style={{ textAlign: "center", padding: "40px" }}>
             {isSubmitting ? (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
@@ -1119,14 +1186,23 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
         )}
       </div>
 
-      <div className="wizard-footer" style={{ marginTop: "40px", paddingTop: "24px", borderTop: "1px solid #e2e8f0" }}>
+      <div className="wizard-footer">
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          {step > 1 && <button className="btn btn-outline" onClick={prevStep}>← Back</button>}
-          {step < 9 && <button className="btn btn-outline" style={{ color: "#ef4444", borderColor: "#fecaca" }} onClick={resetPhase} title="Reset this phase to defaults">Reset Phase</button>}
+          {step > 1 && <button type="button" className="btn btn-outline" onClick={prevStep}>← Back</button>}
+          {step < TOTAL_STEPS && (
+            <button
+              type="button"
+              className="btn btn-outline wizard-btn-reset"
+              onClick={resetPhase}
+              title="Reset this phase to defaults"
+            >
+              Reset Phase
+            </button>
+          )}
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
-          {step < 9 && <button className="btn btn-outline" disabled={isSubmitting} onClick={() => handleSubmit(true)}>Save Draft</button>}
-          {step < 9 && <button className="btn btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : "Next Step →"}</button>}
+          {step < TOTAL_STEPS && <button type="button" className="btn btn-secondary" disabled={isSubmitting} onClick={() => handleSubmit(true)}>Save Draft</button>}
+          {step < TOTAL_STEPS && <button type="button" className="btn btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : step === 4 ? "Save & Review →" : "Next Step →"}</button>}
         </div>
       </div>
     </div>
