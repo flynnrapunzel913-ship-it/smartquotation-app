@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/prisma-client";
+import { PrismaClient } from "../generated-client";
 import { MR_PRODUCT_DEFINITIONS } from "../lib/templates/mr-product-definitions";
 
 const prisma = new PrismaClient();
