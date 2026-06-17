@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import DatabaseUploadModal from "./DatabaseUploadModal";
 import DatabaseProductsTable from "./DatabaseProductsTable";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAppAlert } from "@/components/ui/AppAlert";
 
 interface Database {
   id: string;
@@ -23,6 +25,8 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [viewingDatabaseId, setViewingDatabaseId] = useState<string | null>(null);
   const [editingNameId, setEditingNameId] = useState<string | null>(null);
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
+  const { showAlert, alertDialog } = useAppAlert();
   const [editNameValue, setEditNameValue] = useState("");
 
   useEffect(() => {
@@ -44,12 +48,30 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this database? All its products will be removed.")) return;
+    const confirmed = await showConfirm({
+      title: "Delete database?",
+      message: "This database and all its products will be permanently removed.",
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     try {
       const response = await fetch(`/api/invoice-databases/${id}`, { method: "DELETE" });
-      if (response.ok) fetchDatabases();
-    } catch (error) {
-      console.error("Error deleting database:", error);
+      if (response.ok) {
+        fetchDatabases();
+      } else {
+        await showAlert({
+          title: "Delete failed",
+          message: "We couldn't delete this database. Please try again.",
+          variant: "error",
+        });
+      }
+    } catch {
+      await showAlert({
+        title: "Delete failed",
+        message: "We couldn't delete this database. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -90,6 +112,8 @@ export default function InvoiceDatabaseManager({ onRefresh }: Props) {
 
   return (
     <div className="database-manager">
+      {confirmDialog}
+      {alertDialog}
       <div className="flex justify-between items-center mb-8">
         <h3 className="text-xl font-bold text-[#1e293b]">Product Databases</h3>
         <button 

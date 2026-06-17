@@ -2,11 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAppAlert } from "@/components/ui/AppAlert";
 import "@/styles/history.css";
 import "@/styles/globals.css";
 
 export default function HistoryPage() {
   const router = useRouter();
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
+  const { showAlert, alertDialog } = useAppAlert();
   const [quotations, setQuotations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -16,9 +20,7 @@ export default function HistoryPage() {
     setLoading(true);
     try {
       const res = await fetch(`/api/quotations?search=${encodeURIComponent(search)}`);
-      console.log("History API Response status:", res.status);
       const data = await res.json();
-      console.log("History API Data received:", data);
       setQuotations(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Failed to fetch quotations:", e);
@@ -40,12 +42,22 @@ export default function HistoryPage() {
   }, [searchTerm]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this quotation?")) return;
+    const confirmed = await showConfirm({
+      title: "Delete quotation?",
+      message: "This quotation will be permanently removed. This action cannot be undone.",
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     try {
       await fetch(`/api/quotations/${id}`, { method: "DELETE" });
       fetchQuotations();
-    } catch (e) {
-      alert("Delete failed");
+    } catch {
+      await showAlert({
+        title: "Delete failed",
+        message: "We couldn't delete this quotation. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -61,6 +73,8 @@ export default function HistoryPage() {
 
   return (
     <div className="history-page">
+      {confirmDialog}
+      {alertDialog}
       <div className="history-container">
         <div className="history-header">
           <div>

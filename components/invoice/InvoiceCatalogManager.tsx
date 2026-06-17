@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAppAlert } from "@/components/ui/AppAlert";
 
 interface Product {
   id: string;
@@ -18,6 +22,8 @@ export default function InvoiceCatalogManager() {
   const [loading, setLoading] = useState(true);
   const [editingDatabaseId, setEditingDatabaseId] = useState<string | null>(null);
   const [editDbName, setEditDbName] = useState("");
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
+  const { showAlert, alertDialog } = useAppAlert();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -75,15 +81,31 @@ export default function InvoiceCatalogManager() {
 
 
   const handleDeleteDatabase = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this entire database? All products inside will be lost.")) return;
+    const confirmed = await showConfirm({
+      title: "Delete database?",
+      message: "This entire database and all products inside will be permanently lost.",
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/invoice-databases/${id}`, { method: "DELETE" });
       if (res.ok) {
         fetchDatabases();
-        fetchProducts(""); // Clear products list
+        fetchProducts("");
+      } else {
+        await showAlert({
+          title: "Delete failed",
+          message: "We couldn't delete this database. Please try again.",
+          variant: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
+      await showAlert({
+        title: "Delete failed",
+        message: "We couldn't delete this database. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -162,16 +184,30 @@ export default function InvoiceCatalogManager() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    const confirmed = await showConfirm({
+      title: "Delete product?",
+      message: "This product will be permanently removed from the catalog.",
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (res.ok) {
         fetchProducts();
       } else {
-        alert("Failed to delete product");
+        await showAlert({
+          title: "Delete failed",
+          message: "We couldn't delete this product. Please try again.",
+          variant: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
+      await showAlert({
+        title: "Delete failed",
+        message: "We couldn't delete this product. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -321,6 +357,8 @@ export default function InvoiceCatalogManager() {
 
   return (
     <div style={{ width: "100%" }}>
+      {confirmDialog}
+      {alertDialog}
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px" }}>
         <button 
           onClick={() => setActiveTab("databases")}

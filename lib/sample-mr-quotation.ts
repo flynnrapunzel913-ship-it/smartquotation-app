@@ -17,6 +17,7 @@ export type MrSampleListEntry = {
   quoteNumber: string;
   sourceBill: string;
   poolType?: string;
+  isSample: true;
 };
 
 export function listMrQuotationSamples(): string[] {
@@ -34,6 +35,7 @@ export function listMrSampleCatalog(): MrSampleListEntry[] {
     quoteNumber: s.quoteNumber,
     sourceBill: s.sourceBill,
     poolType: s.poolType,
+    isSample: true as const,
   }));
 }
 

@@ -88,14 +88,14 @@ function buildKleanTechQuotationHtml(
     const itemSpecs = lines.slice(1).join("\n");
 
     return `
-      <tr style="vertical-align: top;">
+      <tr class="boq-data-row" style="vertical-align: top; page-break-inside: avoid; break-inside: avoid-page;">
         <td style="text-align: center; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${idx + 1}</td>
         <td style="border: 1px solid #000; padding: 4px 6px;">
           <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 4px; font-size: 10px;">${escapeHtml(title)}</div>
           <div style="font-size: 9px; line-height: 1.3; text-align: left;">${escapeHtml(itemSpecs)}</div>
         </td>
-        <td style="text-align: center; border: 1px solid #000; padding: 4px 6px;">
-          ${item.imageUrl ? `<img src="${imageToBase64(item.imageUrl.replace(".jpg", ".png"))}" style="max-width: 80px; max-height: 80px; object-fit: contain;" />` : `<span style="font-size: 9px; color: #64748b;">No Image</span>`}
+        <td style="text-align: center; border: 1px solid #000; padding: 4px 6px; page-break-inside: avoid; break-inside: avoid-page;">
+          ${item.imageUrl ? `<img src="${imageToBase64(item.imageUrl.replace(".jpg", ".png"))}" style="max-width: 80px; max-height: 80px; object-fit: contain; page-break-inside: avoid; break-inside: avoid-page;" />` : `<span style="font-size: 9px; color: #64748b;">No Image</span>`}
         </td>
         <td style="text-align: center; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${escapeHtml((item as any).hsnCode || "N/A")}</td>
         <td style="text-align: right; border: 1px solid #000; padding: 4px 6px; font-size: 9px;">${formatCurrencyINR(Number(item.rate))}</td>
@@ -397,37 +397,33 @@ export function buildQuotationHtml(
   for (const sec of sections) {
     const rows = itemsBySection.get(sec.code);
     if (!rows?.length) continue;
-    tablesHtml += `
-      <div class="section-title">${sec.title}</div>
-      <table class="boq-table">
-        <thead>
-          <tr>
-            <th style="width: 5%;">SL No.</th>
-            <th style="width: 40%;">Description</th>
-            <th style="width: 12%;">Image</th>
-            <th style="width: 10%;">Warranty</th>
-            <th style="width: 5%;">Qty</th>
-            <th style="width: 6%;">Unit</th>
-            <th style="width: 10%;">Rate</th>
-            <th style="width: 12%;">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows
-            .map((it: (typeof quote.items)[number], index: number) => {
-              const title = (it as any).title || it.description.split("\n")[0];
-              const rest = (it as any).title ? it.description : it.description.split("\n").slice(1).join("\n");
-              
-              // Highlight MAKE : lines
-              const formattedBody = rest.split("\n").map(line => {
-                if (line.toUpperCase().includes("MAKE :")) {
-                  return `<div class="item-make">${escapeHtml(line)}</div>`;
-                }
-                return `<div class="item-body">${escapeHtml(line)}</div>`;
-              }).join("");
 
-          return `
-              <tr>
+    const rowHtml = rows
+      .map((it: (typeof quote.items)[number], index: number) => {
+        const title = (it as any).title || it.description.split("\n")[0];
+        const rest = (it as any).title ? it.description : it.description.split("\n").slice(1).join("\n");
+
+        const formattedBody = rest.split("\n").map(line => {
+          if (line.toUpperCase().includes("MAKE :")) {
+            return `<div class="item-make">${escapeHtml(line)}</div>`;
+          }
+          return `<div class="item-body">${escapeHtml(line)}</div>`;
+        }).join("");
+
+        return `
+          <table class="boq-table boq-item-table">
+            <colgroup>
+              <col style="width: 5%;" />
+              <col style="width: 40%;" />
+              <col style="width: 12%;" />
+              <col style="width: 10%;" />
+              <col style="width: 5%;" />
+              <col style="width: 6%;" />
+              <col style="width: 10%;" />
+              <col style="width: 12%;" />
+            </colgroup>
+            <tbody>
+              <tr class="boq-data-row">
                 <td class="cen" style="vertical-align: top;">${index + 1}</td>
                 <td>
                   <div class="item-title">${escapeHtml(title)}</div>
@@ -435,8 +431,8 @@ export function buildQuotationHtml(
                 </td>
                 <td class="cen">
                   <div class="item-image-container">
-                    ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" />` :
-              ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px;">${escapeHtml((it as any).imageText)}</div>` : "")}
+                    ${it.imageUrl ? `<img src="${imageToBase64(it.imageUrl)}" class="item-image" alt="" />` :
+          ((it as any).imageText ? `<div style="font-weight: 700; font-size: 14px;">${escapeHtml((it as any).imageText)}</div>` : "")}
                   </div>
                 </td>
                 <td class="numeric-cell">${escapeHtml(it.warranty)}</td>
@@ -444,23 +440,64 @@ export function buildQuotationHtml(
                 <td class="numeric-cell">${escapeHtml(it.unit)}</td>
                 <td class="num" style="vertical-align: middle;">${formatAmountWithoutCurrency(Number(it.rate))}</td>
                 <td class="num" style="vertical-align: middle; font-weight: 700;">${formatAmountWithoutCurrency(Number(it.amount))}</td>
-              </tr>`;
-        }).join("")}
-        </tbody>
-      </table>`;
+              </tr>
+            </tbody>
+          </table>`;
+      })
+      .join("");
+
+    tablesHtml += `
+      <div class="boq-section">
+      <div class="section-title">${sec.title}</div>
+      <table class="boq-table boq-table-header">
+        <colgroup>
+          <col style="width: 5%;" />
+          <col style="width: 40%;" />
+          <col style="width: 12%;" />
+          <col style="width: 10%;" />
+          <col style="width: 5%;" />
+          <col style="width: 6%;" />
+          <col style="width: 10%;" />
+          <col style="width: 12%;" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>SL No.</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Warranty</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+      </table>
+      ${rowHtml}`;
 
     if (sec.code === "D") {
       tablesHtml += `
-        <table class="boq-table" style="margin-top: -21px; border-top: 0;">
+        <table class="boq-table boq-totals-table">
+          <colgroup>
+            <col style="width: 5%;" />
+            <col style="width: 40%;" />
+            <col style="width: 12%;" />
+            <col style="width: 10%;" />
+            <col style="width: 5%;" />
+            <col style="width: 6%;" />
+            <col style="width: 10%;" />
+            <col style="width: 12%;" />
+          </colgroup>
           <tbody>
-            <tr>
+            <tr class="boq-data-row">
               <td colspan="7" style="text-align: right; padding: 10px; font-weight: 700;">TOTAL (A+B+C+D)</td>
-              <td class="num" style="width: 100px; padding: 10px; font-weight: 700; background: #f8fafc;">${formatAmountWithoutCurrency(part1Total)}</td>
+              <td class="num" style="padding: 10px; font-weight: 700; background: #f8fafc;">${formatAmountWithoutCurrency(part1Total)}</td>
             </tr>
           </tbody>
         </table>
       `;
     }
+    tablesHtml += `</div>`;
   }
 
   const specificationSectionHtml = buildMRPoolSpecificationSectionHtml({

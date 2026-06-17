@@ -223,6 +223,7 @@ async function generateKleanTechDocx(
     }
 
     return new TableRow({
+      cantSplit: true,
       children: [
         cell(String(idx + 1), 5, { align: AlignmentType.CENTER }),
         cell(item.description, 40),
@@ -677,6 +678,7 @@ export async function quotationToDocxBuffer(
         }
 
         return new TableRow({
+          cantSplit: true,
           children: [
             cell(String(index + 1), 5, { align: AlignmentType.CENTER }),
             new TableCell({

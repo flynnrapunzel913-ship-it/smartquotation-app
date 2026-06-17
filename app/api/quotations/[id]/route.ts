@@ -86,7 +86,7 @@ export async function PUT(
           terms: data.terms,
           paymentTerms: data.paymentTerms,
           sections: (data.sections as any) || [],
-          isDraft: data.isDraft || false,
+          isDraft: data.isDraft ?? false,
           updatedAt: new Date(),
         },
       });

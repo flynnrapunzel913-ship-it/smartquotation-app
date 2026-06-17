@@ -39,7 +39,6 @@ export const MR_PRODUCT_IMAGE_SOURCES: Record<string, MRImageSource> = {
   },
   "seed-temp-prod-15": { type: "single", sources: [IMG("pdf-page4-img5.jpeg")] },
   "seed-temp-prod-16": { type: "single", sources: [IMG("pdf-page4-img7.jpeg")] },
-  "seed-temp-prod-17": { type: "single", sources: [IMG("transformer-for-pool-lights.jpg")] },
   "seed-temp-prod-18": { type: "single", sources: [IMG("pdf-page4-img1.jpeg")] },
   "seed-temp-prod-19": { type: "single", sources: [IMG("pdf-page4-img2.jpeg")] },
   "seed-temp-prod-20": { type: "single", sources: [IMG("pdf-page5-img2.jpeg")] },
@@ -48,10 +47,10 @@ export const MR_PRODUCT_IMAGE_SOURCES: Record<string, MRImageSource> = {
   "seed-temp-prod-23": { type: "single", sources: [IMG("pdf-page5-img5.jpeg")] },
   "seed-temp-prod-24": { type: "single", sources: [IMG("pdf-page5-img6.jpeg")] },
   "seed-temp-prod-25": { type: "single", sources: [IMG("pool-chemicals.jpg")] },
-  "seed-temp-prod-26": { type: "single", sources: [IMG("pdf-page5-img7.jpeg")] },
+  "seed-temp-prod-26": { type: "single", sources: [IMG("pdf-page5-img8.jpeg")] },
   "seed-temp-prod-27": { type: "single", sources: [IMG("pdf-page5-img9.jpeg")] },
   "seed-temp-prod-28": { type: "single", sources: [IMG("pdf-page5-img10.jpeg")] },
-  "seed-temp-prod-29": { type: "single", sources: [IMG("pdf-page5-img8.jpeg")] },
+  "seed-temp-prod-29": { type: "single", sources: [IMG("pdf-page5-img7.jpeg")] },
 };
 
 /** Canonical output filename (without directory) per product id */
@@ -75,7 +74,6 @@ export const MR_PRODUCT_IMAGE_OUTPUT: Record<string, string> = {
   "seed-temp-prod-14": "electrical-materials-composite.png",
   "seed-temp-prod-15": "labour-charges--pool-electrical-works.png",
   "seed-temp-prod-16": "pool-starter-for-pumps-and-lights.png",
-  "seed-temp-prod-17": "transformer-for-pool-lights.png",
   "seed-temp-prod-18": "testing-and-commissioning-of-the-pool.png",
   "seed-temp-prod-19": "vacuum-head.png",
   "seed-temp-prod-20": "vacuum-hose.png",

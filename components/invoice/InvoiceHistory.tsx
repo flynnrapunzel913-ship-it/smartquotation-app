@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatCurrencyINR } from "@/lib/utils";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAppAlert } from "@/components/ui/AppAlert";
 
 interface Invoice {
   id: string;
@@ -19,6 +21,8 @@ export default function InvoiceHistory() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
+  const { showAlert, alertDialog } = useAppAlert();
 
   useEffect(() => {
     fetchInvoices();
@@ -46,12 +50,30 @@ export default function InvoiceHistory() {
   };
 
   const handleDelete = async (id: string, invoiceNumber: string) => {
-    if (!confirm(`Are you sure you want to delete invoice ${invoiceNumber}?`)) return;
+    const confirmed = await showConfirm({
+      title: "Delete invoice?",
+      message: `Invoice ${invoiceNumber} will be permanently removed. This cannot be undone.`,
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     try {
       const response = await fetch(`/api/invoices/${id}`, { method: "DELETE" });
-      if (response.ok) fetchInvoices();
-    } catch (error) {
-      console.error("Error deleting invoice:", error);
+      if (response.ok) {
+        fetchInvoices();
+      } else {
+        await showAlert({
+          title: "Delete failed",
+          message: "We couldn't delete this invoice. Please try again.",
+          variant: "error",
+        });
+      }
+    } catch {
+      await showAlert({
+        title: "Delete failed",
+        message: "We couldn't delete this invoice. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -63,6 +85,8 @@ export default function InvoiceHistory() {
 
   return (
     <div className="invoice-history">
+      {confirmDialog}
+      {alertDialog}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
         <h2 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1e293b", margin: 0 }}>Invoice Records</h2>
         <div style={{ position: "relative", width: "100%", maxWidth: "400px" }}>

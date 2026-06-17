@@ -36,6 +36,7 @@ export default function QuotationTypesPage() {
 
   useEffect(() => {
     router.prefetch("/history");
+    router.prefetch("/activity");
     router.prefetch("/dashboard/invoices");
     router.prefetch("/quotations/mr-swimming-pools/new");
     router.prefetch("/quotations/klean-tech/new");
@@ -143,7 +144,10 @@ export default function QuotationTypesPage() {
                 <LayoutGrid size={24} className="text-slate-400" />
                 <h2 style={{ fontSize: "24px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.01em" }}>Recent Activity</h2>
               </div>
-              <button style={{
+              <button
+                type="button"
+                onClick={() => router.push("/activity")}
+                style={{
                 padding: "8px 20px",
                 fontSize: "14px",
                 fontWeight: "600",

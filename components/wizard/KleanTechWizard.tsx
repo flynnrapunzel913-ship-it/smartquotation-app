@@ -9,6 +9,7 @@ import ProductManagerModal from "@/components/klean-tech/ProductManagerModal";
 import ProductImageThumbnail from "@/components/klean-tech/ProductImageThumbnail";
 import KleanTechQuotationTemplate from "@/components/templates/KleanTechQuotationTemplate";
 import { Pencil, Check, X } from "lucide-react";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import "@/styles/wizard.css"; // Reuse existing styles if possible
 
 interface Product {
@@ -67,6 +68,7 @@ interface Props {
 
 export default function KleanTechWizard({ id, mode = "edit" }: Props) {
   const router = useRouter();
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [step, setStep] = useState(1);
@@ -180,7 +182,14 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
     });
   };
 
-  const deleteItem = (index: number) => {
+  const deleteItem = async (index: number) => {
+    const confirmed = await showConfirm({
+      title: "Remove this item?",
+      message: "This product will be removed from the quotation.",
+      confirmLabel: "Remove",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     setFormData((prev) => {
       const newItems = [...prev.items];
       newItems.splice(index, 1);
@@ -261,6 +270,7 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
 
   return (
     <div className="wizard-container">
+      {confirmDialog}
       <div className="wizard-header">
         <h1>KLEAN TECH SYSTEMS</h1>
         <p>Quotation Generator Wizard</p>

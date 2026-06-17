@@ -128,47 +128,18 @@ export function addSpecSection(
   switch (sectionId) {
     case "mainPool":
       next.includeMainPool = true;
-      if (!hasDims(next.poolLength, next.poolWidth, next.poolDepth)) {
-        next.poolLength = "30";
-        next.poolWidth = "60";
-        next.poolDepth = "4.5";
-      }
       break;
     case "kidPool":
       next.includeKidPool = true;
-      if (!hasDims(next.kidPoolLength, next.kidPoolWidth, next.kidPoolDepth)) {
-        next.kidPoolLength = "10";
-        next.kidPoolWidth = "10";
-        next.kidPoolDepth = "2.5";
-      }
       break;
     case "plantRoom":
       next.includePlantRoom = true;
-      if (!hasDims(next.plantRoomLength, next.plantRoomWidth, next.plantRoomHeight)) {
-        next.plantRoomLength = "12";
-        next.plantRoomWidth = "12";
-        next.plantRoomHeight = "6";
-      }
       break;
     case "balancingTank":
       next.includeBalancingTank = true;
-      if (
-        !hasDims(
-          next.balancingTankLength,
-          next.balancingTankWidth,
-          next.balancingTankDepth,
-        )
-      ) {
-        next.balancingTankLength = "12";
-        next.balancingTankWidth = "12";
-        next.balancingTankDepth = "6";
-      }
       break;
     case "turnoverPeriod":
       next.includeTurnoverPeriod = true;
-      if (!hasDims(next.turnoverPeriod)) {
-        next.turnoverPeriod = "4 Hours";
-      }
       break;
   }
 

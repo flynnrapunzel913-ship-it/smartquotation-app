@@ -1,7 +1,11 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import ProductImageThumbnail from "./ProductImageThumbnail";
 import { hasProductImage } from "@/lib/product-image";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAppAlert } from "@/components/ui/AppAlert";
 
 interface Product {
   id: string;
@@ -26,6 +30,8 @@ export default function ProductManagerModal({ onClose }: Props) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
+  const { showAlert, alertDialog } = useAppAlert();
   const [editFormData, setEditFormData] = useState({
     name: "",
     description: "",
@@ -84,16 +90,30 @@ export default function ProductManagerModal({ onClose }: Props) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    const confirmed = await showConfirm({
+      title: "Delete product?",
+      message: "This product will be permanently removed from the catalog.",
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/cleantech/products/${id}`, { method: "DELETE" });
       if (res.ok) {
         fetchProducts();
       } else {
-        alert("Failed to delete product");
+        await showAlert({
+          title: "Delete failed",
+          message: "We couldn't delete this product. Please try again.",
+          variant: "error",
+        });
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
+      await showAlert({
+        title: "Delete failed",
+        message: "We couldn't delete this product. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -212,6 +232,9 @@ export default function ProductManagerModal({ onClose }: Props) {
   }) : [];
 
   return (
+    <>
+      {confirmDialog}
+      {alertDialog}
     <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
       <div style={{ background: "white", padding: "32px", borderRadius: "16px", width: "90%", maxWidth: "1200px", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
@@ -705,5 +728,6 @@ export default function ProductManagerModal({ onClose }: Props) {
         </div>
       )}
     </div>
+    </>
   );
 }

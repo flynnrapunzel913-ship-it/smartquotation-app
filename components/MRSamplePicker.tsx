@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileText, ArrowRight, Loader2 } from "lucide-react";
+import RecentActivity from "@/components/RecentActivity";
 import type { MrSampleListEntry } from "@/lib/sample-mr-quotation";
 
 type Props = {
@@ -10,10 +11,22 @@ type Props = {
   compact?: boolean;
 };
 
+function Tag({ label, variant }: { label: string; variant: "sample" | "pool" }) {
+  const styles: Record<typeof variant, React.CSSProperties> = {
+    sample: { background: "#fef3c7", color: "#b45309" },
+    pool: { background: "#ecfdf5", color: "#047857" },
+  };
+  return (
+    <span className="mr-picker-tag" style={styles[variant]}>
+      {label}
+    </span>
+  );
+}
+
 export default function MRSamplePicker({ onSelectBlank, compact }: Props) {
   const router = useRouter();
   const [samples, setSamples] = useState<MrSampleListEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingSamples, setLoadingSamples] = useState(true);
 
   useEffect(() => {
     fetch("/api/quotations/samples")
@@ -21,129 +34,91 @@ export default function MRSamplePicker({ onSelectBlank, compact }: Props) {
       .then((data) => {
         if (Array.isArray(data)) setSamples(data);
       })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .catch(() => setSamples([]))
+      .finally(() => setLoadingSamples(false));
   }, []);
 
-  if (loading) {
+  if (loadingSamples && compact) {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#64748b", padding: compact ? "8px 0" : "16px 0" }}>
+      <div className="mr-picker-loading">
         <Loader2 size={18} className="animate-spin" />
-        <span>Loading sample quotations…</span>
+        <span>Loading quotations…</span>
       </div>
     );
   }
 
-  if (!samples.length) return null;
-
   return (
-    <div style={{ marginBottom: compact ? 16 : 28 }}>
+    <div className={`mr-start-picker${compact ? " mr-start-picker--compact" : ""}`}>
       {!compact && (
-        <div style={{ marginBottom: 16 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#0F172A", margin: "0 0 4px" }}>
-            Start from a sample quotation
-          </h2>
-          <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-            Pre-filled quotations from your bills folder — edit and generate PDF/DOCX.
-          </p>
-        </div>
+        <section className="mr-picker-section">
+          <div className="mr-picker-section-header">
+            <h2>Start from a sample quotation</h2>
+            <p>Pre-filled quotations from your bills folder — edit and generate PDF/DOCX.</p>
+          </div>
+
+          {loadingSamples ? (
+            <div className="mr-picker-loading">
+              <Loader2 size={18} className="animate-spin" />
+              <span>Loading samples…</span>
+            </div>
+          ) : (
+            <div className="mr-picker-grid">
+              {samples.map((sample) => (
+                <button
+                  key={sample.filename}
+                  type="button"
+                  className="mr-picker-card mr-picker-card--sample"
+                  onClick={() =>
+                    router.push(
+                      `/quotations/mr-swimming-pools/new?sample=${encodeURIComponent(sample.filename)}`,
+                    )
+                  }
+                >
+                  <div className="mr-picker-card-top">
+                    <div className="mr-picker-card-title-row">
+                      <div className="mr-picker-card-icon">
+                        <FileText size={18} />
+                      </div>
+                      <div>
+                        <div className="mr-picker-card-title">{sample.displayName}</div>
+                        <div className="mr-picker-card-subtitle">{sample.quoteNumber}</div>
+                      </div>
+                    </div>
+                    <ArrowRight size={16} className="mr-picker-card-arrow" />
+                  </div>
+                  <p className="mr-picker-card-desc">{sample.description}</p>
+                  <div className="mr-picker-card-tags">
+                    <Tag label="Sample" variant="sample" />
+                    {sample.poolType ? <Tag label={sample.poolType} variant="pool" /> : null}
+                  </div>
+                </button>
+              ))}
+
+              {onSelectBlank && (
+                <button type="button" className="mr-picker-card mr-picker-card--blank" onClick={onSelectBlank}>
+                  Start with blank template
+                </button>
+              )}
+            </div>
+          )}
+        </section>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 12,
-        }}
-      >
-        {samples.map((sample) => (
-          <button
-            key={sample.filename}
-            type="button"
-            onClick={() => router.push(`/quotations/mr-swimming-pools/new?sample=${encodeURIComponent(sample.filename)}`)}
-            style={{
-              textAlign: "left",
-              padding: "16px 18px",
-              borderRadius: 12,
-              border: "1px solid #e2e8f0",
-              background: "white",
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              transition: "border-color 0.15s, box-shadow 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#0d9488";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(13,148,136,0.12)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e2e8f0";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 8,
-                    background: "#f0fdfa",
-                    color: "#0d9488",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <FileText size={18} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: "#0F172A" }}>{sample.displayName}</div>
-                  <div style={{ fontSize: 12, color: "#94a3b8" }}>{sample.quoteNumber}</div>
-                </div>
-              </div>
-              <ArrowRight size={16} color="#94a3b8" />
-            </div>
-            <p style={{ fontSize: 13, color: "#64748b", margin: 0, lineHeight: 1.45 }}>{sample.description}</p>
-            {sample.poolType && (
-              <span
-                style={{
-                  alignSelf: "flex-start",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  padding: "2px 8px",
-                  borderRadius: 6,
-                  background: "#ecfdf5",
-                  color: "#047857",
-                }}
-              >
-                {sample.poolType}
-              </span>
-            )}
-          </button>
-        ))}
-
-        {onSelectBlank && (
-          <button
-            type="button"
-            onClick={onSelectBlank}
-            style={{
-              textAlign: "left",
-              padding: "16px 18px",
-              borderRadius: 12,
-              border: "1px dashed #cbd5e1",
-              background: "#f8fafc",
-              cursor: "pointer",
-              fontWeight: 600,
-              color: "#475569",
-              fontSize: 14,
-            }}
-          >
-            Start with blank template
-          </button>
-        )}
-      </div>
+      {!compact && (
+        <section className="mr-picker-section">
+          <div className="mr-picker-section-header">
+            <h2>Your MR quotation history</h2>
+            <p>Click a completed quotation to preview PDF, or a draft to continue editing.</p>
+          </div>
+          <RecentActivity
+            limit={20}
+            filter="mr-quotations"
+            showCardHeader={false}
+            viewAllHref="/activity"
+            emptyMessage="No finalized MR quotations yet. Complete a quotation to see it here."
+          />
+        </section>
+      )}
     </div>
   );
 }

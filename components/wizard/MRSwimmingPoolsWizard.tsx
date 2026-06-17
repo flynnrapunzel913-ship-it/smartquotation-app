@@ -21,7 +21,9 @@ import {
 } from "@/lib/mr-pool-spec-sections";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
-import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertTriangle, Loader2, Plus, PenLine } from "lucide-react";
+import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAppAlert } from "@/components/ui/AppAlert";
 
 const DEFAULT_TERMS = `1. Single phase connection up to the plant room is in your scope of work.
 2. Back wash line after the plant room and water supply to balance tank is in your scope.
@@ -50,6 +52,8 @@ interface Props {
 
 export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Props) {
   const router = useRouter();
+  const { showConfirm, dialog: confirmDialog } = useConfirmDialog();
+  const { showAlert, alertDialog } = useAppAlert();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteId, setQuoteId] = useState<string | null>(id || null);
@@ -57,6 +61,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
+  const [isDraftQuotation, setIsDraftQuotation] = useState(true);
 
   const [formData, setFormData] = useState<QuotationFormValues>({
     customerName: "",
@@ -68,26 +73,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
     gstPercent: MR_MASTER_TEMPLATE.gstPercent || 18,
     projectSpecifications: {
       ...MR_MASTER_TEMPLATE.projectSpecifications as any,
-      poolLength: "30",
-      poolWidth: "60",
-      poolDepth: "4.5",
-      plantRoomSize: "12'X12'X6'",
-      plantRoomLength: "12",
-      plantRoomWidth: "12",
-      plantRoomHeight: "6",
-      kidPoolLength: "10",
-      kidPoolWidth: "10",
-      kidPoolDepth: "2.5",
-      balancingTankLength: "",
-      balancingTankWidth: "",
-      balancingTankDepth: "",
-      turnoverPeriod: "4 Hours",
-      shapeOfPool: "Rectangle Pool",
-      typeOfPool: "Skimmer Pool",
       ...DEFAULT_SPEC_SECTION_FLAGS,
       includeBalancingTank: false,
     },
-    items: getDefaultMRItems([...(MR_MASTER_TEMPLATE.items || [])] as any, "Skimmer Pool").map((it: any) => ({
+    items: getDefaultMRItems([...(MR_MASTER_TEMPLATE.items || [])] as any).map((it: any) => ({
       ...it,
       description: renderTemplate(it.description, it.variableValues || {}),
       templateText: it.description,
@@ -216,12 +205,12 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [formData, hasUnsavedChanges, isSubmitting]);
+  }, [formData, hasUnsavedChanges, isSubmitting, isDraftQuotation, quoteId]);
 
   const handleAutoSave = async () => {
     if (!quoteId) return; // Only auto-save to server if we have an ID
     try {
-      const payload = { ...formData, subtotal, grandTotal, isDraft: true };
+      const payload = { ...formData, subtotal, grandTotal, isDraft: isDraftQuotation };
       await fetch(`/api/quotations/${quoteId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -328,7 +317,12 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
             title: data.title || "",
           };
           setFormData(mappedData);
-          if (mode === "duplicate") setQuoteId(null);
+          if (mode === "duplicate") {
+            setQuoteId(null);
+            setIsDraftQuotation(true);
+          } else {
+            setIsDraftQuotation(!!data.isDraft);
+          }
           setIsLoading(false);
         });
     } else if (sample) {
@@ -408,8 +402,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
   const gstAmount = (subtotal * formData.gstPercent) / 100;
   const grandTotal = subtotal + gstAmount;
 
-  const resetPhase = () => {
-    if (!confirm("Are you sure you want to reset this phase to defaults? All changes in this step will be lost.")) return;
+  const resetPhase = async () => {
+    const confirmed = await showConfirm({
+      title: "Reset this step?",
+      message: "All changes in this step will be lost and defaults will be restored.",
+      confirmLabel: "Reset",
+      variant: "danger",
+    });
+    if (!confirmed) return;
 
     if (step === 1) {
       setFormData(prev => ({
@@ -423,21 +423,22 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       setFormData(prev => {
         const nextSpecs = {
           ...prev.projectSpecifications,
-          poolLength: "30",
-          poolWidth: "60",
-          poolDepth: "4.5",
-          shapeOfPool: "Rectangle Pool",
-          typeOfPool: "Skimmer Pool",
-          plantRoomLength: "12",
-          plantRoomWidth: "12",
-          plantRoomHeight: "6",
-          kidPoolLength: "10",
-          kidPoolWidth: "10",
-          kidPoolDepth: "2.5",
+          poolLength: "",
+          poolWidth: "",
+          poolDepth: "",
+          shapeOfPool: "",
+          typeOfPool: "",
+          plantRoomLength: "",
+          plantRoomWidth: "",
+          plantRoomHeight: "",
+          plantRoomSize: "",
+          kidPoolLength: "",
+          kidPoolWidth: "",
+          kidPoolDepth: "",
           balancingTankLength: "",
           balancingTankWidth: "",
           balancingTankDepth: "",
-          turnoverPeriod: "4 Hours",
+          turnoverPeriod: "",
           ...DEFAULT_SPEC_SECTION_FLAGS,
           includeBalancingTank: false,
         };
@@ -466,7 +467,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
   const nextStep = async () => {
     if (step === 4) {
       try {
-        await handleSubmit(true, true);
+        await handleSubmit(false, true);
         setStep(5);
       } catch (e) {
         console.error("Save failed in nextStep", e);
@@ -552,7 +553,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       section,
       serialNo: formData.items.filter((i) => i.section === section).length + 1,
       category: "General",
-      title: "New Custom Product",
+      title: "",
       description: "Enter product description",
       warranty: "0",
       qty: 1,
@@ -577,8 +578,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
     }, 150);
   };
 
-  const deleteItem = (index: number) => {
-    if (!confirm("Are you sure you want to remove this item?")) return;
+  const deleteItem = async (index: number) => {
+    const confirmed = await showConfirm({
+      title: "Remove this item?",
+      message: "This line item will be removed from the quotation.",
+      confirmLabel: "Remove",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     setFormData((prev) => {
       const newItems = [...prev.items];
       newItems.splice(index, 1);
@@ -680,6 +687,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       const data = await res.json();
       if (data.success) {
         setQuoteId(data.id);
+        setIsDraftQuotation(isDraft);
         setLastSaved(new Date());
         setHasUnsavedChanges(false);
         localStorage.removeItem("mr_quotation_draft");
@@ -756,6 +764,23 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
               <img src={item.imageUrl} alt="product" />
               <button className="remove-img-btn" onClick={() => updateItem(idx, "imageUrl", null)}>✕</button>
             </div>
+          ) : item.imageText ? (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 700,
+                fontSize: 12,
+                color: "#334155",
+                textAlign: "center",
+                padding: 8,
+              }}
+            >
+              {item.imageText}
+            </div>
           ) : (
             <div className="image-upload-placeholder">
               <span style={{ fontSize: '10px' }}>No Image</span>
@@ -780,7 +805,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                 id={`item-title-${idx}`}
                 className="form-control" 
                 style={{ fontWeight: 700, fontSize: "16px", border: isTemplate ? "none" : "1px dashed #cbd5e1", padding: isTemplate ? "0" : "8px", background: isTemplate ? "transparent" : "white" }}
-                value={item.title || item.category || ""} 
+                value={item.title ?? ""} 
                 onChange={(e) => updateItem(idx, "title", e.target.value)}
                 placeholder="Enter Product Title..."
               />
@@ -890,6 +915,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
 
   return (
     <div className="wizard-container">
+      {confirmDialog}
+      {alertDialog}
       <div className="progress-bar" style={{ height: "6px", background: "#e2e8f0", borderRadius: "3px", overflow: "hidden", marginBottom: "32px" }}>
         <div className="progress-fill" style={{ width: `${(step / TOTAL_STEPS) * 100}%`, height: "100%", background: "linear-gradient(to right, #6366f1, #4f46e5)", transition: "width 0.3s ease" }}></div>
       </div>
@@ -948,9 +975,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                 <label>Pool Shape</label>
                 <select
                   className="form-control"
-                  value={formData.projectSpecifications.shapeOfPool}
+                  value={formData.projectSpecifications.shapeOfPool ?? ""}
                   onChange={(e) => handleSpecChange("shapeOfPool", e.target.value)}
                 >
+                  <option value="">Select pool shape</option>
                   <option value="Rectangle Pool">Rectangle Pool</option>
                   <option value="Square Pool">Square Pool</option>
                   <option value="Circular Pool">Circular Pool</option>
@@ -974,9 +1002,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                 <label>Pool Type</label>
                 <select
                   className="form-control"
-                  value={formData.projectSpecifications.typeOfPool}
+                  value={formData.projectSpecifications.typeOfPool ?? ""}
                   onChange={(e) => handleSpecChange("typeOfPool", e.target.value)}
                 >
+                  <option value="">Select pool type</option>
                   <option value="Skimmer Pool">Skimmer Pool</option>
                   <option value="Overflow Pool">Overflow Pool</option>
                   <option value="Skimmer Type">Skimmer Type</option>
@@ -1205,8 +1234,9 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                   </button>
                 ))}
               </div>
-              <button className="btn-secondary" type="button" onClick={() => addItem(activeSectionCode)}>
-                + Add Custom
+              <button className="btn btn-add-custom" type="button" onClick={() => addItem(activeSectionCode)}>
+                <Plus size={16} />
+                Add custom item
               </button>
             </div>
 
@@ -1232,16 +1262,30 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                     })}
 
                     <div className="products-add-panel">
+                      <div className="products-add-panel-header">
+                        <span className="products-add-panel-icon-wrap" aria-hidden>
+                          <Plus size={18} />
+                        </span>
+                        <div>
+                          <strong>Add to {sec.title}</strong>
+                          <span>Search the catalog or create a blank line item</span>
+                        </div>
+                      </div>
                       <ProductSelect
                         value=""
-                        placeholder={`Search and add a product to ${sec.title}...`}
+                        sectionFilter={sec.code}
+                        placeholder={`Search products in ${sec.title}…`}
                         companyType="MR_SWIMMING_POOLS"
                         onChange={(product) => {
                           if (product) addProductFromCatalog(sec.code, product);
                         }}
                       />
-                      <button className="btn-secondary" type="button" onClick={() => addItem(sec.code)}>
-                        + Add Manual Item
+                      <div className="products-add-divider">
+                        <span>or</span>
+                      </div>
+                      <button className="btn btn-add-manual" type="button" onClick={() => addItem(sec.code)}>
+                        <PenLine size={16} />
+                        Add blank manual item
                       </button>
                     </div>
                   </section>
@@ -1264,7 +1308,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                 <AlertTriangle size={40} className="text-red-500" />
                 <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0F172A" }}>Save Failed</h2>
                 <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "20px" }}>We couldn't save your quotation. Please check your connection and try again.</p>
-                <button className="btn-primary" onClick={() => handleSubmit(true)}>Try Saving Again</button>
+                <button className="btn-primary" onClick={() => handleSubmit(false)}>Try Saving Again</button>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>

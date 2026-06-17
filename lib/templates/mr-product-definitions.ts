@@ -360,7 +360,8 @@ export const MR_PRODUCT_DEFINITIONS: MRProductDefinition[] = [
     unit: "Nos",
     warranty: "01 Years",
     description: "AC TO DC",
-    imagePath: "/template-images/mr-swimming-pools/transformer-for-pool-lights.png",
+    imagePath: null,
+    imageText: "AC TO DC",
     sortOrder: 20,
   },
   {

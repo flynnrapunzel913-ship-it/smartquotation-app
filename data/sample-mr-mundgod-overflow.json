@@ -490,8 +490,8 @@
       "amount": 15000,
       "productId": "seed-temp-prod-17",
       "variableValues": {},
-      "imageUrl": "/template-images/mr-swimming-pools/transformer-for-pool-lights.png",
-      "imageText": null,
+      "imageUrl": null,
+      "imageText": "AC TO DC",
       "poolTypeFilter": null
     },
     {
