@@ -9,7 +9,6 @@ import {
   applyMRPoolMetricsToSpecs,
   getDefaultMRItems,
   isOverflowPool,
-  isProductVisibleForPoolType,
 } from "@/lib/mr-pool-utils";
 import { MR_MASTER_TEMPLATE } from "@/lib/templates/mr-master-template";
 import "@/styles/wizard.css";
@@ -328,11 +327,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
     }
   }, [id, mode]);
 
-  const visibleItems = formData.items.filter((item) =>
-    isProductVisibleForPoolType(item, formData.projectSpecifications.typeOfPool),
-  );
-
-  const subtotal = visibleItems.reduce((sum, item) => {
+  const subtotal = formData.items.reduce((sum, item) => {
     const section = formData.sections?.find((s) => s.code === item.section);
     if (section && !section.included) return sum;
     return sum + Number(item.amount || 0);
@@ -433,7 +428,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
           (it) => !existingTitles.has((it.title ?? "").toUpperCase()),
         );
         const nextItems = [
-          ...prev.items.filter((it) => isProductVisibleForPoolType(it, value)),
+          ...prev.items,
           ...itemsToAdd.map((it: any) => ({
             ...it,
             description: renderTemplate(it.description, it.variableValues || {}),
@@ -1059,9 +1054,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit" }: Props) {
 
             <div ref={productsScrollRef} className="products-scroll-panel">
               {includedSections.map((sec) => {
-                const sectionItems = formData.items
-                  .filter((it) => it.section === sec.code)
-                  .filter((it) => isProductVisibleForPoolType(it, formData.projectSpecifications.typeOfPool));
+                const sectionItems = formData.items.filter((it) => it.section === sec.code);
 
                 return (
                   <section

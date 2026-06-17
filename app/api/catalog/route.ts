@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CompanyType } from "@/generated-client";
-import { MR_PRODUCT_DEFINITIONS } from "@/lib/templates/mr-product-definitions";
+import {
+  fetchMRCatalogProducts,
+  getMRCatalogProductsFromDefinitions,
+} from "@/lib/templates/mr-catalog";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -15,35 +18,14 @@ export async function GET(request: Request) {
 
   try {
     if (companyType === "MR_SWIMMING_POOLS") {
-      const normalizedQuery = query.toLowerCase();
-      const products = MR_PRODUCT_DEFINITIONS.filter((def) => {
-        const matchesCategory = !category || def.category === category;
-        const matchesQuery =
-          !normalizedQuery ||
-          def.name.toLowerCase().includes(normalizedQuery) ||
-          def.title.toLowerCase().includes(normalizedQuery) ||
-          def.category.toLowerCase().includes(normalizedQuery) ||
-          def.section.toLowerCase().includes(normalizedQuery);
-        return matchesCategory && matchesQuery;
-      }).map((def) => ({
-        id: def.id,
-        companyType,
-        category: def.category,
-        code: def.id,
-        name: def.name,
-        description: def.description,
-        unitPrice: def.defaultRate,
-        unit: def.unit,
-        sectionCode: def.section,
-        warranty: def.warranty,
-        imagePath: def.imagePath,
-        imageText: def.imageText ?? null,
-        poolTypeFilter: def.poolTypeFilter ?? null,
-        templateVariables: def.templateVariables ?? [],
-        defaultVariableValues: def.defaultVariableValues ?? {},
-      }));
-
-      return NextResponse.json(products);
+      try {
+        const products = await fetchMRCatalogProducts({ query, category });
+        return NextResponse.json(products);
+      } catch (dbError) {
+        console.error("MR catalog DB fetch failed, using definitions:", dbError);
+        const products = getMRCatalogProductsFromDefinitions({ query, category });
+        return NextResponse.json(products);
+      }
     }
 
     const products = await prisma.productCatalog.findMany({

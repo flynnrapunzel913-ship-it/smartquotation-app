@@ -246,6 +246,7 @@ export function applyMRPoolMetricsToSpecs(
   return next;
 }
 
+/** Default line items for a pool type (template only). Manually added items are never filtered. */
 export function getDefaultMRItems(
   allItems: QuotationItemForm[],
   poolType?: string,

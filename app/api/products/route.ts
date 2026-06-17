@@ -16,6 +16,25 @@ export async function GET(req: Request) {
   const search = searchParams.get("search") || "";
 
   try {
+    if (companyType === "MR_SWIMMING_POOLS") {
+      const { fetchMRCatalogProducts } = await import("@/lib/templates/mr-catalog");
+      const products = await fetchMRCatalogProducts({ query: search });
+      return NextResponse.json(
+        products.map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          category: p.category,
+          defaultRate: p.unitPrice,
+          unit: p.unit,
+          warranty: p.warranty,
+          imagePath: p.imagePath,
+          imageText: p.imageText,
+          sectionCode: p.sectionCode,
+        })),
+      );
+    }
+
     if (companyType) {
       const catalogProducts = await prisma.productCatalog.findMany({
         where: { companyType: companyType as any },

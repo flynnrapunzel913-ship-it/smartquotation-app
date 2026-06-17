@@ -135,7 +135,14 @@ export default function ProductSelect({ value, companyType, onChange, placeholde
                   className="product-item"
                   onClick={() => handleSelect(product)}
                 >
-                  <div style={{ fontWeight: "500", fontSize: "14px" }}>{product.name}</div>
+                  <div style={{ fontWeight: "500", fontSize: "14px" }}>
+                    {product.name}
+                    {product.poolTypeFilter ? (
+                      <span style={{ fontSize: "10px", color: "#94a3b8", marginLeft: "6px" }}>
+                        ({product.poolTypeFilter} pool)
+                      </span>
+                    ) : null}
+                  </div>
                   <div style={{ fontSize: "11px", color: "#64748b" }}>{product.category} • ₹{Number(product.defaultRate).toLocaleString()}</div>
                 </div>
               ))}

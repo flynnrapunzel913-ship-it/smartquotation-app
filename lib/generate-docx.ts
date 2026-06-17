@@ -16,7 +16,7 @@ import {
 } from "docx";
 import { format } from "date-fns";
 import { formatCurrencyINR } from "@/lib/utils";
-import { isOverflowPool, isProductVisibleForPoolType } from "@/lib/mr-pool-utils";
+import { isOverflowPool } from "@/lib/mr-pool-utils";
 import type { QuotationWithRelations } from "@/types";
 import type { CompanySettings } from "@prisma/client";
 import type { ProjectSpecifications } from "@/types";
@@ -367,16 +367,11 @@ export async function quotationToDocxBuffer(
         { code: "Part 2", title: "Part 2 - Pool Finishes" },
       ];
 
-  const visibleItems = quote.items.filter((item) =>
-    isProductVisibleForPoolType(
-      { title: (item as { title?: string }).title, poolTypeFilter: (item as { poolTypeFilter?: string }).poolTypeFilter as "skimmer" | "overflow" | undefined },
-      specs?.typeOfPool,
-    ),
-  );
+  const quoteItems = quote.items;
 
   const children: (Paragraph | Table)[] = [];
   const sumSections = (sectionCodes: string[]) =>
-    visibleItems
+    quoteItems
       .filter((item) => sectionCodes.includes(item.section))
       .reduce((total, item) => total + Number(item.amount), 0);
   const part1Total = sumSections(["A", "B", "C", "D"]);
@@ -599,7 +594,7 @@ export async function quotationToDocxBuffer(
   );
 
   const itemsBySection = new Map<string, typeof quote.items>();
-  for (const item of visibleItems) {
+  for (const item of quoteItems) {
     const list = itemsBySection.get(item.section) ?? [];
     list.push(item);
     itemsBySection.set(item.section, list);
