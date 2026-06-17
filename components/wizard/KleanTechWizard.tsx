@@ -102,9 +102,12 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
       if (!formData.referenceNumber) return;
       setIsCheckingDuplicate(true);
       try {
-        const res = await fetch(`/api/quotations?search=${formData.referenceNumber}`);
+        const res = await fetch(`/api/quotations?search=${encodeURIComponent(formData.referenceNumber)}`);
         const data = await res.json();
-        const duplicate = data.some((q: any) => q.quoteNumber === formData.referenceNumber);
+        const duplicate = Array.isArray(data) && data.some(
+          (q: { id: string; quoteNumber: string }) =>
+            q.quoteNumber === formData.referenceNumber && q.id !== quoteId,
+        );
         setIsDuplicateReference(duplicate);
       } catch (e) {
         console.error("Failed to check duplicate", e);
@@ -115,9 +118,76 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
 
     const timer = setTimeout(checkDuplicate, 500);
     return () => clearTimeout(timer);
-  }, [formData.referenceNumber]);
+  }, [formData.referenceNumber, quoteId]);
 
-  // Calculate totals
+  useEffect(() => {
+    if (!id) return;
+
+    fetch(`/api/quotations/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.error("Error loading quotation:", data.error);
+          setIsLoading(false);
+          return;
+        }
+
+        const specs = data.projectSpecifications || {};
+        setFormData({
+          date: new Date(data.date).toISOString().split("T")[0],
+          referenceNumber:
+            mode === "duplicate"
+              ? `KT-${Date.now().toString().slice(-6)}`
+              : data.quoteNumber,
+          invoiceToName: data.customer?.name || "",
+          invoiceToAddress: data.customer?.address || "",
+          gstPercent: data.gstPercent ?? 18,
+          carryingForwardPercent: specs.carryingForwardPercent ?? 3,
+          freightType: specs.freightType ?? "To Pay Basis",
+          serviceCharges: specs.serviceCharges ?? 0,
+          paymentTerms: data.paymentTerms || DEFAULT_PAYMENT,
+          termsAndConditions: data.terms || DEFAULT_TERMS,
+          items: (data.items || []).map((it: {
+            category: string;
+            productId: string | null;
+            description: string;
+            imageUrl?: string | null;
+            rate: number;
+            qty: number;
+            amount: number;
+            variableValues?: Record<string, string>;
+          }) => ({
+            type: (it.category === "SPARE" ? "SPARE" : "MACHINE") as "MACHINE" | "SPARE",
+            productId: it.productId,
+            code: it.variableValues?.code || "",
+            description: it.description,
+            imagePath: it.imageUrl || "",
+            hsnCode: it.variableValues?.hsnCode || "",
+            unitPrice: Number(it.rate),
+            quantity: Number(it.qty),
+            lineTotal: Number(it.amount),
+            htsCode: it.variableValues?.htsCode,
+            unit: it.variableValues?.unit,
+            specs: it.variableValues?.specs,
+            notes: it.variableValues?.notes,
+            warranty: it.variableValues?.warranty,
+            deliveryTime: it.variableValues?.deliveryTime,
+          })),
+        });
+
+        if (mode === "duplicate") {
+          setQuoteId(null);
+        } else {
+          setQuoteId(id);
+        }
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error("Error loading quotation", e);
+        setIsLoading(false);
+      });
+  }, [id, mode]);
+
   const subtotal = formData.items.reduce((sum, item) => sum + item.lineTotal, 0);
   const carryingForwardCharge = (subtotal * formData.carryingForwardPercent) / 100;
   const taxableAmount = subtotal + formData.serviceCharges + carryingForwardCharge;
@@ -210,10 +280,13 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
       quotationType: "klean-tech",
       date: formData.date,
       gstPercent: formData.gstPercent,
+      subtotal: taxableAmount,
+      grandTotal,
       projectSpecifications: {
         serviceCharges: formData.serviceCharges,
         carryingForwardPercent: formData.carryingForwardPercent,
         freightType: formData.freightType,
+        quotationType: "KLEAN_TECH_SYSTEMS",
       },
       items: formData.items.map((item, idx) => ({
         section: "A", 
@@ -246,18 +319,23 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
     };
     
     try {
-      const res = await fetch("/api/quotations", {
-        method: "POST",
+      const url = quoteId ? `/api/quotations/${quoteId}` : "/api/quotations";
+      const method = quoteId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(mappedData),
       });
       
       if (res.ok) {
         const data = await res.json();
+        const savedId = data.id || quoteId;
         if (!isDraft) {
           localStorage.removeItem("klean_tech_draft");
         }
-        router.push(`/quotations/klean-tech/${data.id}/success`);
+        if (savedId) {
+          router.push(`/quotations/klean-tech/${savedId}/success`);
+        }
       } else {
         console.error("Error saving quotation");
       }
@@ -267,6 +345,10 @@ export default function KleanTechWizard({ id, mode = "edit" }: Props) {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return <div className="wizard-container">Loading quotation...</div>;
+  }
 
   return (
     <div className="wizard-container">

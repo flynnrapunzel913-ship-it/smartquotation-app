@@ -34,15 +34,34 @@ export async function POST(req: Request) {
 
     const data: QuotationFormValues = await req.json();
 
-    // Upsert customer
-    const customer = await prisma.customer.create({
-      data: {
-        name: data.customerName,
-        address: data.customerAddress,
-        phone: data.customerPhone || null,
-        email: data.customerEmail || null,
-      },
+    const existing = await prisma.quotation.findUnique({
+      where: { quoteNumber: data.quoteNumber },
+      select: { id: true, customerId: true },
     });
+
+    let customerId: string;
+    if (existing) {
+      await prisma.customer.update({
+        where: { id: existing.customerId },
+        data: {
+          name: data.customerName,
+          address: data.customerAddress,
+          phone: data.customerPhone || null,
+          email: data.customerEmail || null,
+        },
+      });
+      customerId = existing.customerId;
+    } else {
+      const customer = await prisma.customer.create({
+        data: {
+          name: data.customerName,
+          address: data.customerAddress,
+          phone: data.customerPhone || null,
+          email: data.customerEmail || null,
+        },
+      });
+      customerId = customer.id;
+    }
 
     // Calculate totals
     const subtotal = data.items.reduce((sum, item) => sum + Number(item.amount), 0);
@@ -72,7 +91,7 @@ export async function POST(req: Request) {
       create: {
         quoteNumber: data.quoteNumber,
         title: data.title || "",
-        customerId: customer.id,
+        customerId: customerId,
         date: new Date(data.date),
         gstPercent: gstPercent,
         subtotal: subtotal,
@@ -82,7 +101,7 @@ export async function POST(req: Request) {
         notes: data.notes || "",
         terms: data.terms || "",
         paymentTerms: data.paymentTerms || "",
-        isDraft: data.isDraft || false,
+        isDraft: data.isDraft ?? false,
         projectSpecifications: {
           ...(data.projectSpecifications as any),
           quotationType: (data as any).quotationType || "MR_SWIMMING_POOLS",
@@ -117,7 +136,7 @@ export async function POST(req: Request) {
         notes: data.notes || "",
         terms: data.terms || "",
         paymentTerms: data.paymentTerms || "",
-        isDraft: data.isDraft || false,
+        isDraft: data.isDraft ?? false,
         projectSpecifications: data.projectSpecifications as any,
         sections: (data.sections as any) || [],
         items: {

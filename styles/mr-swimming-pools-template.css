@@ -521,6 +521,10 @@ body {
   page-break-inside: avoid;
 }
 
+.closing-signature-name {
+  margin-top: 24px;
+}
+
 @media print {
   .boq-item-table,
   .boq-data-row,

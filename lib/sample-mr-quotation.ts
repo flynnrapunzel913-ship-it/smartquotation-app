@@ -47,7 +47,7 @@ export function resolveMrQuotationSample(sample?: string | null): string {
   if (requested && samples.includes(requested)) return requested;
   const catalogDefault = MR_SAMPLE_CATALOG[0]?.filename;
   if (catalogDefault && samples.includes(catalogDefault)) return catalogDefault;
-  return samples.find((s) => s !== "MASTER_TEMPLATE") ?? catalogDefault ?? "sample-mr-mundgod-overflow.json";
+  return samples.find((s) => s !== "MASTER_TEMPLATE") ?? catalogDefault ?? "sample-mr-skimmer-30x20.json";
 }
 
 import { MR_MASTER_TEMPLATE } from "./templates/mr-master-template";

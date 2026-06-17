@@ -25,14 +25,15 @@ import { CheckCircle2, AlertTriangle, Loader2, Plus, PenLine } from "lucide-reac
 import { useConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useAppAlert } from "@/components/ui/AppAlert";
 
-const DEFAULT_TERMS = `1. Single phase connection up to the plant room is in your scope of work.
+const DEFAULT_TERMS = MR_MASTER_TEMPLATE.terms ?? `1. Single phase connection up to the plant room is in your scope of work.
 2. Back wash line after the plant room and water supply to balance tank is in your scope.
-3. All Civil works mentioned above are at our scope.`;
+3. All Civil works are at your scope.
+4. Rates are valid for 30 days from the date of quotation.`;
 
-const DEFAULT_PAYMENT = `1. 30% Payment along with the PO.
+const DEFAULT_PAYMENT = MR_MASTER_TEMPLATE.paymentTerms ?? `1. 30% Payment along with the PO.
 2. 30% payment after bar bending.
-3. 30% during tile fixing work.
-4. 10% on successful commissioning and testing.`;
+3. 30% During tile fixing work.
+4. 10% On successful commissioning and testing.`;
 
 const DEFAULT_SECTIONS = [
   { code: "A", title: "PLANT ROOM EQUIPMENTS", included: true, sortOrder: 1 },
@@ -42,7 +43,7 @@ const DEFAULT_SECTIONS = [
   { code: "Part 2", title: "Part2:POOL FINISHES", included: true, sortOrder: 5 },
 ];
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 interface Props {
   id?: string;
@@ -62,6 +63,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
   const [isDraftQuotation, setIsDraftQuotation] = useState(true);
+  const [finalizeFailed, setFinalizeFailed] = useState(false);
 
   const [formData, setFormData] = useState<QuotationFormValues>({
     customerName: "",
@@ -93,7 +95,8 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
     { id: 2, name: "Pool Specifications" },
     { id: 3, name: "Calculated Values" },
     { id: 4, name: "Products" },
-    { id: 5, name: "Review & Generate" },
+    { id: 5, name: "Terms & Payment" },
+    { id: 6, name: "Review & Generate" },
   ];
 
   const [activeSectionCode, setActiveSectionCode] = useState<string>("A");
@@ -277,14 +280,19 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         .then((res) => res.json())
         .then((data) => {
           if (data.error) {
-            alert("Error loading quotation: " + data.error);
+            void showAlert({
+              title: "Load failed",
+              message: data.error,
+              variant: "error",
+            });
+            setIsLoading(false);
             return;
           }
           // Map data to form structure
           const mappedData: QuotationFormValues = {
             customerName: data.customer.name,
             customerAddress: data.customer.address,
-            customerPhone: data.customer.phone || "",
+            customerPhone: (data.customer.phone || "").replace(/\D/g, "").slice(0, 10),
             customerEmail: data.customer.email || "",
             quoteNumber: mode === "duplicate" ? `MR-${Math.floor(1000 + Math.random() * 9000)}-${Date.now().toString().slice(-4)}` : data.quoteNumber,
             date: new Date(data.date).toISOString().split("T")[0],
@@ -333,14 +341,22 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         .then((res) => res.json())
         .then((data) => {
           if (data.error) {
-            alert("Error loading sample: " + data.error);
+            void showAlert({
+              title: "Sample load failed",
+              message: data.error,
+              variant: "error",
+            });
             setIsLoading(false);
             return;
           }
           applySampleFormData(data);
         })
         .catch(() => {
-          alert("Failed to load sample quotation.");
+          void showAlert({
+            title: "Sample load failed",
+            message: "Failed to load sample quotation.",
+            variant: "error",
+          });
           setIsLoading(false);
         });
     } else {
@@ -461,18 +477,19 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         }));
         return { ...prev, items: resetItems };
       });
+    } else if (step === 5) {
+      setFormData((prev) => ({
+        ...prev,
+        terms: DEFAULT_TERMS,
+        paymentTerms: DEFAULT_PAYMENT,
+      }));
     }
   };
 
   const nextStep = async () => {
-    if (step === 4) {
-      try {
-        await handleSubmit(false, true);
-        setStep(5);
-      } catch (e) {
-        console.error("Save failed in nextStep", e);
-        setStep(5);
-      }
+    if (step === 5) {
+      const ok = await handleSubmit(false, true);
+      if (ok) setStep(6);
     } else {
       setStep((s) => Math.min(s + 1, TOTAL_STEPS));
     }
@@ -490,6 +507,10 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       return next;
     });
     setHasUnsavedChanges(true);
+  };
+
+  const handlePhoneChange = (value: string) => {
+    handleInputChange("customerPhone", value.replace(/\D/g, "").slice(0, 10));
   };
 
   const handleSpecChange = (field: string, value: string) => {
@@ -622,10 +643,18 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       if (data.url) {
         updateItem(idx, "imageUrl", data.url);
       } else {
-        alert("Upload failed: " + data.error);
+        await showAlert({
+          title: "Upload failed",
+          message: data.error || "Could not upload the image.",
+          variant: "error",
+        });
       }
-    } catch (e) {
-      alert("Upload failed");
+    } catch {
+      await showAlert({
+        title: "Upload failed",
+        message: "Could not upload the image. Please try again.",
+        variant: "error",
+      });
     }
   };
 
@@ -671,11 +700,20 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
     setHasUnsavedChanges(true);
   };
 
-  const handleSubmit = async (isDraft = false, silent = false) => {
-    if (isSubmitting) return;
+  const handleSubmit = async (isDraft = false, silent = false): Promise<boolean> => {
+    if (isSubmitting) return false;
     setIsSubmitting(true);
     try {
-      const payload = { ...formData, subtotal, grandTotal, isDraft };
+      const payload = {
+        ...formData,
+        subtotal,
+        grandTotal,
+        isDraft,
+        projectSpecifications: {
+          ...formData.projectSpecifications,
+          quotationType: "MR_SWIMMING_POOLS",
+        },
+      };
       const url = quoteId ? `/api/quotations/${quoteId}` : "/api/quotations";
       const method = quoteId ? "PUT" : "POST";
 
@@ -688,21 +726,37 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       if (data.success) {
         setQuoteId(data.id);
         setIsDraftQuotation(isDraft);
+        setFinalizeFailed(false);
         setLastSaved(new Date());
         setHasUnsavedChanges(false);
         localStorage.removeItem("mr_quotation_draft");
-        if (!isDraft) {
-          setStep(5);
-        } else if (!silent) {
-          alert("Draft saved!");
+        if (isDraft && !silent) {
+          await showAlert({
+            title: "Draft saved",
+            message: "Your quotation draft has been saved.",
+            variant: "success",
+          });
         }
-      } else {
-        alert("Error saving: " + data.error);
+        return true;
       }
-    } catch (e) {
-      alert("Network error");
+      if (!isDraft) setFinalizeFailed(true);
+      await showAlert({
+        title: "Save failed",
+        message: data.error || "We couldn't save your quotation. Please try again.",
+        variant: "error",
+      });
+      return false;
+    } catch {
+      if (!isDraft) setFinalizeFailed(true);
+      await showAlert({
+        title: "Network error",
+        message: "We couldn't reach the server. Check your connection and try again.",
+        variant: "error",
+      });
+      return false;
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   const addProductFromCatalog = (
@@ -720,7 +774,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       imageText?: string | null;
       templateVariables?: string[];
       defaultVariableValues?: Record<string, string>;
-      poolTypeFilter?: "skimmer" | "overflow";
+      poolTypeFilter?: "skimmer" | "overflow" | null;
     },
   ) => {
     const initialVars: Record<string, string> = {
@@ -745,7 +799,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
       variableValues: initialVars,
       imageUrl: product.imagePath,
       imageText: product.imageText,
-      poolTypeFilter: product.poolTypeFilter,
+      poolTypeFilter: product.poolTypeFilter ?? undefined,
     };
     setFormData((prev) => ({ ...prev, items: [...prev.items, newItem] }));
     setHasUnsavedChanges(true);
@@ -961,7 +1015,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
               <div className="form-group"><label>Client Name</label><input type="text" className="form-control" value={formData.customerName || ""} onChange={(e) => handleInputChange("customerName", e.target.value)} /></div>
               <div className="form-group"><label>Date</label><input type="date" className="form-control" value={formData.date || ""} onChange={(e) => handleInputChange("date", e.target.value)} /></div>
               <div className="form-group" style={{ gridColumn: "span 2" }}><label>Site Address</label><textarea className="form-control" value={formData.customerAddress || ""} onChange={(e) => handleInputChange("customerAddress", e.target.value)} /></div>
-              <div className="form-group"><label>Phone Number (Optional)</label><input type="text" className="form-control" value={formData.customerPhone || ""} onChange={(e) => handleInputChange("customerPhone", e.target.value)} /></div>
+              <div className="form-group"><label>Phone Number (Optional)</label><input type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" placeholder="10-digit number" className="form-control" value={formData.customerPhone || ""} onChange={(e) => handlePhoneChange(e.target.value)} /></div>
               <div className="form-group" style={{ gridColumn: "span 2" }}><label>Quotation Title</label><input type="text" className="form-control" value={formData.title || ""} onChange={(e) => handleInputChange("title", e.target.value)} /></div>
             </div>
           </div>
@@ -1162,52 +1216,124 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         )}
 
         {step === 3 && (
-          <div className="metrics-card" style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <div className="metrics-card" style={{ maxWidth: "900px", margin: "0 auto" }}>
             <h2 style={{ textAlign: "center", marginBottom: "8px" }}>Calculated Values</h2>
-            <p style={{ textAlign: "center", color: "#64748b", marginBottom: "32px" }}>Review and adjust the final technical metrics for this quotation.</p>
+            <p style={{ textAlign: "center", color: "#64748b", marginBottom: "32px" }}>
+              Geometric actuals are computed from pool dimensions. Design values are used on the quotation PDF and can be adjusted.
+            </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               {[
-                { label: "Water Volume (Cft)", key: "poolVolume" },
-                { label: "Water Volume (Liters)", key: "waterVolumeLiters" },
-                { label: "Total Volume (Ltrs)", key: "totalPoolVolume" },
-                { label: "Filtration Volume (Ltrs)", key: "filtrationVolume" },
-                { label: "Filtration Flow Rate", key: "filtrationFlowRate" },
-                { label: "Tiling Area (Sft)", key: "tilingArea" },
-                { label: "Coping Area (Rft)", key: "copingArea" },
-                { label: "Waterproofing Area (Sft)", key: "waterproofingArea" },
-                ...(specSectionFlags.includePlantRoom
-                  ? [{ label: "Plant Room Size", key: "plantRoomSize" }]
-                  : []),
-                ...(specSectionFlags.includeBalancingTank
-                  ? [{ label: "Balancing Tank Size", key: "balancingTankSize" }]
-                  : []),
-              ].map((m) => {
-                const isOverridden = (formData.projectSpecifications as any)[`${m.key}Override`];
+                {
+                  actualKey: "actualWaterVolumeLiters",
+                  designKey: "waterVolumeLiters",
+                  actualLabel: "Actual Water Volume (Main Pool)",
+                  designLabel: "Design Water Volume (Main Pool — PDF)",
+                },
+                {
+                  actualKey: "actualTotalPoolVolume",
+                  designKey: "totalPoolVolume",
+                  actualLabel: "Actual Total Pool Volume",
+                  designLabel: "Design Total Pool Volume (PDF)",
+                },
+              ].map((pair) => {
+                const specs = formData.projectSpecifications as Record<string, string | boolean | undefined>;
+                const isOverridden = specs[`${pair.designKey}Override`];
                 return (
-                  <div key={m.key} className={`metric-card ${isOverridden ? 'manual-override' : ''}`}>
-                    <div className="metric-header">
-                      <span className="metric-label">{m.label}</span>
-                      {isOverridden ? (
-                        <span className="badge manual">Manual Override</span>
-                      ) : (
-                        <span className="badge auto">Auto Calculated</span>
-                      )}
+                  <div key={pair.designKey} className="metric-pair-card">
+                    <div className="metric-pair-actual">
+                      <span className="metric-label">{pair.actualLabel}</span>
+                      <span className="metric-actual-value">{specs[pair.actualKey] || "—"}</span>
+                      <span className="badge auto">Auto Calculated</span>
                     </div>
-                    <div className="metric-body">
-                      <input
-                        type="text"
-                        className="metric-input"
-                        value={(formData.projectSpecifications as any)[m.key]}
-                        onChange={(e) => setMetricOverride(m.key, e.target.value)}
-                      />
-                      {isOverridden && (
-                        <button className="reset-btn" onClick={() => resetMetric(m.key)}>Reset</button>
-                      )}
+                    <div className={`metric-card ${isOverridden ? "manual-override" : ""}`}>
+                      <div className="metric-header">
+                        <span className="metric-label">{pair.designLabel}</span>
+                        {isOverridden ? (
+                          <span className="badge manual">Admin Override</span>
+                        ) : (
+                          <span className="badge auto">Auto Calculated</span>
+                        )}
+                      </div>
+                      <div className="metric-body">
+                        <input
+                          type="text"
+                          className="metric-input"
+                          value={String(specs[pair.designKey] ?? "")}
+                          onChange={(e) => setMetricOverride(pair.designKey, e.target.value)}
+                        />
+                        {isOverridden ? (
+                          <button className="reset-btn" type="button" onClick={() => resetMetric(pair.designKey)}>
+                            Reset
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 );
               })}
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                {[
+                  { label: "Water Volume (Cft)", key: "poolVolume", actualKey: null },
+                  { label: "Filtration Volume (Ltrs)", key: "filtrationVolume", actualKey: null },
+                  { label: "Filtration Flow Rate", key: "filtrationFlowRate", actualKey: null },
+                  {
+                    label: "Tiling Area (Sft)",
+                    key: "tilingArea",
+                    actualKey: "actualTilingArea",
+                  },
+                  {
+                    label: "Coping Area (Rft)",
+                    key: "copingArea",
+                    actualKey: "actualCopingArea",
+                  },
+                  {
+                    label: "Waterproofing Area (Sft)",
+                    key: "waterproofingArea",
+                    actualKey: "actualWaterproofingArea",
+                  },
+                  ...(specSectionFlags.includePlantRoom
+                    ? [{ label: "Plant Room Size", key: "plantRoomSize", actualKey: null }]
+                    : []),
+                  ...(specSectionFlags.includeBalancingTank
+                    ? [{ label: "Balancing Tank Size", key: "balancingTankSize", actualKey: null }]
+                    : []),
+                ].map((m) => {
+                  const specs = formData.projectSpecifications as Record<string, string | boolean | undefined>;
+                  const isOverridden = specs[`${m.key}Override`];
+                  return (
+                    <div key={m.key} className={`metric-card ${isOverridden ? "manual-override" : ""}`}>
+                      {m.actualKey ? (
+                        <div className="metric-actual-hint">
+                          Calculated: <strong>{specs[m.actualKey] || "—"}</strong>
+                        </div>
+                      ) : null}
+                      <div className="metric-header">
+                        <span className="metric-label">{m.label}</span>
+                        {isOverridden ? (
+                          <span className="badge manual">Admin Override</span>
+                        ) : (
+                          <span className="badge auto">Auto Calculated</span>
+                        )}
+                      </div>
+                      <div className="metric-body">
+                        <input
+                          type="text"
+                          className="metric-input"
+                          value={String(specs[m.key] ?? "")}
+                          onChange={(e) => setMetricOverride(m.key, e.target.value)}
+                        />
+                        {isOverridden ? (
+                          <button className="reset-btn" type="button" onClick={() => resetMetric(m.key)}>
+                            Reset
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             <div style={{ marginTop: "40px", textAlign: "center" }}>
               <button className="btn btn-primary" onClick={nextStep}>Looks Correct, Continue →</button>
@@ -1296,6 +1422,32 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         )}
 
         {step === 5 && (
+          <div className="metrics-card wizard-terms-step" style={{ maxWidth: "900px", margin: "0 auto" }}>
+            <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "24px", textAlign: "center" }}>
+              Edit the terms and payment schedule below. These appear on the final quotation PDF.
+            </p>
+            <div className="form-group">
+              <label className="wizard-terms-label">TERMS &amp; CONDITIONS</label>
+              <textarea
+                className="form-control wizard-terms-textarea"
+                rows={8}
+                value={formData.terms || ""}
+                onChange={(e) => handleInputChange("terms", e.target.value)}
+              />
+            </div>
+            <div className="form-group" style={{ marginTop: "24px" }}>
+              <label className="wizard-terms-label">PAYMENT TERMS</label>
+              <textarea
+                className="form-control wizard-terms-textarea"
+                rows={8}
+                value={formData.paymentTerms || ""}
+                onChange={(e) => handleInputChange("paymentTerms", e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+
+        {step === 6 && (
           <div style={{ textAlign: "center", padding: "40px" }}>
             {isSubmitting ? (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
@@ -1303,12 +1455,12 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
                 <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0F172A" }}>Saving Quotation...</h2>
                 <p style={{ color: "#64748b", fontSize: "14px" }}>Please wait while we finalize your documents.</p>
               </div>
-            ) : !quoteId ? (
+            ) : !quoteId || isDraftQuotation || finalizeFailed ? (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                 <AlertTriangle size={40} className="text-red-500" />
                 <h2 style={{ fontSize: "20px", fontWeight: "700", color: "#0F172A" }}>Save Failed</h2>
                 <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "20px" }}>We couldn't save your quotation. Please check your connection and try again.</p>
-                <button className="btn-primary" onClick={() => handleSubmit(false)}>Try Saving Again</button>
+                <button className="btn-primary" onClick={() => { setFinalizeFailed(false); void handleSubmit(false); }}>Try Saving Again</button>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
@@ -1404,7 +1556,7 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
           {step < TOTAL_STEPS && <button type="button" className="btn btn-secondary" disabled={isSubmitting} onClick={() => handleSubmit(true)}>Save Draft</button>}
-          {step < TOTAL_STEPS && <button type="button" className="btn btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : step === 4 ? "Save & Review →" : "Next Step →"}</button>}
+          {step < TOTAL_STEPS && <button type="button" className="btn btn-primary" disabled={isSubmitting} onClick={nextStep}>{isSubmitting ? "Saving..." : step === 5 ? "Save & Review →" : "Next Step →"}</button>}
         </div>
       </div>
     </div>

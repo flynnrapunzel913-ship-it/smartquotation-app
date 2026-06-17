@@ -59,6 +59,16 @@ export async function PUT(
 
       if (!current) throw new Error("Quotation not found");
 
+      const subtotal = Number(data.subtotal) || sanitizedItems.reduce(
+        (sum: number, item: { amount: number }) => sum + Number(item.amount || 0),
+        0,
+      );
+      const gstPercent = Number(data.gstPercent) || 18;
+      const gstAmount = data.grandTotal != null
+        ? Number(data.grandTotal) - subtotal
+        : (subtotal * gstPercent) / 100;
+      const grandTotal = Number(data.grandTotal) || subtotal + gstAmount;
+
       // Update Customer
       await tx.customer.update({
         where: { id: current.customerId },
@@ -77,11 +87,18 @@ export async function PUT(
           quoteNumber: data.quoteNumber,
           title: data.title || "",
           date: new Date(data.date),
-          gstPercent: Number(data.gstPercent),
-          grandTotal: data.grandTotal || 0,
-          subtotal: data.subtotal || 0,
-          projectSpecifications: data.projectSpecifications,
-          amountInWords: convertToWordsINR(data.grandTotal || 0),
+          gstPercent,
+          grandTotal,
+          subtotal,
+          gstAmount,
+          projectSpecifications: {
+            ...(data.projectSpecifications as object),
+            quotationType:
+              (data.projectSpecifications as { quotationType?: string })?.quotationType
+              ?? (data as { quotationType?: string }).quotationType
+              ?? "MR_SWIMMING_POOLS",
+          },
+          amountInWords: convertToWordsINR(grandTotal),
           notes: data.notes,
           terms: data.terms,
           paymentTerms: data.paymentTerms,

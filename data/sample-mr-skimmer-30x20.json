@@ -1,7 +1,7 @@
 {
-  "id": "sample-mr-mundgod-overflow",
-  "quoteNumber": "MRSP-2026-MUNDGOD",
-  "title": "Quotation for MUNDGOD - Overflow Swimming Pool",
+  "id": "sample-mr-skimmer-30x20",
+  "quoteNumber": "MRSP-2026-SKIMMER-30X20",
+  "title": "Quotation for Skimmer Swimming Pool 30×20",
   "date": "2026-06-09T00:00:00.000Z",
   "gstPercent": 18,
   "subtotal": 1611820,
@@ -15,11 +15,11 @@
   "deletedAt": null,
   "createdAt": "2026-06-09T00:00:00.000Z",
   "updatedAt": "2026-06-09T00:00:00.000Z",
-  "customerId": "sample-mr-mundgod-overflow-customer",
+  "customerId": "sample-mr-skimmer-30x20-customer",
   "customer": {
-    "id": "sample-mr-mundgod-overflow-customer",
-    "name": "MUNDGOD Swimming Pool Project",
-    "address": "Mundgod, Uttara Kannada District, Karnataka",
+    "id": "sample-mr-skimmer-30x20-customer",
+    "name": "Skimmer Pool Project",
+    "address": "Site Location",
     "phone": "",
     "email": "",
     "createdAt": "2026-06-09T00:00:00.000Z",
@@ -27,38 +27,44 @@
   },
   "projectSpecifications": {
     "poolLength": "30",
-    "poolWidth": "60",
+    "poolWidth": "20",
     "poolDepth": "4.5",
-    "poolVolume": "8,100 Cft",
-    "plantRoomSize": "12'X12'X6'",
-    "shapeOfPool": "Designer Pool",
-    "typeOfPool": "Overflow Pool",
-    "kidPoolLength": "10",
-    "kidPoolWidth": "10",
-    "kidPoolDepth": "2.5",
-    "balancingTankLength": "12",
-    "balancingTankWidth": "12",
-    "balancingTankDepth": "6",
-    "plantRoomLength": "12",
-    "plantRoomWidth": "12",
+    "poolVolume": "2,700 Cft",
+    "plantRoomSize": "8'X8'X6'",
+    "shapeOfPool": "Rectangle Pool",
+    "typeOfPool": "Skimmer Pool",
+    "kidPoolLength": "",
+    "kidPoolWidth": "",
+    "kidPoolDepth": "",
+    "balancingTankLength": "",
+    "balancingTankWidth": "",
+    "balancingTankDepth": "",
+    "plantRoomLength": "8",
+    "plantRoomWidth": "8",
     "plantRoomHeight": "6",
     "turnoverPeriod": "4 Hours",
     "includeMainPool": true,
-    "includeKidPool": true,
+    "includeKidPool": false,
     "includePlantRoom": true,
-    "includeBalancingTank": true,
+    "includeBalancingTank": false,
     "includeTurnoverPeriod": true,
-    "waterVolumeLiters": "2,29,366 Ltrs",
-    "totalPoolVolume": "2,36,445 Ltrs",
-    "filtrationVolume": "2,60,911 Ltrs",
-    "filtrationFlowRate": "65,228 L/Hr",
-    "tilingArea": "2,810 Sft",
-    "copingArea": "220 Rft",
-    "waterproofingArea": "3,242 Sft",
-    "kidPoolSize": "10'X10'X2.5'",
-    "balancingTankSize": "12'X12'X6'",
+    "tilingArea": "1,100 Sft",
+    "tilingAreaOverride": true,
+    "actualWaterVolumeLiters": "76,455 Ltrs",
+    "actualTotalPoolVolume": "76,455 Ltrs",
+    "actualTilingArea": "1,050 Sft",
+    "actualWaterproofingArea": "1,306 Sft",
+    "actualCopingArea": "100 Rft",
+    "waterVolumeLiters": "76,455 Ltrs",
+    "totalPoolVolume": "76,455 Ltrs",
+    "filtrationVolume": "76,455 Ltrs",
+    "filtrationFlowRate": "19,114 L/Hr",
+    "copingArea": "100 Rft",
+    "waterproofingArea": "1,306 Sft",
+    "kidPoolSize": "",
+    "balancingTankSize": "",
     "quotationType": "MR_SWIMMING_POOLS",
-    "sourceBill": "bills/DOC-20260609-WA0044..pdf"
+    "sourceBill": "bills/reference-skimmer-30x20.pdf"
   },
   "sections": [
     {
@@ -94,8 +100,8 @@
   ],
   "items": [
     {
-      "id": "sample-mr-mundgod-overflow-item-1",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-1",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 1,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -117,8 +123,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-2",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-2",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 2,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -138,8 +144,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-3",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-3",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 3,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -159,8 +165,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-4",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-4",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 4,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -180,8 +186,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-5",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-5",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 5,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -202,8 +208,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-6",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-6",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 6,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -223,8 +229,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-7",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-7",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 7,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -244,8 +250,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-8",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-8",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 8,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -263,8 +269,8 @@
       "poolTypeFilter": "overflow"
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-9",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-9",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 9,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -282,8 +288,8 @@
       "poolTypeFilter": "overflow"
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-10",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-10",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 10,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -301,8 +307,8 @@
       "poolTypeFilter": "overflow"
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-11",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-11",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 11,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -320,8 +326,8 @@
       "poolTypeFilter": "skimmer"
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-12",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-12",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 12,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -339,8 +345,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-13",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-13",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 13,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -360,8 +366,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-14",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-14",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 14,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -379,8 +385,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-15",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-15",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 15,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -398,8 +404,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-16",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-16",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "A",
       "serialNo": 16,
       "category": "PLANT ROOM EQUIPMENTS",
@@ -419,8 +425,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-17",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-17",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "B",
       "serialNo": 1,
       "category": "ELECTRICAL WORK",
@@ -438,8 +444,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-18",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-18",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "B",
       "serialNo": 2,
       "category": "ELECTRICAL WORK",
@@ -457,8 +463,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-19",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-19",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "C",
       "serialNo": 1,
       "category": "CONTROL PANEL",
@@ -476,8 +482,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-20",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-20",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "C",
       "serialNo": 2,
       "category": "CONTROL PANEL",
@@ -495,8 +501,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-21",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-21",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "C",
       "serialNo": 3,
       "category": "CONTROL PANEL",
@@ -514,8 +520,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-22",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-22",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 1,
       "category": "CLEANING KIT",
@@ -533,8 +539,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-23",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-23",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 2,
       "category": "CLEANING KIT",
@@ -554,8 +560,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-24",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-24",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 3,
       "category": "CLEANING KIT",
@@ -575,8 +581,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-25",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-25",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 4,
       "category": "CLEANING KIT",
@@ -594,8 +600,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-26",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-26",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 5,
       "category": "CLEANING KIT",
@@ -613,8 +619,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-27",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-27",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 6,
       "category": "CLEANING KIT",
@@ -632,8 +638,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-28",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-28",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "D",
       "serialNo": 7,
       "category": "CLEANING KIT",
@@ -651,8 +657,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-29",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-29",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "Part 2",
       "serialNo": 1,
       "category": "POOL FINISHES",
@@ -670,8 +676,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-30",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-30",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "Part 2",
       "serialNo": 2,
       "category": "POOL FINISHES",
@@ -689,8 +695,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-31",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-31",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "Part 2",
       "serialNo": 3,
       "category": "POOL FINISHES",
@@ -708,8 +714,8 @@
       "poolTypeFilter": null
     },
     {
-      "id": "sample-mr-mundgod-overflow-item-32",
-      "quotationId": "sample-mr-mundgod-overflow",
+      "id": "sample-mr-skimmer-30x20-item-32",
+      "quotationId": "sample-mr-skimmer-30x20",
       "section": "Part 2",
       "serialNo": 4,
       "category": "POOL FINISHES",

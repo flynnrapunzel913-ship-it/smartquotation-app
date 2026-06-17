@@ -71,7 +71,7 @@ export function buildMRQuotationSummaryHtml({
       <div class="closing-signature-block">
         <div>Thanking you,</div>
         <div>For M R SWIMMING POOL &amp; SPA CONSTRUCTION COMPANY</div>
-        <div>(Rajesh V Shetti)</div>
+        <div class="closing-signature-name">(Rajesh V Shetti)</div>
         <div>9538840277 / 9845326115</div>
       </div>
     </section>`;
@@ -129,7 +129,7 @@ export function MRQuotationSummary({
       <div className="closing-signature-block">
         <div>Thanking you,</div>
         <div>For M R SWIMMING POOL & SPA CONSTRUCTION COMPANY</div>
-        <div>(Rajesh V Shetti)</div>
+        <div className="closing-signature-name">(Rajesh V Shetti)</div>
         <div>9538840277 / 9845326115</div>
       </div>
     </section>

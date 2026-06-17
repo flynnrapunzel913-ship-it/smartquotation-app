@@ -1,3 +1,11 @@
+import {
+  readPoolBox,
+  poolVolumeCubicFeet,
+  cubicFeetToLiters,
+  poolTilingSqFt,
+  poolPerimeterRft,
+} from "@/lib/pool-calculator";
+
 export function formatCurrencyINR(amount: number | string): string {
   const num = Number(amount);
   if (isNaN(num)) return "₹0.00";
@@ -40,44 +48,35 @@ export interface PoolMetrics {
 }
 
 export function calculatePoolMetrics(l: number, w: number, d: number, shape: string = "Rectangle Pool"): PoolMetrics {
-  let floorArea = 0;
-  let wallArea = 0;
-  let volumeCubicFeet = 0;
-  let perimeter = 0;
-
-  const s = shape.toLowerCase();
-
-  if (s.includes("circular")) {
-    const r = l / 2; // Assuming length is diameter
-    floorArea = Math.PI * r * r;
-    wallArea = 2 * Math.PI * r * d;
-    perimeter = 2 * Math.PI * r;
-  } else if (s.includes("oval")) {
-    const a = l / 2;
-    const b = w / 2;
-    floorArea = Math.PI * a * b;
-    // Ramanujan approximation for perimeter
-    const h = Math.pow(a - b, 2) / Math.pow(a + b, 2);
-    perimeter = Math.PI * (a + b) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)));
-    wallArea = perimeter * d;
-  } else {
-    // Default to Rectangle/Square
-    floorArea = l * w;
-    wallArea = 2 * (l * d) + 2 * (w * d);
-    perimeter = 2 * (l + w);
+  void shape;
+  const box = readPoolBox(String(l), String(w), String(d));
+  if (!box) {
+    return {
+      volumeCubicFeet: 0,
+      volumeLiters: 0,
+      floorArea: 0,
+      wallArea: 0,
+      tilingArea: 0,
+      copingArea: 0,
+      waterproofingArea: 0,
+    };
   }
 
-  volumeCubicFeet = floorArea * d;
-  const volumeLiters = Math.round(volumeCubicFeet * 28.3168);
+  const floorArea = box.lengthFt * box.widthFt;
+  const wallArea = 2 * box.lengthFt * box.depthFt + 2 * box.widthFt * box.depthFt;
+  const volumeCubicFeet = poolVolumeCubicFeet(box);
+  const volumeLiters = cubicFeetToLiters(volumeCubicFeet);
+  const tilingArea = poolTilingSqFt(box);
+  const copingArea = poolPerimeterRft(box.lengthFt, box.widthFt);
 
   return {
     volumeCubicFeet,
     volumeLiters,
     floorArea: Math.round(floorArea),
     wallArea: Math.round(wallArea),
-    tilingArea: Math.round(floorArea + wallArea),
-    copingArea: Math.round(perimeter),
-    waterproofingArea: Math.round(floorArea + wallArea),
+    tilingArea,
+    copingArea,
+    waterproofingArea: tilingArea,
   };
 }
 

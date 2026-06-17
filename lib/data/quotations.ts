@@ -35,6 +35,7 @@ export async function listQuotations(filters: {
   }
 
   const results = await prisma.quotation.findMany({
+    where,
     include: { customer: true },
     orderBy: { createdAt: "desc" },
   });

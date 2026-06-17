@@ -18,6 +18,11 @@ export type ProjectSpecifications = {
   copingArea?: string;
   waterproofingArea?: string;
   waterVolumeLiters?: string;
+  actualWaterVolumeLiters?: string;
+  actualTotalPoolVolume?: string;
+  actualTilingArea?: string;
+  actualWaterproofingArea?: string;
+  actualCopingArea?: string;
   // Kid pool
   kidPoolLength?: string;
   kidPoolWidth?: string;
@@ -97,6 +102,9 @@ export type QuotationFormValues = {
   notes: string;
   terms: string;
   paymentTerms: string;
+  isDraft?: boolean;
+  subtotal?: number;
+  grandTotal?: number;
 };
 
 export type QuotationWithRelations = Quotation & {

@@ -44,7 +44,11 @@ const itemSchema = z.object({
 export const quotationFormSchema = z.object({
   customerName: z.string().min(1, "Client name required"),
   customerAddress: z.string().min(1, "Site address required"),
-  customerPhone: z.string().optional().default(""),
+  customerPhone: z
+    .string()
+    .optional()
+    .default("")
+    .refine((val) => val === "" || /^\d{10}$/.test(val), "Phone must be exactly 10 digits"),
   customerEmail: z
     .string()
     .default("")

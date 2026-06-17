@@ -22,7 +22,7 @@ type Props = {
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const isPositive = status === "Completed" || status === "Generated";
+  const isPositive = status === "Final" || status === "Completed" || status === "Generated";
   return (
     <div
       style={{

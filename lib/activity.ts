@@ -68,7 +68,7 @@ export function mapQuotationToActivity(q: {
     type: "quotation",
     name: quoteNumber,
     module,
-    status: q.isDraft ? "Draft" : "Completed",
+    status: q.isDraft ? "Draft" : "Final",
     timestamp: q.createdAt || q.date || new Date().toISOString(),
     isDraft: !!q.isDraft,
     quotationType: specs?.quotationType,

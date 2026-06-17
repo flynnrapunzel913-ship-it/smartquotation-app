@@ -804,7 +804,7 @@ export async function quotationToDocxBuffer(
       children: [new TextRun({ text: "For M R SWIMMING POOL & SPA CONSTRUCTION COMPANY", size: 20, bold: true })],
     }),
     new Paragraph({
-      spacing: { before: 160 },
+      spacing: { before: 320 },
       children: [new TextRun({ text: "(Rajesh V Shetti)", size: 20, bold: true })],
     }),
     new Paragraph({
