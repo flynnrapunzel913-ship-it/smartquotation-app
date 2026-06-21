@@ -153,35 +153,12 @@ export default function InvoiceWizard({ initialData }: Props) {
     setShowDropdown(null);
   };
 
-  const addProductFromCatalog = async (product: {
-    id: string;
-    name: string;
-    description: string;
-    defaultRate: number;
-    unit?: string;
-    hsnCode?: string;
-    gstRate?: number;
-    imagePath?: string | null;
-    sectionCode?: string;
-  }) => {
-    const mapped = mapCatalogToInvoiceProduct({
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      category: "",
-      sectionCode: product.sectionCode || "A",
-      unit: product.unit || "Nos",
-      warranty: "",
-      defaultRate: product.defaultRate,
-      hsnCode: product.hsnCode,
-      gstRate: product.gstRate,
-      imagePath: product.imagePath,
-    });
+  const addProductFromCatalog = async (product: { id: string }) => {
     const live = await fetchLiveMRProduct(product.id);
-    const p = live ?? mapped;
+    if (!live) return;
     setFormData((prev) => ({
       ...prev,
-      items: [...prev.items, invoiceItemFromProduct(p)],
+      items: [...prev.items, invoiceItemFromProduct(live)],
     }));
   };
 

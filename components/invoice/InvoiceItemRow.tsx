@@ -1,5 +1,6 @@
 import React from "react";
 import { formatCurrencyINR } from "@/lib/utils";
+import type { InvoiceCatalogProduct } from "@/lib/mr-invoice-product";
 
 interface InvoiceItem {
   description: string;
@@ -18,8 +19,8 @@ interface InvoiceItemRowProps {
   removeItem: (index: number) => void;
   showDropdown: boolean;
   setShowDropdown: (index: number | null) => void;
-  filteredProducts: any[];
-  selectProduct: (index: number, product: any) => void;
+  filteredProducts: InvoiceCatalogProduct[];
+  selectProduct: (index: number, product: InvoiceCatalogProduct) => void;
 }
 
 export const InvoiceItemRow = React.memo(({
@@ -77,7 +78,10 @@ export const InvoiceItemRow = React.memo(({
               >
                 <div>
                   <div style={{ fontWeight: "600", fontSize: "14px", color: "#0f172a" }}>{product.name}</div>
-                  <div style={{ fontSize: "12px", color: "#64748b" }}>HSN: {product.hsnCode}</div>
+                  <div style={{ fontSize: "12px", color: "#64748b" }}>
+                    {product.hsnCode ? `HSN: ${product.hsnCode}` : "HSN: —"}
+                    {product.unit ? ` · ${product.unit}` : ""}
+                  </div>
                 </div>
                 <div style={{ fontWeight: "600", color: "#4f46e5", fontSize: "14px" }}>{formatCurrencyINR(product.defaultRate)}</div>
               </div>
