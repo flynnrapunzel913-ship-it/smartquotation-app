@@ -7,6 +7,8 @@ export type CatalogProduct = {
   unit: string;
   warranty: string;
   defaultRate: number;
+  hsnCode?: string;
+  gstRate?: number;
   imagePath?: string | null;
   imageText?: string | null;
   templateText?: string;
@@ -33,6 +35,8 @@ function enrichCatalogRow(p: Record<string, unknown>): CatalogProduct {
     unit: String(p.unit || "Nos"),
     warranty: String(p.warranty || specs.warranty || ""),
     defaultRate: Number(p.unitPrice) || 0,
+    hsnCode: String(p.hsnCode ?? ""),
+    gstRate: Number(p.gstRate ?? 18),
     imagePath: (p.imagePath as string | null) ?? (specs.imagePath as string | null) ?? null,
     imageText: (p.imageText as string | null) ?? (specs.imageText as string | null) ?? null,
     templateText: tText,
@@ -44,8 +48,14 @@ function enrichCatalogRow(p: Record<string, unknown>): CatalogProduct {
 
 const cache = new Map<string, Promise<CatalogProduct[]>>();
 
-export function fetchCatalogProducts(companyType: string): Promise<CatalogProduct[]> {
+export function invalidateCatalogCache(companyType?: string) {
+  if (companyType) cache.delete(companyType);
+  else cache.clear();
+}
+
+export function fetchCatalogProducts(companyType: string, options?: { fresh?: boolean }): Promise<CatalogProduct[]> {
   const key = companyType;
+  if (options?.fresh) cache.delete(key);
   if (!cache.has(key)) {
     cache.set(
       key,

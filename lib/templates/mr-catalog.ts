@@ -19,6 +19,8 @@ type DbProduct = {
   warranty: string;
   imagePath: string | null;
   imageText: string | null;
+  hsnCode?: string | null;
+  gstRate?: { toString(): string } | number | null;
 };
 
 export type MRCatalogProduct = {
@@ -34,6 +36,8 @@ export type MRCatalogProduct = {
   warranty: string;
   imagePath: string | null;
   imageText: string | null;
+  hsnCode: string;
+  gstRate: number;
   poolTypeFilter: "skimmer" | "overflow" | null;
   templateVariables: string[];
   defaultVariableValues: Record<string, string>;
@@ -55,6 +59,8 @@ export function enrichMRProduct(db: DbProduct): MRCatalogProduct {
     warranty: db.warranty,
     imagePath: db.imagePath ?? def?.imagePath ?? null,
     imageText: db.imageText ?? def?.imageText ?? null,
+    hsnCode: db.hsnCode ?? "",
+    gstRate: Number(db.gstRate ?? 18),
     poolTypeFilter: def?.poolTypeFilter ?? null,
     templateVariables: def?.templateVariables?.length
       ? def.templateVariables

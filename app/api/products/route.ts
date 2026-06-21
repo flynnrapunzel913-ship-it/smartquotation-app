@@ -31,6 +31,8 @@ export async function GET(req: Request) {
           imagePath: p.imagePath,
           imageText: p.imageText,
           sectionCode: p.sectionCode,
+          hsnCode: p.hsnCode,
+          gstRate: p.gstRate,
         })),
       );
     }
