@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Search, X, Package, ChevronRight } from "lucide-react";
+import { fetchCatalogProducts } from "@/lib/catalog-cache";
 
 interface Product {
   id: string;
@@ -50,34 +51,8 @@ export default function ProductSelect({
   useEffect(() => {
     if (!companyType) return;
     setLoading(true);
-    fetch(`/api/catalog?companyType=${companyType}`)
-      .then((res) => res.json())
-      .then((data: any[]) => {
-        const enriched = data.map((p) => {
-          const tText = p.description || "";
-          const matches = tText.matchAll(/{{(\w+)}}/g);
-          const extractedVars = Array.from(new Set(Array.from(matches, (m) => m[1])));
-          const templateVariables = p.templateVariables?.length ? p.templateVariables : extractedVars;
-          const specs = (p.specifications ?? {}) as Record<string, unknown>;
-          return {
-            id: p.id,
-            name: p.name,
-            description: tText,
-            category: p.category || "General",
-            sectionCode: p.sectionCode || String(specs.sectionCode || "A"),
-            unit: p.unit || "Nos",
-            warranty: p.warranty || String(specs.warranty || ""),
-            defaultRate: Number(p.unitPrice) || 0,
-            imagePath: p.imagePath ?? (specs.imagePath as string | null) ?? null,
-            imageText: p.imageText ?? (specs.imageText as string | null) ?? null,
-            templateText: tText,
-            templateVariables,
-            defaultVariableValues: p.defaultVariableValues || {},
-            poolTypeFilter: p.poolTypeFilter || specs.poolTypeFilter || null,
-          };
-        });
-        setProducts(enriched);
-      })
+    fetchCatalogProducts(companyType)
+      .then((enriched) => setProducts(enriched))
       .catch((err) => console.error("Error fetching products:", err))
       .finally(() => setLoading(false));
   }, [companyType]);

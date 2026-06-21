@@ -60,14 +60,14 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteId, setQuoteId] = useState<string | null>(id || null);
-  const [isLoading, setIsLoading] = useState(!!id || !!sample);
+  const [isLoading, setIsLoading] = useState(true);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false);
   const [isDraftQuotation, setIsDraftQuotation] = useState(true);
   const [finalizeFailed, setFinalizeFailed] = useState(false);
 
-  const [formData, setFormData] = useState<QuotationFormValues>({
+  const [formData, setFormData] = useState<QuotationFormValues>(() => ({
     customerName: "",
     customerAddress: "",
     customerPhone: "",
@@ -76,21 +76,17 @@ export default function MRSwimmingPoolsWizard({ id, mode = "edit", sample }: Pro
     date: new Date().toISOString().split("T")[0],
     gstPercent: MR_MASTER_TEMPLATE.gstPercent || 18,
     projectSpecifications: {
-      ...MR_MASTER_TEMPLATE.projectSpecifications as any,
+      ...(MR_MASTER_TEMPLATE.projectSpecifications as object),
       ...DEFAULT_SPEC_SECTION_FLAGS,
       includeBalancingTank: false,
     },
-    items: getDefaultMRItems([...(MR_MASTER_TEMPLATE.items || [])] as any).map((it: any) => ({
-      ...it,
-      description: renderTemplate(it.description, it.variableValues || {}),
-      templateText: it.description,
-    })),
-    sections: [...(MR_MASTER_TEMPLATE.sections || [])] as any,
+    items: [],
+    sections: [...(MR_MASTER_TEMPLATE.sections || [])] as QuotationFormValues["sections"],
     notes: MR_MASTER_TEMPLATE.notes || "",
     terms: MR_MASTER_TEMPLATE.terms || DEFAULT_TERMS,
     paymentTerms: MR_MASTER_TEMPLATE.paymentTerms || DEFAULT_PAYMENT,
     title: "",
-  });
+  }));
 
   const STEPS = [
     { id: 1, name: "Client Details" },

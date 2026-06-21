@@ -1,9 +1,14 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import MRSamplePicker from "@/components/MRSamplePicker";
+
+const MRSamplePicker = dynamic(() => import("@/components/MRSamplePicker"), {
+  loading: () => (
+    <div style={{ padding: "48px", textAlign: "center", color: "#64748b" }}>Loading options…</div>
+  ),
+});
 
 const MRSwimmingPoolsWizard = dynamic(() => import("@/components/wizard/MRSwimmingPoolsWizard"), {
   loading: () => (
@@ -20,15 +25,26 @@ import "@/styles/wizard.css";
 function WizardWrapper() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || undefined;
-  const sample = searchParams.get("sample") || undefined;
+  const sampleFromUrl = searchParams.get("sample") || undefined;
   const mode = (searchParams.get("mode") as "edit" | "duplicate") || "edit";
   const [blankStarted, setBlankStarted] = useState(false);
+  const [selectedSample, setSelectedSample] = useState<string | undefined>(sampleFromUrl);
+  const sample = selectedSample || sampleFromUrl;
   const showWizard = Boolean(id || sample || blankStarted);
+
+  useEffect(() => {
+    if (sampleFromUrl) setSelectedSample(sampleFromUrl);
+  }, [sampleFromUrl]);
+
+  useEffect(() => {
+    void import("@/components/wizard/MRSwimmingPoolsWizard");
+  }, []);
 
   if (!showWizard) {
     return (
       <MRSamplePicker
         onSelectBlank={() => setBlankStarted(true)}
+        onSelectSample={(filename) => setSelectedSample(filename)}
       />
     );
   }

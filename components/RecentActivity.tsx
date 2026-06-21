@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FileText, FileCheck } from "lucide-react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   type ActivityFilter,
   type ActivityItem,
   fetchRecentActivities,
-  filterActivities,
   openActivityItem,
 } from "@/lib/activity";
 
@@ -40,15 +39,12 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function ActivityRow({ item, idx }: { item: ActivityItem; idx: number }) {
+function ActivityRow({ item, onNavigate }: { item: ActivityItem; onNavigate: (href: string) => void }) {
   return (
-    <motion.button
+    <button
       type="button"
-      key={item.id + idx}
-      initial={{ opacity: 0, x: 10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: idx * 0.05 }}
-      onClick={() => openActivityItem(item)}
+      key={item.id}
+      onClick={() => openActivityItem(item, onNavigate)}
       className="activity-row"
       title={item.isDraft ? "Open to edit" : "Click to preview"}
     >
@@ -89,7 +85,7 @@ function ActivityRow({ item, idx }: { item: ActivityItem; idx: number }) {
           {new Date(item.timestamp).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
         </div>
       </div>
-    </motion.button>
+    </button>
   );
 }
 
@@ -101,16 +97,16 @@ export default function RecentActivity({
   emptyMessage = "No recent activity found.",
   className = "",
 }: Props) {
+  const router = useRouter();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = (href: string) => router.push(href);
 
   useEffect(() => {
     let cancelled = false;
-    fetchRecentActivities(100)
+    fetchRecentActivities(limit, filter)
       .then((items) => {
-        if (!cancelled) {
-          setActivities(filterActivities(items, filter).slice(0, limit));
-        }
+        if (!cancelled) setActivities(items);
       })
       .catch(() => {
         if (!cancelled) setActivities([]);
@@ -140,7 +136,7 @@ export default function RecentActivity({
             <div key={i} className="skeleton" style={{ height: "56px", borderRadius: "12px" }} />
           ))
         ) : activities.length > 0 ? (
-          activities.map((item, idx) => <ActivityRow key={item.id} item={item} idx={idx} />)
+          activities.map((item) => <ActivityRow key={item.id} item={item} onNavigate={navigate} />)
         ) : (
           <div style={{ textAlign: "center", padding: "40px 0", color: "var(--text-subtle)", fontSize: "14px" }}>
             {emptyMessage}

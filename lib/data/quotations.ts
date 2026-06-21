@@ -39,7 +39,6 @@ export async function listQuotations(filters: {
     include: { customer: true },
     orderBy: { createdAt: "desc" },
   });
-  console.log("Prisma results count (simplified):", results.length);
   return results;
 }
 

@@ -111,10 +111,24 @@ export function getQuotationEditPath(item: ActivityItem): string {
   return `/quotations/mr-swimming-pools/new?id=${item.id}`;
 }
 
-export function openActivityItem(item: ActivityItem): void {
+export function getActivityItemHref(item: ActivityItem): string | null {
+  if (item.type === "invoice") {
+    if (item.isDraft) return `/dashboard/invoices/edit/${item.id}`;
+    return null;
+  }
+  if (item.isDraft) return getQuotationEditPath(item);
+  return null;
+}
+
+export function openActivityItem(
+  item: ActivityItem,
+  navigate?: (href: string) => void,
+): void {
   if (item.type === "invoice") {
     if (item.isDraft) {
-      window.location.href = `/dashboard/invoices/edit/${item.id}`;
+      const href = `/dashboard/invoices/edit/${item.id}`;
+      if (navigate) navigate(href);
+      else window.location.href = href;
     } else {
       window.open(`/dashboard/invoices/preview/${item.id}`, "_blank");
     }
@@ -122,27 +136,23 @@ export function openActivityItem(item: ActivityItem): void {
   }
 
   if (item.isDraft) {
-    window.location.href = getQuotationEditPath(item);
+    const href = getQuotationEditPath(item);
+    if (navigate) navigate(href);
+    else window.location.href = href;
   } else {
     window.open(`/api/quotations/${item.id}/pdf?disposition=inline`, "_blank");
   }
 }
 
-export async function fetchRecentActivities(limit = 50): Promise<ActivityItem[]> {
-  const [qRes, iRes] = await Promise.all([
-    fetch("/api/quotations"),
-    fetch("/api/invoices"),
-  ]);
-
-  const qData = await qRes.json();
-  const iData = await iRes.json();
-
-  const quotations = Array.isArray(qData) ? qData.map(mapQuotationToActivity) : [];
-  const invoices = Array.isArray(iData) ? iData.map(mapInvoiceToActivity) : [];
-
-  const merged = [...quotations, ...invoices].sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-  );
-
-  return merged.slice(0, limit);
+export async function fetchRecentActivities(
+  limit = 50,
+  filter: ActivityFilter = "all",
+): Promise<ActivityItem[]> {
+  const params = new URLSearchParams({
+    limit: String(limit),
+    filter,
+  });
+  const res = await fetch(`/api/activity?${params}`);
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
 }

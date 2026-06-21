@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Star, ArrowRight, ShieldCheck, Database, FileText, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { Star, ArrowRight, ShieldCheck, Database, FileText } from "lucide-react";
 
 interface Props {
   title: string;
@@ -17,8 +16,6 @@ interface Props {
 
 export function QuotationTypeCard({ title, description, href, theme, disabled, compact, logoUrl }: Props) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const getThemeConfig = () => {
     switch (theme) {
@@ -55,22 +52,12 @@ export function QuotationTypeCard({ title, description, href, theme, disabled, c
 
   const config = getThemeConfig();
 
-  return (
-    <motion.div
-      whileHover={{ y: -8, boxShadow: "0 30px 60px -12px rgba(0, 0, 0, 0.1), 0 18px 36px -18px rgba(0, 0, 0, 0.05)" }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      style={{ height: "100%" }}
-    >
+  const cardBody = (
       <div 
-        onClick={(e) => {
-          if (disabled || isLoading) return;
-          setIsLoading(true);
-          router.push(href);
-        }}
         className="card-premium" 
         style={{ 
-          opacity: disabled || isLoading ? 0.7 : 1, 
-          cursor: disabled || isLoading ? "default" : "pointer",
+          opacity: disabled ? 0.7 : 1, 
+          cursor: disabled ? "default" : "pointer",
           textDecoration: "none",
           display: "flex",
           flexDirection: "column",
@@ -82,7 +69,7 @@ export function QuotationTypeCard({ title, description, href, theme, disabled, c
       >
         {!compact && (
           <button 
-            onClick={(e) => { e.preventDefault(); setIsFavorite(!isFavorite); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsFavorite(!isFavorite); }}
             style={{ 
               position: "absolute", 
               top: "24px", 
@@ -170,13 +157,25 @@ export function QuotationTypeCard({ title, description, href, theme, disabled, c
               background: "white"
             }}
           >
-            {isLoading ? "Opening..." : config.cta}
-            {isLoading ? <Loader2 className="animate-spin" size={compact ? 14 : 18} /> : <ArrowRight size={compact ? 14 : 18} />}
+            {config.cta}
+            <ArrowRight size={compact ? 14 : 18} />
           </div>
           {!compact && <span style={{ fontSize: "13px", fontWeight: "500", color: "var(--text-subtle)" }}>Last used 2h ago</span>}
         </div>
       </div>
-      
+  );
+
+  if (disabled) {
+    return <div style={{ height: "100%" }}>{cardBody}</div>;
+  }
+
+  return (
+    <Link
+      href={href}
+      prefetch
+      style={{ height: "100%", display: "block", textDecoration: "none", color: "inherit" }}
+    >
+      {cardBody}
       <style jsx>{`
         .btn-module-cta {
           background: white;
@@ -186,7 +185,7 @@ export function QuotationTypeCard({ title, description, href, theme, disabled, c
           color: white !important;
         }
       `}</style>
-    </motion.div>
+    </Link>
   );
 }
 
