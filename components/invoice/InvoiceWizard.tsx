@@ -15,7 +15,15 @@ const InvoicePreview = dynamic(() => import("./InvoicePreview"), {
   ),
   ssr: false
 });
-import InvoiceProductManagerModal from "./InvoiceProductManagerModal";
+import ProductSelect from "@/components/ProductSelect";
+import { fetchCatalogProducts, invalidateCatalogCache } from "@/lib/catalog-cache";
+import {
+  filterInvoiceProducts,
+  fetchLiveMRProduct,
+  invoiceItemFromProduct,
+  mapCatalogToInvoiceProduct,
+  type InvoiceCatalogProduct,
+} from "@/lib/mr-invoice-product";
 import { InvoiceItemRow } from "./InvoiceItemRow";
 import Button from "@/components/ui/Button";
 
@@ -27,6 +35,8 @@ interface InvoiceItem {
   hsn?: string;
   gstRate?: number;
   unit?: string;
+  productId?: string;
+  imageUrl?: string | null;
 }
 
 interface BankDetails {
@@ -106,11 +116,8 @@ export default function InvoiceWizard({ initialData }: Props) {
   });
 
 
-  const [databaseId, setDatabaseId] = useState<string>("");
-  const [databaseName, setDatabaseName] = useState<string>("");
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<InvoiceCatalogProduct[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
-  const [showDatabaseModal, setShowDatabaseModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState<number | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const [savedInvoiceId, setSavedInvoiceId] = useState<string | null>(null);
@@ -118,52 +125,64 @@ export default function InvoiceWizard({ initialData }: Props) {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetchActiveDatabase();
-    fetchProducts();
+    loadMRCatalogProducts();
   }, []);
 
-
-
-  const fetchActiveDatabase = async () => {
-    try {
-      const response = await fetch("/api/invoice-databases?module=MR_INVOICE");
-      const data = await response.json();
-      const active = data.find((db: any) => db.isActive);
-      if (active) {
-        setDatabaseId(active.id);
-        setDatabaseName(active.name);
-      }
-    } catch (error) {
-      console.error("Error fetching active database:", error);
-    }
-  };
-
-  const fetchProducts = async () => {
+  const loadMRCatalogProducts = async () => {
     setIsLoadingProducts(true);
     try {
-      const response = await fetch("/api/products?module=MR_INVOICE");
-      const data = await response.json();
-      // Handle both array and object responses for backward compatibility
-      const productsArray = Array.isArray(data) ? data : (data.products || []);
-      setProducts(productsArray);
+      invalidateCatalogCache("MR_SWIMMING_POOLS");
+      const catalog = await fetchCatalogProducts("MR_SWIMMING_POOLS", { fresh: true });
+      setProducts(catalog.map(mapCatalogToInvoiceProduct));
+    } catch (error) {
+      console.error("Error loading MR catalog for invoice:", error);
     } finally {
       setIsLoadingProducts(false);
     }
   };
 
-  const selectProduct = (index: number, product: any) => {
+  const selectProduct = async (index: number, product: InvoiceCatalogProduct) => {
+    const live = product.id ? await fetchLiveMRProduct(product.id) : null;
+    const p = live ?? product;
     const newItems = [...formData.items];
     newItems[index] = {
       ...newItems[index],
-      description: (product.name || product.description || "").trim(),
-      unitPrice: Number(product.defaultRate || 0),
-      hsn: product.hsnCode || "",
-      gstRate: Number(product.gstRate || 0),
-      unit: product.unit || "Nos",
-      total: Number(product.defaultRate || 0) * newItems[index].qty
+      ...invoiceItemFromProduct(p, newItems[index].qty || 1),
     };
     setFormData((prev) => ({ ...prev, items: newItems }));
     setShowDropdown(null);
+  };
+
+  const addProductFromCatalog = async (product: {
+    id: string;
+    name: string;
+    description: string;
+    defaultRate: number;
+    unit?: string;
+    hsnCode?: string;
+    gstRate?: number;
+    imagePath?: string | null;
+    sectionCode?: string;
+  }) => {
+    const mapped = mapCatalogToInvoiceProduct({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      category: "",
+      sectionCode: product.sectionCode || "A",
+      unit: product.unit || "Nos",
+      warranty: "",
+      defaultRate: product.defaultRate,
+      hsnCode: product.hsnCode,
+      gstRate: product.gstRate,
+      imagePath: product.imagePath,
+    });
+    const live = await fetchLiveMRProduct(product.id);
+    const p = live ?? mapped;
+    setFormData((prev) => ({
+      ...prev,
+      items: [...prev.items, invoiceItemFromProduct(p)],
+    }));
   };
 
   const totals = React.useMemo(() => {
@@ -503,6 +522,17 @@ export default function InvoiceWizard({ initialData }: Props) {
               <SectionHeader stepKey="step2" defaultTitle="Step 2: Invoice Items" />
             </div>
 
+            <div style={{ marginBottom: "16px" }}>
+              <ProductSelect
+                value=""
+                companyType="MR_SWIMMING_POOLS"
+                placeholder="Search MR quotation catalog to add a product…"
+                onChange={(product) => {
+                  if (product) void addProductFromCatalog(product);
+                }}
+              />
+            </div>
+
             <table className="items-table" style={{ width: "100%", borderCollapse: "collapse", marginTop: "16px" }}>
               <thead>
                 <tr style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
@@ -517,11 +547,7 @@ export default function InvoiceWizard({ initialData }: Props) {
               </thead>
               <tbody>
                 {formData.items.map((item, index) => {
-                  const filteredProducts = products.filter(p => 
-                    (p.name && p.name.toLowerCase().includes(item.description.toLowerCase())) ||
-                    (p.description && p.description.toLowerCase().includes(item.description.toLowerCase())) ||
-                    (p.hsnCode && p.hsnCode.includes(item.description))
-                  ).slice(0, 5);
+                  const filteredProducts = filterInvoiceProducts(products, item.description);
 
                   return (
                     <InvoiceItemRow
