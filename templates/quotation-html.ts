@@ -570,6 +570,7 @@ export function buildQuotationHtml(
         <div>${HEADER_CONTACTS.registeredOffice}</div>
         <div>${HEADER_CONTACTS.branches}</div>
       </div>
+      <div class="header-divider"></div>
     </header>
     <div class="doc-title">QUOTATION</div>
 
