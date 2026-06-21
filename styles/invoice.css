@@ -389,10 +389,31 @@
 }
 
 .invoice-item-dropdown.product-dropdown {
-  left: 12px;
-  right: 12px;
+  left: 0;
+  right: 0;
   min-width: 280px;
   animation: invoice-dropdown-in 0.18s ease;
+}
+
+.invoice-product-picker {
+  position: relative;
+  width: 100%;
+}
+
+.invoice-product-picker .form-control:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.invoice-item-dropdown .product-item {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.invoice-item-dropdown .product-item:active {
+  transform: scale(0.995);
+  background: #eef2ff;
 }
 
 @keyframes invoice-dropdown-in {

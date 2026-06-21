@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronRight, Package } from "lucide-react";
 import { formatCurrencyINR } from "@/lib/utils";
 import type { InvoiceCatalogProduct } from "@/lib/mr-invoice-product";
@@ -37,10 +37,21 @@ export const InvoiceItemRow = React.memo(({
   selectProduct,
 }: InvoiceItemRowProps) => {
   const [highlightIndex, setHighlightIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const hasQuery = item.description.trim().length > 0;
   const isOpen = showDropdown && hasQuery;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (containerRef.current?.contains(event.target as Node)) return;
+      setShowDropdown(null);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [isOpen, setShowDropdown]);
 
   useEffect(() => {
     setHighlightIndex(0);
@@ -52,11 +63,10 @@ export const InvoiceItemRow = React.memo(({
     el?.scrollIntoView({ block: "nearest" });
   }, [highlightIndex, isOpen]);
 
-  const pickProduct = (product: InvoiceCatalogProduct) => {
-    selectProduct(index, product);
+  const pickProduct = useCallback((product: InvoiceCatalogProduct) => {
     setShowDropdown(null);
-    inputRef.current?.blur();
-  };
+    selectProduct(index, product);
+  }, [index, selectProduct, setShowDropdown]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen && (e.key === "ArrowDown" || e.key === "Enter")) {
@@ -83,6 +93,7 @@ export const InvoiceItemRow = React.memo(({
     <tr className={isOpen ? "invoice-row-dropdown-open" : undefined} style={{ borderBottom: "1px solid #f1f5f9" }}>
       <td className="number-font" style={{ padding: "12px", width: "40px", textAlign: "center", color: "#94a3b8", fontSize: "0.875rem" }}>{index + 1}</td>
       <td className="description-cell invoice-description-cell" style={{ padding: "12px", position: "relative" }}>
+        <div ref={containerRef} className="invoice-product-picker" data-invoice-product-picker>
         <input
           ref={inputRef}
           type="text"
@@ -117,8 +128,11 @@ export const InvoiceItemRow = React.memo(({
                   aria-selected={i === highlightIndex}
                   className={`product-item${i === highlightIndex ? " is-highlighted" : ""}`}
                   onMouseEnter={() => setHighlightIndex(i)}
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => pickProduct(product)}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    pickProduct(product);
+                  }}
                 >
                   <div className="product-item-thumb">
                     {product.imagePath ? (
@@ -152,6 +166,7 @@ export const InvoiceItemRow = React.memo(({
             )}
           </div>
         )}
+        </div>
       </td>
       <td style={{ padding: "12px", width: "120px" }}>
         <input

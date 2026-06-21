@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatCurrencyINR, convertToWordsINR } from "@/lib/utils";
@@ -141,26 +141,65 @@ export default function InvoiceWizard({ initialData }: Props) {
     }
   };
 
-  const selectProduct = async (index: number, product: InvoiceCatalogProduct) => {
-    const live = product.id ? await fetchLiveMRProduct(product.id) : null;
-    const p = live ?? product;
-    const newItems = [...formData.items];
-    newItems[index] = {
-      ...newItems[index],
-      ...invoiceItemFromProduct(p, newItems[index].qty || 1),
-    };
-    setFormData((prev) => ({ ...prev, items: newItems }));
+  const selectProduct = useCallback((index: number, product: InvoiceCatalogProduct) => {
     setShowDropdown(null);
-  };
+    setFormData((prev) => {
+      const newItems = [...prev.items];
+      newItems[index] = {
+        ...newItems[index],
+        ...invoiceItemFromProduct(product, newItems[index].qty || 1),
+      };
+      return { ...prev, items: newItems };
+    });
 
-  const addProductFromCatalog = async (product: { id: string }) => {
-    const live = await fetchLiveMRProduct(product.id);
-    if (!live) return;
-    setFormData((prev) => ({
-      ...prev,
-      items: [...prev.items, invoiceItemFromProduct(live)],
-    }));
-  };
+    if (product.id) {
+      void fetchLiveMRProduct(product.id).then((live) => {
+        if (!live) return;
+        setFormData((prev) => {
+          const items = [...prev.items];
+          const row = items[index];
+          if (!row || row.productId !== product.id) return prev;
+          const refreshed = invoiceItemFromProduct(live, row.qty || 1);
+          if (
+            row.unitPrice === refreshed.unitPrice &&
+            row.hsn === refreshed.hsn &&
+            row.description === refreshed.description
+          ) {
+            return prev;
+          }
+          items[index] = { ...row, ...refreshed };
+          return { ...prev, items };
+        });
+      });
+    }
+  }, []);
+
+  const addProductFromCatalog = useCallback((product: { id: string }) => {
+    const cached = products.find((p) => p.id === product.id);
+    if (cached) {
+      setFormData((prev) => ({
+        ...prev,
+        items: [...prev.items, invoiceItemFromProduct(cached)],
+      }));
+    }
+
+    void fetchLiveMRProduct(product.id).then((live) => {
+      if (!live) return;
+      setFormData((prev) => {
+        const items = [...prev.items];
+        const lastIndex = items.length - 1;
+        const last = items[lastIndex];
+        if (last?.productId === product.id) {
+          items[lastIndex] = { ...last, ...invoiceItemFromProduct(live, last.qty || 1) };
+          return { ...prev, items };
+        }
+        if (!cached) {
+          return { ...prev, items: [...prev.items, invoiceItemFromProduct(live)] };
+        }
+        return prev;
+      });
+    });
+  }, [products]);
 
   const totals = React.useMemo(() => {
     const subTotal = formData.items.reduce((sum, item) => sum + (item.total || 0), 0);
@@ -177,20 +216,6 @@ export default function InvoiceWizard({ initialData }: Props) {
       amountInWords: convertToWordsINR(grandTotal),
     };
   }, [formData.items, formData.cgstRate, formData.sgstRate, formData.roundOff]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (showDropdown !== null) {
-        const target = event.target as HTMLElement;
-        if (!target.closest(".description-cell")) {
-          setShowDropdown(null);
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showDropdown]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
